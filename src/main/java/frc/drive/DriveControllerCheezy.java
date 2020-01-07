@@ -7,7 +7,7 @@ import frc.util.util;
  * Gotta get more wheel
  *      -Unknown 254 programmer
  * 
- * Base on Cheesydrive but modified
+ * Based on Cheesydrive but modified
  */
 
 public class DriveControllerCheezy {

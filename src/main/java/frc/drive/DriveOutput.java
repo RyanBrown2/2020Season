@@ -73,18 +73,14 @@ public class DriveOutput extends Thread{
         leftSet = vel - Constants.robotWidth*omega;
     }
 
-    /**
-     * Outputs no voltage to the motors
-     */
+    // Outputs no voltage to the motors
     public void setNoVoltage(){
         this.mode = Modes.Voltage;
         rightSet = 0;
         leftSet = 0;
     }
 
-    /**
-     * Set no velocity
-     */
+    // Set no velocity
     public void setNoVelocity(){
         this.mode = Modes.Velocity;
         rightSet = 0;
@@ -96,9 +92,6 @@ public class DriveOutput extends Thread{
     @Override
     public void run() {
         while(true){
-            // if(RobotState.isOperatorControl())
-            //     mDrive.brake(IdleMode.kBrake);
-            // else
             mDrive.brake(IdleMode.kCoast);
             switch(mode){
                 case Voltage:
@@ -107,7 +100,6 @@ public class DriveOutput extends Thread{
                 case Velocity:
                     vController.setSetpoint(new Coordinate(rightSet, leftSet));
                     Coordinate cVels = new Coordinate(mDrive.getRightVel(), mDrive.getLeftVel());
-                    // cVels = new Coordinate();
                     Coordinate out = vController.run(cVels);
                     mDrive.outputToDrive(out.getX(), out.getY());
                     break;
