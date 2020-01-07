@@ -26,7 +26,6 @@ public class Robot extends TimedRobot {
   Drive driveAuto;
   DriveController driveController;
   DriveOutput driveOutput;
-  TeleopDrive teleopDrive;
 
   boolean resetVision = false;
 
@@ -37,16 +36,13 @@ public class Robot extends TimedRobot {
     driveOutput = DriveOutput.getInstance();
     driveOutput.start();
 
-    teleopDrive = new TeleopDrive();
-
-
     auto = new PathTest();
   }
 
   @Override
   public void robotPeriodic() {
-    Drive.getInstance().display();
-    display();
+//    Drive.getInstance().display();
+//    display();
   }
 
   @Override

@@ -146,7 +146,7 @@ public class PositionTracker extends Thread implements IPositionTracker{
         this.visionData = visionData;
     }
 
-    public void display(){
+    public void display(){ //todo
         if(SmartDashboard.getBoolean("Reset Location", false)){
             double x = SmartDashboard.getNumber("Location Reset X (feet)",0);
             double y = SmartDashboard.getNumber("Location Reset Y (feet)",0);

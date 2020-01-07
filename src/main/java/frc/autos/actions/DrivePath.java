@@ -24,7 +24,9 @@ public class DrivePath extends Action{
     public static DrivePath createFromFileOnRoboRio(String fileName, String path,
     TrapezoidalMp.constraints constraints){
         String filePath = "/home/lvuser/deploy/Autos/"+fileName+".json";
+        System.out.println("filler");
         SplineSegmentFiller filler = new SplineSegmentFiller(filePath, path);
+        System.out.println("segment");
         TrajectoryList segment = filler.generate();
         return new DrivePath(segment, constraints);
     }
