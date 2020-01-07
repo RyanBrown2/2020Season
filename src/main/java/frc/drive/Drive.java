@@ -22,6 +22,7 @@ public class Drive {
         return instance;
     }
 
+	CANSparkMax spark;
 	TalonSRX leftEncoder, rightEncoder;
 	SpeedControllerGroup left, right;
     private Drive(){
@@ -63,31 +64,22 @@ public class Drive {
 	}
 
 	public double getLeftPosition(){
-		// if(Constants.isCompBot)
 			return -leftEncoder.getSelectedSensorPosition()*Units.Angle.encoderTicks*Units.Length.radians;
-		// else 
-		// 	return leftEncoder.getSelectedSensorPosition()*Units.Angle.encoderTicks*Units.Length.radians;
 	}
 
 	public double getRightPosition(){
-		// if(Constants.isCompBot)
 			return rightEncoder.getSelectedSensorPosition()*Units.Angle.encoderTicks*Units.Length.radians;
-		// else 
-		// 	return -rightEncoder.getSelectedSensorPosition()*Units.Angle.encoderTicks*Units.Length.radians;
 	}
 
-	/**
-	 * Returns Left Velocity
-	 */
+
+	// Returns Left Velocity
 	public double getLeftVel(){
 		double out = -leftEncoder.getSelectedSensorVelocity()*
 				Units.Angle.encoderTicks*Units.Length.radians/(0.1*Units.Time.seconds);
 		return out;
 	}
 
-	/**
-	 * Returns Right Velocity
-	 */
+	// Returns Right Velocity
 	public double getRightVel(){
 		double out = rightEncoder.getSelectedSensorVelocity()*
 				Units.Angle.encoderTicks*Units.Length.radians/(0.1*Units.Time.seconds);
