@@ -1,5 +1,6 @@
 package frc.drive;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 import frc.utilPackage.Units;
@@ -21,13 +22,13 @@ public class Drive {
         return instance;
     }
 
-    CANSparkMax mLeft, mRight;
-	CANSparkMax[] slaves = new CANSparkMax[4];
+    CANSparkMax left1, left2, right1, right2;
 	TalonSRX leftEncoder, rightEncoder;
+	SpeedControllerGroup left, right;
     private Drive(){
         //set up drive
-        mLeft = new CANSparkMax(Constants.Drive.MLeftNum, MotorType.kBrushless);
-		mRight = new CANSparkMax(Constants.Drive.MRightNum, MotorType.kBrushless);
+		left = Constants.Drive.leftDrive;
+		right = Constants.Drive.rightDrive;
 		leftEncoder = Constants.Drive.leftEncoder;
 		leftEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 		rightEncoder = Constants.Drive.rightEncoder;
@@ -44,11 +45,11 @@ public class Drive {
 	
     /**
      * Output puts a voltage to the drive
-     * @param output X: right voltage, Y: left voltage
+     * @param  : right voltage, left voltage
      */
     public void outputToDrive(double rightVoltage, double leftVoltage){
-		mRight.set(rightVoltage/12);
-		mLeft.set(-leftVoltage/12);
+		right.set(rightVoltage/12);
+		left.set(-leftVoltage/12);
     }
 
 	/**
