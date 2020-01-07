@@ -2,12 +2,18 @@ package frc.coordinates;
 
 import frc.utilPackage.Util;
 
-public class Heading extends Coordinate {
+/*
+	This class is used to create heading objects.
+	These objects create a vector at the origin from an x and y value.
+	They are used in calculating angles and defining Pos2D objects.
+*/
 
+public class Heading extends Coordinate {
+	// Maps the heading from polar coordinates to cartesian coordinates
 	public static Heading createPolarHeading(double angle, double mag){
 		return new Heading(mag*Math.cos(angle), mag*Math.sin(angle));
 	}
-
+	// New headings left undefined will have 
 	public Heading(){
 		x = 0;
 		y = 1;
@@ -76,6 +82,7 @@ public class Heading extends Coordinate {
 	public static Heading headingBetweenPoints(Coordinate pt1, Coordinate pt2){
 		double angle = Math.atan2(pt2.getY() - pt1.getY(), pt2.getX() - pt1.getX());
 		Heading out = new Heading(angle);
+		// Heading out = new Heading(pt2.getX()+pt1.getX(), pt2.getY()+pt1.getY());
 		return out;
 	}
 

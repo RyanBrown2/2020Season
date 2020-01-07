@@ -1,26 +1,27 @@
 package frc.utilPackage;
 
 public class LowPassFilter {
-	double alpha = 0.4;
-	double emaS = 0;
-	
-	public LowPassFilter() {
-	}
-	
-	public LowPassFilter(double _alpha){
-		alpha = _alpha;
-	}
+    double oldValue = 0;
+    double a = .9;
 
-	public void setup(double init){
-		emaS = init;
-	}
-	
-	public double run(double input){
-		emaS = (alpha*input)+((1-alpha)*emaS);
-		return emaS;
-	}
-	
-	public double getOut(){
-		return emaS;
-	}
+    public LowPassFilter(double a){
+        this.a = a;
+    }
+
+    public LowPassFilter(double a, double defaultVal){
+        this.a = a;
+        oldValue = defaultVal;
+    }
+
+    public double update(double newValue){
+//        System.out.println(newValue);
+        if(Double.isNaN(newValue) || !Util.inErrorRange(newValue, 0, 10000)){
+            return newValue;
+        }
+//        System.out.println("Old Val: "+oldValue);
+        double update = oldValue*a + newValue*(1.0 - a);
+//        System.out.println("New Value:"+update);
+        oldValue = update;
+        return update;
+    }
 }

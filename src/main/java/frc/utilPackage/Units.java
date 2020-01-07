@@ -17,6 +17,7 @@ public class Units {
 		public final static double revolutions = 6.2832;
 		public final static double encoderTicks = 0.0015340; //4096 encoder ticks per revolution
 		// public final static double encoderTicks = 6.2832; //4096 encoder ticks per revolution
+		public final static double encoderTicksAbsolute = 0.0061359; //1024 encoder ticks per revolution
 	}
 	
 	public static class Mass{
