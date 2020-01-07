@@ -22,7 +22,6 @@ public class Drive {
         return instance;
     }
 
-    CANSparkMax left1, left2, right1, right2;
 	TalonSRX leftEncoder, rightEncoder;
 	SpeedControllerGroup left, right;
     private Drive(){
@@ -48,8 +47,8 @@ public class Drive {
      * @param  : right voltage, left voltage
      */
     public void outputToDrive(double rightVoltage, double leftVoltage){
-		right.set(rightVoltage/12);
-		left.set(-leftVoltage/12);
+		Constants.Drive.leftDrive.set(-leftVoltage/12);
+		Constants.Drive.rightDrive.set(rightVoltage/12);
     }
 
 	/**
@@ -96,10 +95,9 @@ public class Drive {
 	}
 
 	public void brake(IdleMode mode){
-		mLeft.setIdleMode(mode);
-		mRight.setIdleMode(mode);
-		for(int i = 0; i < 4; i++){
-			slaves[i].setIdleMode(mode);
-		}
+		Constants.Drive.left1.setIdleMode(mode);
+		Constants.Drive.left2.setIdleMode(mode);
+		Constants.Drive.right1.setIdleMode(mode);
+		Constants.Drive.right2.setIdleMode(mode);
 	}
 }
