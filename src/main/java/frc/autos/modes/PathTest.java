@@ -14,11 +14,11 @@ public class PathTest extends AutoMode {
     public PathTest() {
 
         TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 4 * Units.Length.feet, 2 * Units.Length.feet);
-        firstPath = DrivePath.createFromFileOnRoboRio("PathTest", "testPath", constraints);
-//        firstPath.setHorizontalThresh(1 * Units.Length.feet);
-//        firstPath.setlookAhead(2 * Units.Length.feet);
+        firstPath = DrivePath.createFromFileOnRoboRio("Left/FarHatchAuto", "toFarRocket", constraints);
+        firstPath.setHorizontalThresh(1 * Units.Length.feet);
+        firstPath.setlookAhead(2 * Units.Length.feet);
 
-//        setInitPos(0, 0);
+        setInitPos(0, 0);
 
     }
 

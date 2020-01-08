@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-//    Drive.getInstance().display();
+    Drive.getInstance().display();
 //    display();
   }
 
