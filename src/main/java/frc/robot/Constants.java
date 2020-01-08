@@ -23,7 +23,7 @@ public class Constants {
     public static boolean isCompBot = true;
 
     public static class Drive {
-		public static TalonSRX rightEncoder = new TalonSRX(41);
+		public static TalonSRX rightEncoder = new TalonSRX(50);
         public static TalonSRX leftEncoder = new TalonSRX(22); //was 22
 		public static double wheelDiameter = 5.5, // inches
 				wheelCircumference = wheelDiameter * Math.PI, // inches

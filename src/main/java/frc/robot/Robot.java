@@ -10,6 +10,7 @@ import frc.controlBoard.IControlBoard;
 import frc.drive.Drive;
 import frc.drive.DriveController;
 import frc.drive.DriveOutput;
+import frc.drive.PositionTracker;
 import frc.util.Jevois;
 import frc.utilPackage.TeleopDrive;
 
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   Drive driveAuto;
   DriveController driveController;
   DriveOutput driveOutput;
+  PositionTracker positionTracker;
 
   boolean resetVision = false;
 
@@ -35,13 +37,14 @@ public class Robot extends TimedRobot {
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
     driveOutput.start();
-
     auto = new PathTest();
+   positionTracker = PositionTracker.getInstance();
   }
 
   @Override
   public void robotPeriodic() {
-    Drive.getInstance().display();
+   Drive.getInstance().display();
+   positionTracker.display();
 //    display();
   }
 
@@ -52,7 +55,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-
   }
 
   @Override
