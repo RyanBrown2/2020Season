@@ -36,9 +36,6 @@ public class Constants {
         public static CANSparkMax left2 = new CANSparkMax(leftDriveMotors[1], MotorType.kBrushless);
         public static CANSparkMax right1 = new CANSparkMax(rightDriveMotors[0], MotorType.kBrushless);
         public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
-
-        public static SpeedControllerGroup leftDrive = new SpeedControllerGroup(left1, left2);
-		public static SpeedControllerGroup rightDrive = new SpeedControllerGroup(right1, right2);
     }
 
     public static class Image{

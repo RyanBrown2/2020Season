@@ -27,8 +27,6 @@ public class Drive {
 	SpeedControllerGroup left, right;
     private Drive(){
         //set up drive
-		left = Constants.Drive.leftDrive;
-		right = Constants.Drive.rightDrive;
 		leftEncoder = Constants.Drive.leftEncoder;
 		leftEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 		rightEncoder = Constants.Drive.rightEncoder;
@@ -43,13 +41,15 @@ public class Drive {
 		SmartDashboard.putNumber("Right Encoder Pos", getRightPosition());
 	}
 	
-    /**
+    /*
      * Output puts a voltage to the drive
      * @param  : right voltage, left voltage
      */
     public void outputToDrive(double rightVoltage, double leftVoltage){
-		Constants.Drive.leftDrive.set(-leftVoltage/12);
-		Constants.Drive.rightDrive.set(rightVoltage/12);
+		Constants.Drive.left1.setVoltage(-leftVoltage);
+		Constants.Drive.left2.setVoltage(-leftVoltage);
+		Constants.Drive.right1.setVoltage(rightVoltage);
+		Constants.Drive.right2.setVoltage(rightVoltage);
     }
 
 	/**

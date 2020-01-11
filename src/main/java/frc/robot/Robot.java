@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.actions.VisionPursuit;
@@ -29,6 +31,8 @@ public class Robot extends TimedRobot {
   DriveOutput driveOutput;
   PositionTracker positionTracker;
 
+  Display display;
+
   boolean resetVision = false;
 
   @Override
@@ -38,7 +42,9 @@ public class Robot extends TimedRobot {
     driveOutput = DriveOutput.getInstance();
     driveOutput.start();
     auto = new PathTest();
-   positionTracker = PositionTracker.getInstance();
+    positionTracker = PositionTracker.getInstance();
+    display = new Display();
+
   }
 
   @Override
@@ -50,7 +56,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-//    auto.start();
+    auto.start();
   }
 
   @Override
@@ -59,8 +65,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-      driveAuto.outputToDrive(1, 1);
-
+      driveAuto.outputToDrive(5, 5);
+//      testTalon.set(ControlMode.PercentOutput, 3/12);
   }
 
   @Override
