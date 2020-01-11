@@ -14,6 +14,7 @@ import frc.drive.DriveController;
 import frc.drive.DriveOutput;
 import frc.drive.PositionTracker;
 import frc.util.Jevois;
+import frc.utilPackage.ScaledDrive;
 import frc.utilPackage.TeleopDrive;
 
 public class Robot extends TimedRobot {
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
   DriveController driveController;
   DriveOutput driveOutput;
   PositionTracker positionTracker;
+  ScaledDrive scaledDrive;
 
   Display display;
 
@@ -37,6 +39,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
@@ -44,7 +47,7 @@ public class Robot extends TimedRobot {
     auto = new PathTest();
     positionTracker = PositionTracker.getInstance();
     display = new Display();
-
+    scaledDrive.enabled(true);
   }
 
   @Override
@@ -65,8 +68,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-      driveAuto.outputToDrive(5, 5);
-//      testTalon.set(ControlMode.PercentOutput, 3/12);
+      scaledDrive.run();
   }
 
   @Override
