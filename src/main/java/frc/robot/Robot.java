@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    auto.start();
+//    auto.start();
   }
 
   @Override
@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+      driveAuto.outputToDrive(1, 1);
 
   }
 

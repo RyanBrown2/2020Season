@@ -23,7 +23,6 @@ public class Drive {
         return instance;
     }
 
-	CANSparkMax spark;
 	TalonSRX leftEncoder, rightEncoder;
 	SpeedControllerGroup left, right;
     private Drive(){

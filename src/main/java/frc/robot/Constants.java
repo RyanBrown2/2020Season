@@ -24,7 +24,7 @@ public class Constants {
 
     public static class Drive {
 		public static TalonSRX rightEncoder = new TalonSRX(50);
-        public static TalonSRX leftEncoder = new TalonSRX(22); //was 22
+        public static TalonSRX leftEncoder = new TalonSRX(22);
 		public static double wheelDiameter = 5.5, // inches
 				wheelCircumference = wheelDiameter * Math.PI, // inches
                 robotDiameter = 29; // inches (for estimating angle without a gyro)
@@ -33,7 +33,7 @@ public class Constants {
         public static int[] rightDriveMotors = {13, 14};
 
         public static CANSparkMax left1 = new CANSparkMax(leftDriveMotors[0], MotorType.kBrushless);
-        public static CANSparkMax left2 = new CANSparkMax(leftDriveMotors[0], MotorType.kBrushless);
+        public static CANSparkMax left2 = new CANSparkMax(leftDriveMotors[1], MotorType.kBrushless);
         public static CANSparkMax right1 = new CANSparkMax(rightDriveMotors[0], MotorType.kBrushless);
         public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
 
