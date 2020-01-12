@@ -8,9 +8,7 @@ public class ShuffleboardDisplay {
     }
 
     public void run() {
-        driveDisplay.PostionTrackerDisplay();
+        driveDisplay.PositionTrackerDisplay();
     }
-
-
 
 }

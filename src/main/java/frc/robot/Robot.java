@@ -9,6 +9,7 @@ import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
+import frc.display.ShuffleboardDisplay;
 import frc.drive.Drive;
 import frc.drive.DriveController;
 import frc.drive.DriveOutput;
@@ -27,13 +28,13 @@ public class Robot extends TimedRobot {
 
   AutoMode auto;
 
+  ShuffleboardDisplay display;
+
   Drive driveAuto;
   DriveController driveController;
   DriveOutput driveOutput;
   PositionTracker positionTracker;
   ScaledDrive scaledDrive;
-
-  Display display;
 
   boolean resetVision = false;
 
@@ -46,14 +47,16 @@ public class Robot extends TimedRobot {
     driveOutput.start();
     auto = new PathTest();
     positionTracker = PositionTracker.getInstance();
-    display = new Display();
+    display = new ShuffleboardDisplay();
     scaledDrive.enabled(true);
+    display.run();
   }
 
   @Override
   public void robotPeriodic() {
-   Drive.getInstance().display();
-   positionTracker.display();
+//    display.run();
+    Drive.getInstance().display();
+    positionTracker.display();
 //    display();
   }
 

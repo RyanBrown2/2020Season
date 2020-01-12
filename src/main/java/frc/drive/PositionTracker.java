@@ -8,7 +8,7 @@ import frc.coordinates.*;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.display.DriveDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
 import frc.utilPackage.Util;
@@ -30,8 +30,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
 
     private PositionTracker(){
         vmxPi = new AHRS(Port.kMXP);
-        SmartDashboard.putNumber("Location Reset X (feet)", 0);
-        SmartDashboard.putNumber("Location Reset Y (feet)", 0);
         this.start();
     }
 
@@ -58,8 +56,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
     @Override
     public void run() {
         double last = Timer.getFPGATimestamp();
-        SmartDashboard.putBoolean("Reset Location", false);
-        SmartDashboard.putBoolean("Reset Heading", false);
         heading = new Heading();
         heading.setRobotAngle(getAngle());
         Heading pHeading = new Heading(heading);
@@ -147,24 +143,24 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     public void display(){
-        if(SmartDashboard.getBoolean("Reset Location", false)){
-            double x = SmartDashboard.getNumber("Location Reset X (feet)",0);
-            double y = SmartDashboard.getNumber("Location Reset Y (feet)",0);
+        if(DriveDisplay.resetLocation.getBoolean(false)){
+            double x = DriveDisplay.posX.getDouble(0);
+            double y = DriveDisplay.posY.getDouble(0);
             setInitPosFeet(x, y);
-            SmartDashboard.putBoolean("Reset Location", false);
+            DriveDisplay.resetLocation.setBoolean(false);
         }
 
-        if(SmartDashboard.getBoolean("Reset Heading", false)){
+        if(DriveDisplay.resetHeading.getBoolean(false)){
             robotForward();
-            SmartDashboard.putBoolean("Reset Heading", false);
+            DriveDisplay.resetHeading.setBoolean(false);
         }
 
         try{
             Coordinate position = new Coordinate(this.position);
             position.mult(1/Units.Length.feet);
-            SmartDashboard.putNumber("X direction feet", position.getX());
-            SmartDashboard.putNumber("Y direction feet", position.getY());
-            SmartDashboard.putNumber("Angle", getAngle()/Units.Angle.degrees);
+            DriveDisplay.posX.setDouble(position.getX());
+            DriveDisplay.posY.setDouble(position.getY());
+            DriveDisplay.angle.setDouble(getAngle()/Units.Angle.degrees);
         }catch(Exception e){
             e.printStackTrace();
         }
