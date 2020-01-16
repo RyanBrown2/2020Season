@@ -1,14 +1,16 @@
 package frc.utilPackage;
 
+import com.revrobotics.CANSparkMax;
 import frc.drive.DriveOutput;
 import frc.drive.DriveOutput.Modes;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class ScaledDrive {
     DriveOutput drive;
     double wheelScalar = 0.5;
-    double throttleScalar = 0.8;
+    double throttleScalar = 0.6;
     double kWheelNonLinearity = 1;
 
     boolean enabled = true;

@@ -1,6 +1,8 @@
 package frc.autos.modes;
 
+import com.revrobotics.CANSparkMax;
 import frc.path.TrajectoryList;
+import frc.robot.Constants;
 import frc.utilPackage.Units;
 import frc.utilPackage.TrapezoidalMp;
 
@@ -10,27 +12,25 @@ import frc.autos.AutoEndedException;
 
 public class PathTest extends AutoMode {
 
-    DrivePath pathOne, pathTwo, pathThree, revPathOne;
+    DrivePath pathOne, pathTwo;
 
     public PathTest() {
+        Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 2 * Units.Length.feet, 1 * Units.Length.feet);
-        pathOne = DrivePath.createFromFileOnRoboRio("TestAuto", "pt1", constraints);
+        TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 16 * Units.Length.feet, 16 * Units.Length.feet);
+        TrapezoidalMp.constraints revConstraints = new TrapezoidalMp.constraints(0, 10 * Units.Length.feet, 8 * Units.Length.feet);
+
+        pathOne = DrivePath.createFromFileOnRoboRio("TestAuto", "underThing", constraints);
         pathOne.setHorizontalThresh(1 * Units.Length.feet);
-        pathOne.setlookAhead(0.5 * Units.Length.feet);
+        pathOne.setlookAhead(4 * Units.Length.feet);
 
-        pathTwo = DrivePath.createFromFileOnRoboRio("TestAuto", "pt2", constraints);
-        pathTwo.setHorizontalThresh(1 * Units.Length.feet);
-        pathTwo.setlookAhead(0.5 * Units.Length.feet);
-
-        pathThree = DrivePath.createFromFileOnRoboRio("TestAuto", "pt3", constraints);
-        pathThree.setHorizontalThresh(1 * Units.Length.feet);
-        pathThree.setlookAhead(0.5 * Units.Length.feet);
-
-        revPathOne = DrivePath.createFromFileOnRoboRio("TestAuto", "rpt1", constraints);
-        revPathOne.setHorizontalThresh(1 * Units.Length.feet);
-        revPathOne.setlookAhead(0.5 * Units.Length.feet);
-        revPathOne.setReverse(true);
+        pathTwo = DrivePath.createFromFileOnRoboRio("TestAuto", "reverseToShoot", revConstraints);
+        pathTwo.setReverse(true);
+        pathTwo.setHorizontalThresh(1*Units.Length.feet);
+        pathTwo.setlookAhead(4 * Units.Length.feet);
 
         setInitPos(0, 0);
 
@@ -40,7 +40,5 @@ public class PathTest extends AutoMode {
         PositionTracker.getInstance().robotForward();
         runAction(pathOne);
         runAction(pathTwo);
-        runAction(pathThree);
-        runAction(revPathOne);
     }
 }

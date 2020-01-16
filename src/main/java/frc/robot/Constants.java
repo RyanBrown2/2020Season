@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -36,6 +37,26 @@ public class Constants {
         public static CANSparkMax left2 = new CANSparkMax(leftDriveMotors[1], MotorType.kBrushless);
         public static CANSparkMax right1 = new CANSparkMax(rightDriveMotors[0], MotorType.kBrushless);
         public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
+    }
+
+    public static class RamseteParams{
+        // All values in meters unless otherwise stated
+        public static final double ksVolts = 0.19;
+        public static final double kvVoltSecondsPerMeter = 2.27;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.319;
+        public static final double kPDriveVel = 12.3;
+        public static final double kTrackwidthMeters = 0.6456;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+                new DifferentialDriveKinematics(kTrackwidthMeters);
+
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+
+        public static final boolean kGyroReversed = false;
     }
 
     public static class Image{

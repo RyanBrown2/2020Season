@@ -1,22 +1,15 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.autos.actions.VisionPursuit;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
-import frc.drive.Drive;
-import frc.drive.DriveController;
-import frc.drive.DriveOutput;
-import frc.drive.PositionTracker;
-import frc.util.Jevois;
+import frc.drive.*;
 import frc.utilPackage.ScaledDrive;
-import frc.utilPackage.TeleopDrive;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
@@ -39,6 +32,8 @@ public class Robot extends TimedRobot {
 
   Display display;
 
+  RamseteSetup ramseteSetup;
+
   boolean resetVision = false;
 
   @Override
@@ -53,17 +48,20 @@ public class Robot extends TimedRobot {
     display = new Display();
     scaledDrive.enabled(true);
 
-    testTalon = new TalonSRX(22);
-    testTalon2 = new TalonSRX(50);
-
     stick = new Joystick(0);
+
+    Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
   }
 
   @Override
   public void robotPeriodic() {
    Drive.getInstance().display();
    positionTracker.display();
-//    display();
+   display();
+//   ramseteSetup.periodic();
   }
 
   @Override
@@ -78,10 +76,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
       scaledDrive.run();
-      if(stick.getRawButton(1)) {
-          testTalon2.set(ControlMode.PercentOutput, 5/12);
-          testTalon.set(ControlMode.PercentOutput, 5/12);
-      }
   }
 
   @Override
@@ -94,6 +88,5 @@ public class Robot extends TimedRobot {
   }
 
   public void display() {
-
   }
 }
