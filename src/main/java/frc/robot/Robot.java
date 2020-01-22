@@ -13,8 +13,11 @@ import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
+import frc.display.ShuffleboardDisplay;
 import frc.drive.*;
 import frc.utilPackage.ScaledDrive;
+import frc.util.*;
+import java.io.IOException;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
@@ -37,7 +40,9 @@ public class Robot extends TimedRobot {
   PigeonIMU pigeon;
   double[] ypr;
 
-  Display display;
+  ShuffleboardDisplay display;
+
+  TcpServer tcpServer;
 
   boolean resetVision = false;
 
@@ -51,7 +56,7 @@ public class Robot extends TimedRobot {
     driveOutput.start();
     auto = new PathTest();
     positionTracker = PositionTracker.getInstance();
-    display = new Display();
+    display = new ShuffleboardDisplay();
     scaledDrive.enabled(true);
     ypr = new double[3];
 
@@ -61,14 +66,21 @@ public class Robot extends TimedRobot {
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+    tcpServer = new TcpServer(Constants.Tcp.port);
+    try {
+      tcpServer.start();
+    } catch (IOException e) {
+      e.printStackTrace();    }
+
   }
 
   @Override
   public void robotPeriodic() {
    Drive.getInstance().display();
    positionTracker.display();
-   display();
-//   ramseteSetup.periodic();
+   display.run();
+   //   ramseteSetup.periodic();
   }
 
   @Override

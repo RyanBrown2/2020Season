@@ -50,6 +50,10 @@ public class Constants {
         public static double verticalFov = 45*Units.Angle.degrees;
     }
 
+    public static class Tcp {
+        public static int port = 5800;
+    }
+
     public static void readRobotData() throws Exception{
         JSONParser parser = frc.utilPackage.Util.getParser();
         Object tempObj = parser.parse(new FileReader("/home/lvuser/robot.json"));
