@@ -1,13 +1,9 @@
 package frc.drive;
 
 import java.util.Arrays;
-
-import com.kauailabs.navx.frc.AHRS;
-
+import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.coordinates.*;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
@@ -21,15 +17,16 @@ public class PositionTracker extends Thread implements IPositionTracker{
         return instance;
     }
 
-    private AHRS vmxPi;
+    private double[] ypr = new double[3];
     private Coordinate position = new Coordinate();
     private Heading heading = new Heading();
     private Pos2D fullPos = new Pos2D();
     private Pos2D visionData;
     private double offset;
+    public PigeonIMU pigeon;
 
     private PositionTracker(){
-        vmxPi = new AHRS(Port.kMXP);
+        pigeon = new PigeonIMU(Constants.Drive.gyro);
         SmartDashboard.putNumber("Location Reset X (feet)", 0);
         SmartDashboard.putNumber("Location Reset Y (feet)", 0);
         this.start();
@@ -115,7 +112,8 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     private double getRawAngle(){
-        return vmxPi.getAngle();
+        pigeon.getYawPitchRoll(ypr);
+        return ypr[0];
     }
 
     private double getAngle(){

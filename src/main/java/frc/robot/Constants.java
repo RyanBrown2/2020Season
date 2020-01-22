@@ -40,26 +40,6 @@ public class Constants {
         public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
     }
 
-    public static class RamseteParams{
-        // All values in meters unless otherwise stated
-        public static final double ksVolts = 0.19;
-        public static final double kvVoltSecondsPerMeter = 2.27;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.319;
-        public static final double kPDriveVel = 12.3;
-        public static final double kTrackwidthMeters = 0.6456;
-        public static final DifferentialDriveKinematics kDriveKinematics =
-                new DifferentialDriveKinematics(kTrackwidthMeters);
-
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-
-        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
-        public static final double kRamseteB = 2;
-        public static final double kRamseteZeta = 0.7;
-
-        public static final boolean kGyroReversed = false;
-    }
-
     public static class Image{
         public static int imageWidth = 320;
         public static int imageHeight = 240;

@@ -14,11 +14,6 @@ public class PathTest extends AutoMode {
     DrivePath pathOne, pathTwo;
 
     public PathTest() {
-        Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
         TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 16 * Units.Length.feet, 16 * Units.Length.feet);
         TrapezoidalMp.constraints revConstraints = new TrapezoidalMp.constraints(0, 10 * Units.Length.feet, 8 * Units.Length.feet);
 
