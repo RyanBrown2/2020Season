@@ -32,8 +32,6 @@ public class Robot extends TimedRobot {
 
   Display display;
 
-  RamseteSetup ramseteSetup;
-
   boolean resetVision = false;
 
   @Override
