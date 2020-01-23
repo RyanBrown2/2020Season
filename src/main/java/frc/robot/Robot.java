@@ -1,9 +1,14 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
@@ -29,6 +34,8 @@ public class Robot extends TimedRobot {
   PositionTracker positionTracker;
   ScaledDrive scaledDrive;
   Joystick stick;
+  PigeonIMU pigeon;
+  double[] ypr;
 
 //  ShuffleboardDisplay display;
 
@@ -38,11 +45,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+<<<<<<< HEAD
 //    try {
 //      Constants.readRobotData();
 //    } catch (Exception e) {
 //      e.printStackTrace();
 //    }
+=======
+    pigeon = new PigeonIMU(Constants.Drive.gyro);
+>>>>>>> 968abfc1e2939eeed8aa290141d63118d439548e
     scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
@@ -52,6 +63,7 @@ public class Robot extends TimedRobot {
     positionTracker = PositionTracker.getInstance();
 //    display = new ShuffleboardDisplay();
     scaledDrive.enabled(true);
+    ypr = new double[3];
 
     stick = new Joystick(0);
 
@@ -105,5 +117,7 @@ public class Robot extends TimedRobot {
   }
 
   public void display() {
+    pigeon.getYawPitchRoll(ypr);
+      SmartDashboard.putNumber("yaw", ypr[0]);
   }
 }

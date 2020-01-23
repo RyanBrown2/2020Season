@@ -1,8 +1,8 @@
 package frc.drive;
 
 import java.util.Arrays;
-
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.coordinates.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,16 +19,15 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     private PigeonIMU pigeon;
+    private double[] ypr = new double[3];
     private Coordinate position = new Coordinate();
     private Heading heading = new Heading();
     private Pos2D fullPos = new Pos2D();
     private Pos2D visionData;
     private double offset;
-    private double[] ypr;
 
     private PositionTracker(){
         pigeon = new PigeonIMU(Constants.Drive.gyro);
-        ypr = new double[3];
         SmartDashboard.putNumber("Location Reset X (feet)", 0);
         SmartDashboard.putNumber("Location Reset Y (feet)", 0);
         this.start();

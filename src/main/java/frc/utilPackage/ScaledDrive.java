@@ -7,8 +7,8 @@ import frc.robot.Robot;
 
 public class ScaledDrive {
     DriveOutput drive;
-    double wheelScalar = 0.5;
-    double throttleScalar = 1;
+    double wheelScalar = 0.7;
+    double throttleScalar = 0.8;
     double kWheelNonLinearity = 1;
 
     boolean enabled = true;
@@ -36,7 +36,6 @@ public class ScaledDrive {
 
     private double outputWheel(double wheelNonLinearity, double wheel){
         final double denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity);
-        // Apply a sin function that's scaled to make it feel better.
         return Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
     }
 }
