@@ -2,6 +2,7 @@ package frc.controlBoard;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 public class ControlBoard extends IControlBoard{
     Joystick joy1, wheel, buttonPad, cojoy;
@@ -66,17 +67,25 @@ public class ControlBoard extends IControlBoard{
 
 	@Override
 	public double getThrottle() {
-		return -joy1.getY();
+        if (Math.abs(joy1.getY()) < 0.05) {
+            return 0;
+        } else {
+            return joy1.getY();
+        }
 	}
 
     @Override
     public double getWheel() {
         double output;
-        SmartDashboard.putNumber("Wheel Raw", wheel.getX());
+//        SmartDashboard.putNumber("Wheel Raw", wheel.getX());
         if (Math.abs(wheel.getX()) < 0.05) {
             return 0;
         } else {
-            return wheel.getX();
+            if (Constants.Drive.headingInvert) {
+                return -wheel.getX();
+            } else {
+                return wheel.getX();
+            }
         }
     }
 

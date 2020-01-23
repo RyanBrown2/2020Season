@@ -46,8 +46,12 @@ public class DriveOutput extends Thread{
 
     public void set(Modes mode, double right, double left){
         this.mode = mode;
-        rightSet = right;
-        leftSet = left;
+        if (Constants.Drive.headingInvert) {
+            rightSet = -right;
+        } else {
+            rightSet = right;
+            leftSet = left;
+        }
     }
 
     /**

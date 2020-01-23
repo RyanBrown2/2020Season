@@ -46,10 +46,17 @@ public class Drive {
      * @param  : right voltage, left voltage
      */
     public void outputToDrive(double rightVoltage, double leftVoltage){
-		Constants.Drive.left1.setVoltage(-leftVoltage);
-		Constants.Drive.left2.setVoltage(-leftVoltage);
-		Constants.Drive.right1.setVoltage(rightVoltage);
-		Constants.Drive.right2.setVoltage(rightVoltage);
+		if (Constants.Drive.headingInvert) {
+			Constants.Drive.left1.setVoltage(leftVoltage);
+			Constants.Drive.left2.setVoltage(leftVoltage);
+			Constants.Drive.right1.setVoltage(-rightVoltage);
+			Constants.Drive.right2.setVoltage(-rightVoltage);
+		} else {
+			Constants.Drive.left1.setVoltage(-leftVoltage);
+			Constants.Drive.left2.setVoltage(-leftVoltage);
+			Constants.Drive.right1.setVoltage(rightVoltage);
+			Constants.Drive.right2.setVoltage(rightVoltage);
+		}
     }
 
 	/**

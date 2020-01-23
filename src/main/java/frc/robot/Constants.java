@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -26,7 +27,7 @@ public class Constants {
     public static class Drive {
         public static TalonSRX gyro = new TalonSRX(17);
 		public static TalonSRX rightEncoder = new TalonSRX(16);
-        public static TalonSRX leftEncoder = new TalonSRX(15);
+        public static TalonSRX leftEncoder = new TalonSRX(19);
 		public static double wheelDiameter = 5.5, // inches
 				wheelCircumference = wheelDiameter * Math.PI, // inches
                 robotDiameter = 29; // inches (for estimating angle without a gyro)
@@ -38,6 +39,8 @@ public class Constants {
         public static CANSparkMax left2 = new CANSparkMax(leftDriveMotors[1], MotorType.kBrushless);
         public static CANSparkMax right1 = new CANSparkMax(rightDriveMotors[0], MotorType.kBrushless);
         public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
+
+        public static Boolean headingInvert = false;
     }
 
     public static class RamseteParams{
@@ -76,8 +79,11 @@ public class Constants {
 
     public static void readRobotData() throws Exception{
         JSONParser parser = frc.utilPackage.Util.getParser();
-        Object tempObj = parser.parse(new FileReader("/home/lvuser/robot.json"));
-        JSONObject fileObj = (JSONObject)tempObj;
+        Object tempObj = parser.parse(new FileReader("/home/lvuser/deploy/robot.json"));
+        JSONObject fileObj = (JSONObject) tempObj;
+
+        Drive.headingInvert = (boolean)fileObj.get("headingInvert");
+
         isCompBot = (boolean)fileObj.get("isCompBot");
     }
 

@@ -8,11 +8,8 @@ import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
-import frc.display.ShuffleboardDisplay;
 import frc.drive.*;
 import frc.utilPackage.ScaledDrive;
-import frc.util.*;
-import java.io.IOException;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
@@ -33,14 +30,19 @@ public class Robot extends TimedRobot {
   ScaledDrive scaledDrive;
   Joystick stick;
 
-  ShuffleboardDisplay display;
+//  ShuffleboardDisplay display;
 
-  TcpServer tcpServer;
+//  TcpServer tcpServer;
 
   boolean resetVision = false;
 
   @Override
   public void robotInit() {
+//    try {
+//      Constants.readRobotData();
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
     scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
@@ -48,7 +50,7 @@ public class Robot extends TimedRobot {
     driveOutput.start();
     auto = new PathTest();
     positionTracker = PositionTracker.getInstance();
-    display = new ShuffleboardDisplay();
+//    display = new ShuffleboardDisplay();
     scaledDrive.enabled(true);
 
     stick = new Joystick(0);
@@ -58,11 +60,11 @@ public class Robot extends TimedRobot {
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-    tcpServer = new TcpServer(Constants.Tcp.port);
-    try {
-      tcpServer.start();
-    } catch (IOException e) {
-      e.printStackTrace();    }
+//    tcpServer = new TcpServer(Constants.Tcp.port);
+//    try {
+//      tcpServer.start();
+//    } catch (IOException e) {
+//      e.printStackTrace();    }
 
   }
 
@@ -70,7 +72,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
    Drive.getInstance().display();
    positionTracker.display();
-   display.run();
+//   display.run();
    //   ramseteSetup.periodic();
   }
 
@@ -81,6 +83,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+  }
+
+  @Override
+  public void teleopInit() {
+
   }
 
   @Override

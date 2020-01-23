@@ -2,14 +2,9 @@ package frc.drive;
 
 import java.util.Arrays;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.kauailabs.navx.frc.AHRS;
-
 import frc.coordinates.*;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
@@ -23,16 +18,17 @@ public class PositionTracker extends Thread implements IPositionTracker{
         return instance;
     }
 
-    private TalonSRX talon = new TalonSRX(15);
-    private PigeonIMU vmxPi;
+    private PigeonIMU pigeon;
     private Coordinate position = new Coordinate();
     private Heading heading = new Heading();
     private Pos2D fullPos = new Pos2D();
     private Pos2D visionData;
     private double offset;
+    private double[] ypr;
 
     private PositionTracker(){
-        vmxPi = new PigeonIMU(talon);
+        pigeon = new PigeonIMU(Constants.Drive.gyro);
+        ypr = new double[3];
         SmartDashboard.putNumber("Location Reset X (feet)", 0);
         SmartDashboard.putNumber("Location Reset Y (feet)", 0);
         this.start();
@@ -46,7 +42,7 @@ public class PositionTracker extends Thread implements IPositionTracker{
         position = new Coordinate(x, y).mult(Units.Length.feet);
     }
 
-    public void resetHeadng(){
+    public void resetHeading(){
         offset = getRawAngle();
     }
 
@@ -62,8 +58,8 @@ public class PositionTracker extends Thread implements IPositionTracker{
     public void run() {
 
         double last = Timer.getFPGATimestamp();
-//        SmartDashboard.putBoolean("Reset Location", false);
-//        SmartDashboard.putBoolean("Reset Heading", false);
+        SmartDashboard.putBoolean("Reset Location", false);
+        SmartDashboard.putBoolean("Reset Heading", false);
         heading = new Heading();
         heading.setRobotAngle(getAngle());
         Heading pHeading = new Heading(heading);
@@ -118,11 +114,8 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     private double getRawAngle(){
-        PigeonIMU.GeneralStatus generalStatus = new PigeonIMU.GeneralStatus();
-        PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
-        double[] xyz_dps = new double[3];
-        vmxPi.getRawGyro(xyz_dps);
-        return vmxPi.getFusedHeading();
+        pigeon.getYawPitchRoll(ypr);
+        return -ypr[0];
     }
 
     private double getAngle(){
