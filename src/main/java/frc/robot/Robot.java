@@ -15,6 +15,7 @@ import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.drive.*;
 import frc.utilPackage.ScaledDrive;
+import org.apache.commons.math3.analysis.function.Constant;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
@@ -45,15 +46,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-<<<<<<< HEAD
-//    try {
-//      Constants.readRobotData();
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-=======
     pigeon = new PigeonIMU(Constants.Drive.gyro);
->>>>>>> 968abfc1e2939eeed8aa290141d63118d439548e
     scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
@@ -61,7 +54,6 @@ public class Robot extends TimedRobot {
     driveOutput.start();
     auto = new PathTest();
     positionTracker = PositionTracker.getInstance();
-//    display = new ShuffleboardDisplay();
     scaledDrive.enabled(true);
     ypr = new double[3];
 
@@ -71,6 +63,7 @@ public class Robot extends TimedRobot {
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
 
 //    tcpServer = new TcpServer(Constants.Tcp.port);
 //    try {
@@ -82,6 +75,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+   SmartDashboard.putNumber("Encoder Test", Constants.Drive.leftEncoder.getSelectedSensorPosition());
    Drive.getInstance().display();
    positionTracker.display();
 //   display.run();
