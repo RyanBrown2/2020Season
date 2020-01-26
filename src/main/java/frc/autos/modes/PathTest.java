@@ -1,7 +1,5 @@
 package frc.autos.modes;
 
-import com.revrobotics.CANSparkMax;
-import frc.robot.Constants;
 import frc.utilPackage.Units;
 import frc.utilPackage.TrapezoidalMp;
 

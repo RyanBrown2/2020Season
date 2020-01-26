@@ -3,9 +3,12 @@ package frc.robot;
 import java.io.FileReader;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.AlternateEncoderType;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,6 +44,16 @@ public class Constants {
         public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
 
         public static Boolean headingInvert = false;
+    }
+
+    public static class Shooter {
+        public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
+        public static TalonSRX turretEnc = new TalonSRX(20);
+        public static CANSparkMax shooterCW = new CANSparkMax(22, MotorType.kBrushless);
+        public static CANSparkMax shooterCCW = new CANSparkMax(23, MotorType.kBrushless);
+
+        public static double encoderOffset = 0;
+        public static double ticksPerRev = (2048*5.3)/3.14159;
     }
 
     public static class Image{
