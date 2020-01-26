@@ -31,7 +31,7 @@ public class Constants {
         public static TalonSRX gyro = new TalonSRX(17);
 		public static TalonSRX rightEncoder = new TalonSRX(16);
         public static TalonSRX leftEncoder = new TalonSRX(19);
-		public static double wheelDiameter = 5.5, // inches
+        public static double wheelDiameter = 5.5, // inches
 				wheelCircumference = wheelDiameter * Math.PI, // inches
                 robotDiameter = 29; // inches (for estimating angle without a gyro)
         

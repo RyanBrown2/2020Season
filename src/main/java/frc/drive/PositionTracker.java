@@ -2,7 +2,6 @@ package frc.drive;
 
 import java.util.Arrays;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.coordinates.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

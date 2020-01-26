@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     auto = new PathTest();
+    scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
 
 //    tcpServer = new TcpServer(Constants.Tcp.port);
 //    try {
