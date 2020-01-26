@@ -55,7 +55,6 @@ public class Robot extends TimedRobot {
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-
 //    tcpServer = new TcpServer(Constants.Tcp.port);
 //    try {
 //      tcpServer.start();

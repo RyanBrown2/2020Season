@@ -1,14 +1,17 @@
 package frc.subsystems;
 
+import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.display.TurretDisplay;
 import frc.robot.Constants;
+import frc.utilPackage.Units;
 
 public class Turret {
+    TurretDisplay turretDisplay;
     CANSparkMax turretMotor;
     CANPIDController turretPID;
     CANEncoder turretEncoder;
@@ -17,6 +20,7 @@ public class Turret {
     double setPoint, processVariable;
 
     public Turret() {
+        turretDisplay = new TurretDisplay();
         turretMotor = Constants.Shooter.turret;
         turretPID = turretMotor.getPIDController();
         turretEncoder = turretMotor.getAlternateEncoder();
@@ -31,7 +35,7 @@ public class Turret {
         smartMotionSlot = 0;
 
         //PID Constants
-        kP = 5e-5;
+        kP = 1;
         kI = 0;
         kD = 0;
         kIz = 0;
@@ -78,10 +82,12 @@ public class Turret {
     }
 
     public void display() {
-        SmartDashboard.putNumber("Turret Raw Ticks", getRawTicks());
-        SmartDashboard.putNumber("Turret Position", turretEncoder.getPosition());
-        SmartDashboard.putNumber("Turret Setpoint", setPoint);
-        SmartDashboard.putNumber("Turret Degrees", getAngle()*(180/3.14159));
-        SmartDashboard.putNumber("Output", turretMotor.getAppliedOutput());
+        turretDisplay.setAngle(getAngle()/ Units.Angle.degrees);
+        turretDisplay.setSetpoint(setPoint);
+//        SmartDashboard.putNumber("Turret Raw Ticks", getRawTicks());
+//        SmartDashboard.putNumber("Turret Position", turretEncoder.getPosition());
+//        SmartDashboard.putNumber("Turret Setpoint", setPoint);
+//        SmartDashboard.putNumber("Turret Degrees", getAngle()*(180/3.14159));
+//        SmartDashboard.putNumber("Output", turretMotor.getAppliedOutput());
     }
 }
