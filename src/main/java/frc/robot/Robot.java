@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.revrobotics.*;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.autos.modes.AutoMode;
@@ -19,6 +20,8 @@ public class Robot extends TimedRobot {
 
   int _smoothing = 0;
 
+//  NetworkTable table = Robot.table;
+
   AutoMode auto;
 
   Drive driveAuto;
@@ -28,7 +31,6 @@ public class Robot extends TimedRobot {
   ScaledDrive scaledDrive;
   Turret turret;
   Joystick stick;
-//  TcpServer tcpServer;
 
   boolean resetVision = false;
 
@@ -54,19 +56,6 @@ public class Robot extends TimedRobot {
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
-//    tcpServer = new TcpServer(Constants.Tcp.port);
-//    try {
-//      tcpServer.start();
-//    } catch (IOException e) {
-//      e.printStackTrace();    }
-
-  }
-
-  @Override
-  public void robotPeriodic() {
-    turret.updateEncoder();
-    display();
   }
 
   @Override

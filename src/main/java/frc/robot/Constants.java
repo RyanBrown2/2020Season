@@ -28,7 +28,7 @@ public class Constants {
     public static boolean isCompBot = true;
 
     public static class Drive {
-        public static TalonSRX gyro = new TalonSRX(17);
+        public static TalonSRX gyro = new TalonSRX(15);
 		public static TalonSRX rightEncoder = new TalonSRX(16);
         public static TalonSRX leftEncoder = new TalonSRX(19);
         public static double wheelDiameter = 5.5, // inches
