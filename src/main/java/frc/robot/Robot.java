@@ -8,6 +8,7 @@ import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.drive.*;
+import frc.subsystems.Flywheel;
 import frc.subsystems.Turret;
 import frc.utilPackage.ScaledDrive;
 
@@ -25,8 +26,13 @@ public class Robot extends TimedRobot {
   DriveController driveController;
   DriveOutput driveOutput;
   PositionTracker positionTracker;
+
   ScaledDrive scaledDrive;
-  Turret turret;
+
+//  Turret turret;
+
+//  Flywheel flywheel;
+
   Joystick stick;
 //  TcpServer tcpServer;
 
@@ -34,6 +40,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    Constants.Drive.pigeon.setYaw(0);
+
     auto = new PathTest();
     scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
@@ -46,7 +54,9 @@ public class Robot extends TimedRobot {
     scaledDrive = new ScaledDrive();
     scaledDrive.enabled(true);
 
-    turret = new Turret();
+//    turret = new Turret();
+
+//    flywheel = new Flywheel();
 
     stick = new Joystick(0);
 
@@ -66,7 +76,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    turret.updateEncoder();
+//    turret.updateEncoder(false);
     display();
   }
 
@@ -81,13 +91,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
+//    turret.toSetpoint(0);
+//    flywheel.setVelocity(1000);
   }
 
   @Override
   public void teleopPeriodic() {
-//      scaledDrive.run();
-    turret.run();
+      scaledDrive.run();
+//    turret.run();
+//    flywheel.run();
   }
 
   @Override
@@ -97,11 +109,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+
   }
 
   public void display() {
     Drive.getInstance().display();
-    turret.display();
+//    turret.display();
+//    flywheel.display();
     positionTracker.display();
   }
 }
