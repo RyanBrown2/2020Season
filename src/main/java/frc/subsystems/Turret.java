@@ -1,16 +1,19 @@
 package frc.subsystems;
 
+import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.display.TurretDisplay;
 import frc.robot.Constants;
+import frc.utilPackage.Units;
 
 import static frc.robot.Constants.Turret.fieldOriented;
 
 public class Turret {
+    TurretDisplay turretDisplay;
     CANSparkMax turretMotor;
     CANPIDController turretPID;
     CANEncoder turretEncoder;
@@ -20,6 +23,7 @@ public class Turret {
 
     public Turret() {
         turretMotor = Constants.Turret.turret;
+        turretDisplay = new TurretDisplay();
         turretPID = turretMotor.getPIDController();
         turretEncoder = turretMotor.getAlternateEncoder();
 
@@ -98,11 +102,7 @@ public class Turret {
     }
 
     public void display() {
-        SmartDashboard.putNumber("Turret Raw Ticks", getRawTicks());
-        SmartDashboard.putNumber("Turret Position", turretEncoder.getPosition());
-        SmartDashboard.putNumber("Turret Setpoint", setPoint);
-        SmartDashboard.putNumber("Turret Degrees", getAngle()*(180/3.14159));
-        SmartDashboard.putNumber("Output", turretMotor.getAppliedOutput());
-        SmartDashboard.putNumber("Adjusted Yaw", ypr[0]);
+        turretDisplay.setAngle(getAngle()/ Units.Angle.degrees);
+        turretDisplay.setSetpoint(setPoint);
     }
 }
