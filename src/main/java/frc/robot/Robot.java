@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.revrobotics.*;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.autos.modes.AutoMode;
@@ -56,6 +55,7 @@ public class Robot extends TimedRobot {
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
   }
 
   @Override
