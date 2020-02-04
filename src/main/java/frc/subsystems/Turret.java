@@ -10,23 +10,27 @@ import frc.display.TurretDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
 
+import static frc.robot.Constants.Turret.fieldOriented;
+
 public class Turret {
     TurretDisplay turretDisplay;
     CANSparkMax turretMotor;
     CANPIDController turretPID;
     CANEncoder turretEncoder;
-    public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
     public int smartMotionSlot;
     double setPoint, processVariable;
+    double[] ypr = new double[3];
 
     public Turret() {
+        turretMotor = Constants.Turret.turret;
         turretDisplay = new TurretDisplay();
-        turretMotor = Constants.Shooter.turret;
         turretPID = turretMotor.getPIDController();
         turretEncoder = turretMotor.getAlternateEncoder();
 
-        Constants.Shooter.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        Constants.Shooter.turretEnc.setSelectedSensorPosition(0);
+        turretPID.setFeedbackDevice(turretEncoder);
+
+        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        Constants.Turret.turretEnc.setSelectedSensorPosition(0);
 
         turretEncoder.setPositionConversionFactor(1);
 
@@ -34,60 +38,71 @@ public class Turret {
 
         smartMotionSlot = 0;
 
-        //PID Constants
-        kP = 1;
-        kI = 0;
-        kD = 0;
-        kIz = 0;
-        kFF = 0;
-        kMaxOutput = 0.25;
-        kMinOutput = -0.25;
-        maxRPM = 5700;
+        turretPID.setP(Constants.Turret.kP);
+        turretPID.setI(Constants.Turret.kI);
+        turretPID.setD(Constants.Turret.kD);
+        turretPID.setIZone(Constants.Turret.kIz);
+        turretPID.setFF(Constants.Turret.kFF);
+        turretPID.setOutputRange(Constants.Turret.kMinOutput, Constants.Turret.kMaxOutput);
 
-        //Smart Motion Coefficients
-        maxVel = 20; // rpm
-        maxAcc = 20;
-
-        turretPID.setP(kP);
-        turretPID.setI(kI);
-        turretPID.setD(kD);
-        turretPID.setIZone(kIz);
-        turretPID.setFF(kFF);
-        turretPID.setOutputRange(kMinOutput, kMaxOutput);
-
-        turretPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-        turretPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-        turretPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-        turretPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+        turretPID.setSmartMotionMaxVelocity(Constants.Turret.maxVel, smartMotionSlot);
+        turretPID.setSmartMotionMinOutputVelocity(Constants.Turret.minVel, smartMotionSlot);
+        turretPID.setSmartMotionMaxAccel(Constants.Turret.maxAcc, smartMotionSlot);
+        turretPID.setSmartMotionAllowedClosedLoopError(Constants.Turret.allowedErr, smartMotionSlot);
     }
 
     public void run() {
-        turretPID.setReference(setPoint, ControlType.kPosition);
+//        keepInRange();
+        setPoint %= (3.14159/2);
+        Constants.Drive.pigeon.getYawPitchRoll(ypr);
+        ypr[0] *= Constants.degreesToRadians;
+        ypr[0] = (ypr[0]/2) % (3.14159/2);
+        turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
     }
 
-    public void updateEncoder() {
-        turretEncoder.setPosition(getAngle());
+    public void keepInRange() {
+        if(fieldOriented) {
+            if(getRawTicks() > Constants.Turret.ticksPerRev) {
+                double val = setPoint/Constants.Turret.ticksPerRev;
+                val -= (val % 1);
+                setPoint -= val*Constants.Turret.ticksPerRev;
+            }
+            if(getRawTicks() < 0) {
+                double val = setPoint/Constants.Turret.ticksPerRev;
+                val -= (val % 1);
+                setPoint += val*Constants.Turret.ticksPerRev;
+            }
+        }
+        if(!fieldOriented) {
+            setPoint = Math.abs(setPoint % Constants.Turret.ticksPerRev);
+        }
+    }
+
+    public void updateEncoder(boolean fieldOriented) {
+        if(fieldOriented) {
+            double[] ypr = new double[3];
+            Constants.Drive.pigeon.getYawPitchRoll(ypr);
+            turretEncoder.setPosition(getAngle() + ypr[0]*Constants.degreesToRadians);
+        }
+        else {
+            turretEncoder.setPosition(getAngle());
+        }
     }
 
     public void toSetpoint(double set) {
-        setPoint = set;
+        setPoint = set % Constants.Turret.ticksPerRev;
     }
 
     public double getRawTicks() {
-        return Constants.Shooter.turretEnc.getSelectedSensorPosition();
+        return -Constants.Turret.turretEnc.getSelectedSensorPosition();
     }
 
     public double getAngle() {
-        return (getRawTicks() - Constants.Shooter.encoderOffset)/Constants.Shooter.ticksPerRev;
+        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
     }
 
     public void display() {
         turretDisplay.setAngle(getAngle()/ Units.Angle.degrees);
         turretDisplay.setSetpoint(setPoint);
-//        SmartDashboard.putNumber("Turret Raw Ticks", getRawTicks());
-//        SmartDashboard.putNumber("Turret Position", turretEncoder.getPosition());
-//        SmartDashboard.putNumber("Turret Setpoint", setPoint);
-//        SmartDashboard.putNumber("Turret Degrees", getAngle()*(180/3.14159));
-//        SmartDashboard.putNumber("Output", turretMotor.getAppliedOutput());
     }
 }

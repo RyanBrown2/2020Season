@@ -3,6 +3,7 @@ package frc.robot;
 import java.io.FileReader;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -22,6 +23,7 @@ import frc.util.util;
 import frc.utilPackage.Units;
 
 public class Constants {
+    public static double degreesToRadians = 3.14159/180;
 
     public static double robotWidth = 26*Units.Length.inches;
 
@@ -31,6 +33,9 @@ public class Constants {
         public static TalonSRX gyro = new TalonSRX(15);
 		public static TalonSRX rightEncoder = new TalonSRX(16);
         public static TalonSRX leftEncoder = new TalonSRX(19);
+
+        public static PigeonIMU pigeon = new PigeonIMU(gyro);
+
         public static double wheelDiameter = 5.5, // inches
 				wheelCircumference = wheelDiameter * Math.PI, // inches
                 robotDiameter = 29; // inches (for estimating angle without a gyro)
@@ -47,13 +52,55 @@ public class Constants {
     }
 
     public static class Shooter {
+    }
+
+    public static class Flywheel {
+        public static CANSparkMax flywheelMotor = new CANSparkMax(23, MotorType.kBrushless);
+        public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
+
+        // Flywheel PID Constants
+        public static double kP = 0.001;
+        public static double kI = 0;
+        public static double kD = 0.1;
+        public static double kIz = 0;
+        public static double kFF = 0;
+
+        public static double kMaxOutput = 1;
+        public static double kMinOutput = 0;
+        public static double maxRPM = 1000;
+
+        // Smart Motion Coefficients
+        //TODO
+
+        public static double allowedErr;
+        public static double minVel;
+    }
+
+    public static class Turret {
+        public static boolean fieldOriented = true;
+
         public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
         public static TalonSRX turretEnc = new TalonSRX(20);
-        public static CANSparkMax shooterCW = new CANSparkMax(22, MotorType.kBrushless);
-        public static CANSparkMax shooterCCW = new CANSparkMax(23, MotorType.kBrushless);
 
         public static double encoderOffset = 0;
-        public static double ticksPerRev = (2048*5.3)/3.14159;
+//        public static double ticksPerRev = (2048*(140/30))/3.14159;
+        public static double ticksPerRev = 18745/(2*3.14159);
+
+        //PID Constants
+        public static double kP = 1;
+        public static double kI = 0;
+        public static double kD = 0;
+        public static double kIz = 0;
+        public static double kFF = 0;
+        public static double kMaxOutput = 1;
+        public static double kMinOutput = -1;
+
+        //Smart Motion Coefficients
+        public static double maxVel = 20; // rpm
+        public static double maxAcc = 5;
+
+        public static double allowedErr;
+        public static double minVel;
     }
 
     public static class Image{
