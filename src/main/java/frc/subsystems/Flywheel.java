@@ -5,6 +5,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.display.FlywheelDisplay;
 import frc.robot.Constants;
 
 public class Flywheel {
@@ -14,7 +15,11 @@ public class Flywheel {
     CANPIDController flywheelPID;
     CANEncoder flywheelEncoder;
 
+    FlywheelDisplay flywheelDisplay;
+
     public Flywheel() {
+        flywheelDisplay = new FlywheelDisplay();
+
         flywheelMotor = Constants.Flywheel.flywheelMotor;
         flywheelMotorI = Constants.Flywheel.flywheelMotorI;
         flywheelMotor.restoreFactoryDefaults();
@@ -51,6 +56,9 @@ public class Flywheel {
     }
 
     public void display() {
+        flywheelDisplay.setVelocity(flywheelEncoder.getVelocity());
+        flywheelDisplay.setpoint(velocitySetpoint);
+
         SmartDashboard.putNumber("Flywheel Setpoint", velocitySetpoint);
         SmartDashboard.putNumber("Flywheel Velocity", flywheelEncoder.getVelocity());
         SmartDashboard.putNumber("Master Flywheel Voltage", flywheelMotor.getAppliedOutput());

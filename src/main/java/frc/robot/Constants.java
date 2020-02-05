@@ -54,6 +54,12 @@ public class Constants {
     public static class Shooter {
     }
 
+    public static class Hood {
+        public static int hoodServo = 0;
+        public static double angleOffset = 30;
+        public static double[] range = {30 * Units.Angle.degrees, 180 * Units.Angle.degrees};
+    }
+
     public static class Flywheel {
         public static CANSparkMax flywheelMotor = new CANSparkMax(23, MotorType.kBrushless);
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);

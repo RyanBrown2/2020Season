@@ -1,8 +1,7 @@
 package frc.drive;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.display.DriveDisplay;
 import frc.robot.*;
 import frc.utilPackage.Units;
 import frc.utilPackage.Util;
@@ -25,7 +24,11 @@ public class Drive {
 
 	TalonSRX leftEncoder, rightEncoder;
 	SpeedControllerGroup left, right;
+	DriveDisplay driveDisplay;
+
     private Drive(){
+    	driveDisplay = new DriveDisplay();
+
         //set up drive
 		leftEncoder = Constants.Drive.leftEncoder;
 		leftEncoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
@@ -34,11 +37,15 @@ public class Drive {
 	}
 
 	public void display(){
-		SmartDashboard.putNumber("Encoder Pos", getEnc()[0]);
-		SmartDashboard.putNumber("Encoder Vel", getEnc()[1]);
+    	driveDisplay.position(getEnc()[0]);
+    	driveDisplay.velocity(getEnc()[1]);
+//		SmartDashboard.putNumber("Encoder Pos", getEnc()[0]);
+//		SmartDashboard.putNumber("Encoder Vel", getEnc()[1]);
 
-		SmartDashboard.putNumber("Left Encoder Pos", getLeftPosition());
-		SmartDashboard.putNumber("Right Encoder Pos", getRightPosition());
+		driveDisplay.left(getLeftPosition());
+		driveDisplay.right(getRightPosition());
+//		SmartDashboard.putNumber("Left Encoder Pos", getLeftPosition());
+//		SmartDashboard.putNumber("Right Encoder Pos", getRightPosition());
 	}
 	
     /*

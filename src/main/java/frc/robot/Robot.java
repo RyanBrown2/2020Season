@@ -3,12 +3,14 @@ package frc.robot;
 import com.revrobotics.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.drive.*;
 import frc.subsystems.Flywheel;
+import frc.subsystems.Hood;
 import frc.subsystems.Turret;
 import frc.utilPackage.ScaledDrive;
 
@@ -31,9 +33,9 @@ public class Robot extends TimedRobot {
 
   ScaledDrive scaledDrive;
 
-//  Turret turret;
-
-//  Flywheel flywheel;
+  Turret turret;
+  Flywheel flywheel;
+  Hood hood;
 
   Joystick stick;
 
@@ -55,9 +57,9 @@ public class Robot extends TimedRobot {
     scaledDrive = new ScaledDrive();
     scaledDrive.enabled(true);
 
-//    turret = new Turret();
-
-//    flywheel = new Flywheel();
+    turret = new Turret();
+    flywheel = new Flywheel();
+    hood = new Hood();
 
     stick = new Joystick(0);
 
@@ -92,6 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
       scaledDrive.run();
+      hood.run();
 //    turret.run();
 //    flywheel.run();
   }
@@ -108,8 +111,9 @@ public class Robot extends TimedRobot {
 
   public void display() {
     Drive.getInstance().display();
-//    turret.display();
-//    flywheel.display();
+    turret.display();
+    flywheel.display();
+    hood.display();
     positionTracker.display();
   }
 }

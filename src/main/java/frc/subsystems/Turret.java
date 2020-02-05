@@ -1,6 +1,5 @@
 package frc.subsystems;
 
-import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -29,7 +28,7 @@ public class Turret {
 
         turretPID.setFeedbackDevice(turretEncoder);
 
-        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
         Constants.Turret.turretEnc.setSelectedSensorPosition(0);
 
         turretEncoder.setPositionConversionFactor(1);
@@ -102,7 +101,7 @@ public class Turret {
     }
 
     public void display() {
-        turretDisplay.setAngle(getAngle()/ Units.Angle.degrees);
-        turretDisplay.setSetpoint(setPoint);
+        turretDisplay.angle(getAngle()/ Units.Angle.degrees);
+        turretDisplay.setpoint(setPoint);
     }
 }

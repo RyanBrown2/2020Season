@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.coordinates.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.display.PositionTrackerDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
 import frc.utilPackage.Util;
@@ -24,11 +25,14 @@ public class PositionTracker extends Thread implements IPositionTracker{
     private Pos2D fullPos = new Pos2D();
     private Pos2D visionData;
     private double offset;
+    private PositionTrackerDisplay positionTrackerDisplay;
 
     private PositionTracker(){
+        positionTrackerDisplay = new PositionTrackerDisplay();
         pigeon = new PigeonIMU(Constants.Drive.gyro);
-        SmartDashboard.putNumber("Location Reset X (feet)", 0);
-        SmartDashboard.putNumber("Location Reset Y (feet)", 0);
+        pigeon.setFusedHeading(0.0);
+//        SmartDashboard.putNumber("Location Reset X (feet)", 0);
+//        SmartDashboard.putNumber("Location Reset Y (feet)", 0);
         this.start();
     }
 
@@ -112,8 +116,10 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     private double getRawAngle(){
-        pigeon.getYawPitchRoll(ypr);
-        return -ypr[0];
+        PigeonIMU.GeneralStatus genStatus = new PigeonIMU.GeneralStatus();
+        PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+        double angle = pigeon.getFusedHeading(fusionStatus);
+        return angle;
     }
 
     private double getAngle(){
@@ -145,26 +151,36 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     public void display(){
-        if(SmartDashboard.getBoolean("Reset Location", false)){
-            double x = SmartDashboard.getNumber("Location Reset X (feet)",0);
-            double y = SmartDashboard.getNumber("Location Reset Y (feet)",0);
+//        positionTrackerDisplay.untoggleButtons();
+        if(positionTrackerDisplay.locationReset()){
+            double x = positionTrackerDisplay.getXReset();
+            double y = positionTrackerDisplay.getYReset();
+
+//            double x = SmartDashboard.getNumber("Location Reset X (feet)",0);
+//            double y = SmartDashboard.getNumber("Location Reset Y (feet)",0);
             setInitPosFeet(x, y);
-            SmartDashboard.putBoolean("Reset Location", false);
+//            SmartDashboard.putBoolean("Reset Location", false);
         }
 
-        if(SmartDashboard.getBoolean("Reset Heading", false)){
+        if(positionTrackerDisplay.headingReset()){
             robotForward();
-            SmartDashboard.putBoolean("Reset Heading", false);
+//            SmartDashboard.putBoolean("Reset Heading", false);
         }
 
         try{
             Coordinate position = new Coordinate(this.position);
             position.mult(1/Units.Length.feet);
+
+            positionTrackerDisplay.xPosition(position.getX());
+            positionTrackerDisplay.yPosition(position.getY());
+            positionTrackerDisplay.setAngle(getAngle()/Units.Angle.degrees);
+
             SmartDashboard.putNumber("X direction feet", position.getX());
             SmartDashboard.putNumber("Y direction feet", position.getY());
             SmartDashboard.putNumber("Angle", getAngle()/Units.Angle.degrees);
         }catch(Exception e){
             e.printStackTrace();
         }
+        positionTrackerDisplay.untoggleButtons();
     }
 }

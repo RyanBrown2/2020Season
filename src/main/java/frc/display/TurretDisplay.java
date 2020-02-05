@@ -26,11 +26,11 @@ public class TurretDisplay {
 
     }
 
-    public void setAngle(double angle) {
+    public void angle(double angle) {
         turretAngle.setDouble(angle);
     }
 
-    public void setSetpoint(double setpoint) {
+    public void setpoint(double setpoint) {
         turretSetpoint.setDouble(setpoint);
     }
 }
