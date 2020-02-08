@@ -7,7 +7,7 @@ public abstract class IControlBoard {
     public  abstract boolean rollers();
 
     // CoDrive
-    public abstract boolean feeder();
+    public abstract boolean feederActuate();
     public abstract boolean panic();
 
 }

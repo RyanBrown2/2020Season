@@ -14,8 +14,8 @@ public class Feeder {
         actuation = Actuation.in;
     }
 
-    public void rollers(boolean on) {
-        if(on) {
+    public void rollers(boolean turnOn) {
+        if(turnOn) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 1);
         } else {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0);
@@ -34,6 +34,26 @@ public class Feeder {
                 Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kReverse);
                 actuation = Actuation.in;
                 break;
+        }
+    }
+
+    public void panic() {
+
+    }
+
+    public boolean isIn() {
+        if (actuation == Actuation.in) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isOut() {
+        if (actuation == Actuation.out) {
+            return true;
+        } else {
+            return false;
         }
     }
 

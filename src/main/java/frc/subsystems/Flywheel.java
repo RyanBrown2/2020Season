@@ -58,6 +58,10 @@ public class Flywheel {
         velocitySetpoint = vel;
     }
 
+    public void panic() {
+
+    }
+
     public void display() {
         flywheelDisplay.setVelocity(flywheelEncoder.getVelocity());
         flywheelDisplay.setpoint(velocitySetpoint);

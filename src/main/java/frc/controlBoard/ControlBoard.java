@@ -37,7 +37,7 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
-    public boolean feeder() {
+    public boolean feederActuate() {
         return cojoy.getRawButtonPressed(ControlBindings.CoDriver.feeder);
     }
 

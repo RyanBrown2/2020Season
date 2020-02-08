@@ -29,6 +29,10 @@ public class Hood {
         this.setpoint = setpoint;
     }
 
+    public void panic() {
+
+    }
+
     public void display() {
         hoodDisplay.setpoint(setpoint);
     }

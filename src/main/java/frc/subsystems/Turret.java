@@ -102,6 +102,10 @@ public class Turret {
         return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
     }
 
+    public void panic() {
+
+    }
+
     public void display() {
         turretDisplay.angle(getAngle()/ Units.Angle.degrees);
         turretDisplay.setpoint(setPoint);
