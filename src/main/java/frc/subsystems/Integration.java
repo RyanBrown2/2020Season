@@ -9,6 +9,13 @@ public class Integration extends Thread {
         return instance;
     }
 
+    private enum States {
+        disabled,
+        starting,
+        running,
+        panic
+    }
+
     private Feeder feeder;
     private Flywheel flywheel;
     private Hood hood;

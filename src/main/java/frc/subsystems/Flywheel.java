@@ -4,7 +4,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.FlywheelDisplay;
 import frc.robot.Constants;
 
@@ -27,6 +26,8 @@ public class Flywheel {
         flywheelMotor.setSmartCurrentLimit(80);
         flywheelMotorI.setSmartCurrentLimit(80);
 
+        flywheelMotorI.follow(flywheelMotor, true);
+
         flywheelEncoder = flywheelMotor.getEncoder();
 
         flywheelPID = flywheelMotor.getPIDController();
@@ -43,7 +44,6 @@ public class Flywheel {
     public void run() {
         flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
         flywheelMotorI.setVoltage(-flywheelMotor.getAppliedOutput());
-        SmartDashboard.putNumber("Flywheel Current", Constants.Flywheel.flywheelMotor.getOutputCurrent());
 //        if(flywheelMotorI.getAppliedOutput() == -flywheelMotor.getAppliedOutput()) {
 //            //good
 //        }
@@ -61,10 +61,5 @@ public class Flywheel {
     public void display() {
         flywheelDisplay.setVelocity(flywheelEncoder.getVelocity());
         flywheelDisplay.setpoint(velocitySetpoint);
-
-        SmartDashboard.putNumber("Flywheel Setpoint", velocitySetpoint);
-        SmartDashboard.putNumber("Flywheel Velocity", flywheelEncoder.getVelocity());
-        SmartDashboard.putNumber("Master Flywheel Voltage", flywheelMotor.getAppliedOutput());
-        SmartDashboard.putNumber("Slave Flywheel Voltage", flywheelMotorI.getAppliedOutput());
     }
 }
