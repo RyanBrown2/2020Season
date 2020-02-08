@@ -56,20 +56,11 @@ public class Constants {
         public static Boolean headingInvert = false;
     }
 
-    public static class Shooter {
-    }
-
     public static class Feeder {
         public static DoubleSolenoid leftSolenoid = new DoubleSolenoid(1, 2); // todo
         public static DoubleSolenoid rightSolenoid = new DoubleSolenoid(3,4); // todo
 
         public static TalonSRX rollerMotor = new TalonSRX(pigeonTalonID);
-    }
-
-    public static class Hood {
-        public static int hoodServo = 0;
-        public static double angleOffset = 30;
-        public static double[] range = {30 * Units.Angle.degrees, 180 * Units.Angle.degrees};
     }
 
     public static class Flywheel {
@@ -92,6 +83,12 @@ public class Constants {
 
         public static double allowedErr;
         public static double minVel;
+    }
+
+    public static class Hood {
+        public static int hoodServo = 0;
+        public static double angleOffset = 30;
+        public static double[] range = {30 * Units.Angle.degrees, 180 * Units.Angle.degrees};
     }
 
     public static class Turret {
