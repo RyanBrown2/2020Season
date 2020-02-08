@@ -9,7 +9,20 @@ public class ShooterControl {
         return instance;
     }
 
-    private ShooterControl() {
+    Flywheel flywheel;
+    Hood hood;
+    Turret turret;
 
+    public enum States {
+        disbabled,
+        enabled,
+        shooting
     }
+
+    private ShooterControl() {
+        flywheel = new Flywheel();
+        hood = new Hood();
+        turret = new Turret();
+    }
+
 }
