@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.revrobotics.*;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,6 +10,7 @@ import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.drive.*;
+import frc.subsystems.Feeder;
 import frc.subsystems.Flywheel;
 import frc.subsystems.Hood;
 import frc.subsystems.Turret;
@@ -26,6 +28,8 @@ public class Robot extends TimedRobot {
 
   AutoMode auto;
 
+  Compressor compressor;
+
   Drive driveAuto;
   DriveController driveController;
   DriveOutput driveOutput;
@@ -33,6 +37,7 @@ public class Robot extends TimedRobot {
 
   ScaledDrive scaledDrive;
 
+  Feeder feeder;
   Turret turret;
   Flywheel flywheel;
   Hood hood;
@@ -57,11 +62,16 @@ public class Robot extends TimedRobot {
     scaledDrive = new ScaledDrive();
     scaledDrive.enabled(true);
 
+
     turret = new Turret();
     flywheel = new Flywheel();
     hood = new Hood();
+    feeder = new Feeder();
 
     stick = new Joystick(0);
+
+    compressor = new Compressor(0);
+    compressor.setClosedLoopControl(true);
 
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -87,16 +97,28 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
 //    turret.toSetpoint(0);
-//    flywheel.setVelocity(1000);
+//    flywheel.setVelocity(2000);
   }
 
   @Override
   public void teleopPeriodic() {
-      scaledDrive.run();
+//      scaledDrive.run();
       hood.run();
 //    turret.run();
 //    flywheel.run();
+
+    if(cb.feeder()) {
+      feeder.actuate();
+    }
+
+    if(cb.rollers()) {
+      feeder.rollers(true);
+    } else {
+      feeder.rollers(false);
+    }
+
   }
 
   @Override
@@ -106,6 +128,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+
+  }
+
+  public void panic() {
 
   }
 

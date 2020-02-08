@@ -24,6 +24,8 @@ public class Flywheel {
         flywheelMotorI = Constants.Flywheel.flywheelMotorI;
         flywheelMotor.restoreFactoryDefaults();
         flywheelMotorI.restoreFactoryDefaults();
+        flywheelMotor.setSmartCurrentLimit(80);
+        flywheelMotorI.setSmartCurrentLimit(80);
 
         flywheelEncoder = flywheelMotor.getEncoder();
 
@@ -41,6 +43,7 @@ public class Flywheel {
     public void run() {
         flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
         flywheelMotorI.setVoltage(-flywheelMotor.getAppliedOutput());
+        SmartDashboard.putNumber("Flywheel Current", Constants.Flywheel.flywheelMotor.getOutputCurrent());
 //        if(flywheelMotorI.getAppliedOutput() == -flywheelMotor.getAppliedOutput()) {
 //            //good
 //        }

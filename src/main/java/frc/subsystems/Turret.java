@@ -52,11 +52,13 @@ public class Turret {
 
     public void run() {
 //        keepInRange();
-        setPoint %= (3.14159/2);
+        updateEncoder(true);
+        setPoint %= (2*3.14159);
         Constants.Drive.pigeon.getYawPitchRoll(ypr);
         ypr[0] *= Constants.degreesToRadians;
         ypr[0] = (ypr[0]/2) % (3.14159/2);
         turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
+//        turretPID.setReference(setPoint, ControlType.kPosition);
     }
 
     public void keepInRange() {

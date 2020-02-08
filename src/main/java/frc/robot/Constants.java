@@ -9,6 +9,8 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import org.json.simple.JSONArray;
@@ -23,14 +25,17 @@ import frc.util.util;
 import frc.utilPackage.Units;
 
 public class Constants {
+
     public static double degreesToRadians = 3.14159/180;
 
     public static double robotWidth = 26*Units.Length.inches;
 
+    public static int pigeonTalonID = 15;
+
     public static boolean isCompBot = true;
 
     public static class Drive {
-        public static TalonSRX gyro = new TalonSRX(15);
+        public static TalonSRX gyro = new TalonSRX(pigeonTalonID);
 		public static TalonSRX rightEncoder = new TalonSRX(16);
         public static TalonSRX leftEncoder = new TalonSRX(19);
 
@@ -54,6 +59,13 @@ public class Constants {
     public static class Shooter {
     }
 
+    public static class Feeder {
+        public static DoubleSolenoid leftSolenoid = new DoubleSolenoid(1, 2); // todo
+        public static DoubleSolenoid rightSolenoid = new DoubleSolenoid(3,4); // todo
+
+        public static TalonSRX rollerMotor = new TalonSRX(pigeonTalonID);
+    }
+
     public static class Hood {
         public static int hoodServo = 0;
         public static double angleOffset = 30;
@@ -65,7 +77,7 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0.001;
+        public static double kP = 0.01;
         public static double kI = 0;
         public static double kD = 0.1;
         public static double kIz = 0;
@@ -102,10 +114,10 @@ public class Constants {
         public static double kMinOutput = -1;
 
         //Smart Motion Coefficients
-        public static double maxVel = 20; // rpm
-        public static double maxAcc = 5;
+        public static double maxVel = 100; // rpm
+        public static double maxAcc = 50;
 
-        public static double allowedErr;
+        public static double allowedErr = 0;
         public static double minVel;
     }
 
