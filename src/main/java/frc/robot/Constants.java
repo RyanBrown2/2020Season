@@ -68,21 +68,21 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0.001;
+        public static double kP = 0.0732;
         public static double kI = 0;
         public static double kD = 0;
         public static double kIz = 0;
-        public static double kFF = 0;
+        public static double kFF = 0.000015;
 
         public static double kMaxOutput = 1;
-        public static double kMinOutput = 0;
-        public static double maxRPM = 1000;
+        public static double kMinOutput = -1;
+        public static double maxRPM = 2500;
 
         // Smart Motion Coefficients
         //TODO
 
-        public static double allowedErr;
-        public static double minVel;
+        public static double allowedErr = 50;
+        public static double minVel = 0;
     }
 
     public static class Hood {

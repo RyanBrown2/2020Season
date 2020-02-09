@@ -23,12 +23,13 @@ public class Flywheel {
         flywheelMotorI = Constants.Flywheel.flywheelMotorI;
         flywheelMotor.restoreFactoryDefaults();
         flywheelMotorI.restoreFactoryDefaults();
-        flywheelMotor.setSmartCurrentLimit(80);
-        flywheelMotorI.setSmartCurrentLimit(80);
+        flywheelMotor.setSmartCurrentLimit(40);
+        flywheelMotorI.setSmartCurrentLimit(40);
 
-//        flywheelMotorI.follow(flywheelMotor, true);
+        flywheelMotorI.follow(flywheelMotor, true);
 
         flywheelEncoder = flywheelMotor.getEncoder();
+        flywheelEncoder.setVelocityConversionFactor(1/2);
 
         flywheelPID = flywheelMotor.getPIDController();
         flywheelPID.setFeedbackDevice(flywheelEncoder);
@@ -39,20 +40,16 @@ public class Flywheel {
         flywheelPID.setIZone(Constants.Flywheel.kIz);
         flywheelPID.setFF(Constants.Flywheel.kFF);
         flywheelPID.setOutputRange(Constants.Flywheel.kMinOutput, Constants.Flywheel.kMaxOutput);
+
+//        flywheelPID.setSmartMotionMinOutputVelocity(Constants.Flywheel.minVel, 0);
+//        flywheelPID.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, 0);
+//        flywheelPID.setSmartMotionAllowedClosedLoopError(Constants.Flywheel.allowedErr, 0);
+//        flywheelPID.setSmartMotionMaxVelocity(Constants.Flywheel.maxRPM, 0);
     }
 
     public void run() {
-//        flywheelMotor.setVoltage(6);
-
-//        flywheelMotorI.setVoltage(-flywheelMotor.getAppliedOutput());
-//        if(flywheelMotorI.getAppliedOutput() == -flywheelMotor.getAppliedOutput()) {
-//            //good
-//        }
-//        else {
-//            flywheelPID.setP(0);
-//            flywheelMotor.setVoltage(0);
-//            flywheelMotorI.setVoltage(0);
-//        }
+        flywheelMotor.setVoltage(4);
+//        flywheelPID.setReference(velocitySetpoint/60, ControlType.kVelocity);
     }
 
     public void setVelocity(double vel) {

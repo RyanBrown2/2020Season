@@ -57,8 +57,8 @@ public class Robot extends TimedRobot {
     transport = new Transport();
     flywheel = new Flywheel();
 
-    compressor = new Compressor(0);
-    compressor.setClosedLoopControl(true);
+//    compressor = new Compressor(0);
+//    compressor.setClosedLoopControl(true);
 
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    flywheel.setVelocity(1000);
+    flywheel.setVelocity(2400);
   }
 
   @Override
@@ -115,5 +115,6 @@ public class Robot extends TimedRobot {
   public void display() {
     Drive.getInstance().display();
     positionTracker.display();
+    flywheel.display();
   }
 }
