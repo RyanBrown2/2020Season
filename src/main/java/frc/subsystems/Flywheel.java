@@ -26,7 +26,7 @@ public class Flywheel {
         flywheelMotor.setSmartCurrentLimit(80);
         flywheelMotorI.setSmartCurrentLimit(80);
 
-        flywheelMotorI.follow(flywheelMotor, true);
+//        flywheelMotorI.follow(flywheelMotor, true);
 
         flywheelEncoder = flywheelMotor.getEncoder();
 
@@ -42,8 +42,9 @@ public class Flywheel {
     }
 
     public void run() {
-        flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
-        flywheelMotorI.setVoltage(-flywheelMotor.getAppliedOutput());
+//        flywheelMotor.setVoltage(6);
+
+//        flywheelMotorI.setVoltage(-flywheelMotor.getAppliedOutput());
 //        if(flywheelMotorI.getAppliedOutput() == -flywheelMotor.getAppliedOutput()) {
 //            //good
 //        }

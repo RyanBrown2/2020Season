@@ -32,6 +32,9 @@ public class Robot extends TimedRobot {
 
   IntakeController intake;
 
+  Transport transport;
+  Flywheel flywheel;
+
   @Override
   public void robotInit() {
     Constants.Drive.pigeon.setYaw(0);
@@ -49,6 +52,10 @@ public class Robot extends TimedRobot {
     scaledDrive.enabled(true);
 
     intake = IntakeController.getInstance();
+
+
+    transport = new Transport();
+    flywheel = new Flywheel();
 
     compressor = new Compressor(0);
     compressor.setClosedLoopControl(true);
@@ -77,18 +84,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
+    flywheel.setVelocity(1000);
   }
 
   @Override
   public void teleopPeriodic() {
-    if(cb.feederActuate()) {
-      intake.feederActuate();
-    }
-
-    if(cb.rollers()) {
-      intake.rollers();
-    }
+      flywheel.run();
+//    if(cb.feederActuate()) {
+//      intake.feederActuate();
+//    }
+//
+//    if(cb.rollers()) {
+//      intake.rollers();
+//    }
   }
 
   @Override

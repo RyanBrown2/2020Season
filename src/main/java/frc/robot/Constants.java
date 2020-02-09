@@ -68,9 +68,9 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0.01;
+        public static double kP = 0.001;
         public static double kI = 0;
-        public static double kD = 0.1;
+        public static double kD = 0;
         public static double kIz = 0;
         public static double kFF = 0;
 
@@ -89,6 +89,11 @@ public class Constants {
         public static int hoodServo = 0;
         public static double angleOffset = 30;
         public static double[] range = {30 * Units.Angle.degrees, 180 * Units.Angle.degrees};
+    }
+
+    public static class Transport {
+        public static TalonSRX rampLeft = new TalonSRX(20);
+        public static TalonSRX rampRight = new TalonSRX(31);
     }
 
     public static class Turret {
