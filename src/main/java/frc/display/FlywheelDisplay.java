@@ -18,10 +18,10 @@ public class FlywheelDisplay {
                 .withPosition(0, 2)
                 .getEntry();
 
-        setpoint =
-                tab.add("Velecity Setpoint", 0)
-                .withPosition(1, 2)
-                .getEntry();
+//        setpoint =
+//                tab.add("Velocity Setpoint", 0)
+//                .withPosition(1, 2)
+//                .getEntry();
     }
 
     public void setVelocity(double velocity) {

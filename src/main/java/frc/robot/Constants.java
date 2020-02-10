@@ -4,23 +4,13 @@ import java.io.FileReader;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import frc.util.util;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import frc.utilPackage.Units;
 
@@ -68,15 +58,15 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0.0732;
+        public static double kP = 0;
         public static double kI = 0;
         public static double kD = 0;
         public static double kIz = 0;
-        public static double kFF = 0.000015;
+        public static double kFF = 0.000174;
 
         public static double kMaxOutput = 1;
         public static double kMinOutput = -1;
-        public static double maxRPM = 2500;
+        public static double maxRPM = 5500;
 
         // Smart Motion Coefficients
         //TODO

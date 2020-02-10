@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    flywheel.setVelocity(2400);
+    flywheel.setVelocity(2700);
   }
 
   @Override
