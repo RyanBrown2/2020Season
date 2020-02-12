@@ -4,7 +4,7 @@ import java.util.Arrays;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.coordinates.*;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.PositionTrackerDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
@@ -60,8 +60,8 @@ public class PositionTracker extends Thread implements IPositionTracker{
     public void run() {
 
         double last = Timer.getFPGATimestamp();
-        SmartDashboard.putBoolean("Reset Location", false);
-        SmartDashboard.putBoolean("Reset Heading", false);
+//        SmartDashboard.putBoolean("Reset Location", false);
+//        SmartDashboard.putBoolean("Reset Heading", false);
         heading = new Heading();
         heading.setRobotAngle(getAngle());
         Heading pHeading = new Heading(heading);
@@ -175,9 +175,9 @@ public class PositionTracker extends Thread implements IPositionTracker{
             positionTrackerDisplay.yPosition(position.getY());
             positionTrackerDisplay.setAngle(getAngle()/Units.Angle.degrees);
 
-            SmartDashboard.putNumber("X direction feet", position.getX());
-            SmartDashboard.putNumber("Y direction feet", position.getY());
-            SmartDashboard.putNumber("Angle", getAngle()/Units.Angle.degrees);
+//            SmartDashboard.putNumber("X direction feet", position.getX());
+//            SmartDashboard.putNumber("Y direction feet", position.getY());
+//            SmartDashboard.putNumber("Angle", getAngle()/Units.Angle.degrees);
         }catch(Exception e){
             e.printStackTrace();
         }

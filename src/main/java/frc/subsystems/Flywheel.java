@@ -23,10 +23,9 @@ public class Flywheel {
         flywheelMotorI = Constants.Flywheel.flywheelMotorI;
         flywheelMotor.restoreFactoryDefaults();
         flywheelMotorI.restoreFactoryDefaults();
-//        flywheelMotor.setSmartCurrentLimit(40);
-//        flywheelMotorI.setSmartCurrentLimit(40);
+        flywheelMotor.setSmartCurrentLimit(40);
+        flywheelMotorI.setSmartCurrentLimit(40);
 
-        flywheelMotorI.follow(flywheelMotor, true);
 
         flywheelEncoder = flywheelMotor.getEncoder();
 
@@ -51,16 +50,23 @@ public class Flywheel {
         flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
     }
 
+    public void output(double voltage) {
+        flywheelMotor.setVoltage(voltage);
+    }
+
     public void setVelocity(double vel) {
-        velocitySetpoint = vel*2;
+        velocitySetpoint = vel;
     }
 
     public void panic() {
 
     }
 
+
+
     public void display() {
-        flywheelDisplay.setVelocity(flywheelEncoder.getVelocity());
-//        flywheelDisplay.setpoint(velocitySetpoint);
+        flywheelDisplay.velocity(flywheelEncoder.getVelocity());
+        flywheelDisplay.setpoint(velocitySetpoint);
+        flywheelDisplay.current(flywheelMotor.getOutputCurrent());
     }
 }

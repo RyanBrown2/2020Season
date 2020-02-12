@@ -2,7 +2,9 @@ package frc.robot;
 
 import com.revrobotics.*;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
@@ -34,6 +36,9 @@ public class Robot extends TimedRobot {
 
   Transport transport;
   Flywheel flywheel;
+  Hood hood;
+
+  PowerDistributionPanel pdp;
 
   @Override
   public void robotInit() {
@@ -56,6 +61,9 @@ public class Robot extends TimedRobot {
 
     transport = new Transport();
     flywheel = new Flywheel();
+    hood = new Hood();
+
+    pdp = new PowerDistributionPanel();
 
 //    compressor = new Compressor(0);
 //    compressor.setClosedLoopControl(true);
@@ -84,12 +92,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    flywheel.setVelocity(2700);
+    flywheel.setVelocity(3500);
   }
 
   @Override
   public void teleopPeriodic() {
       flywheel.run();
+      hood.setAngle(0);
+//    flywheel.output(12);
+//      transport.runRamp(0.5);
 //    if(cb.feederActuate()) {
 //      intake.feederActuate();
 //    }
@@ -116,5 +127,7 @@ public class Robot extends TimedRobot {
     Drive.getInstance().display();
     positionTracker.display();
     flywheel.display();
+
+    SmartDashboard.putNumber("Battery", pdp.getVoltage());
   }
 }

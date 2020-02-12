@@ -2,7 +2,7 @@ package frc.utilPackage;
 
 import frc.drive.DriveOutput;
 import frc.drive.DriveOutput.Modes;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 public class ScaledDrive {
@@ -15,7 +15,7 @@ public class ScaledDrive {
 
     public ScaledDrive() {
         drive = DriveOutput.getInstance();
-        SmartDashboard.putNumber("Wheel Linearity", kWheelNonLinearity);
+//        SmartDashboard.putNumber("Wheel Linearity", kWheelNonLinearity);
     }
 
     public void enabled(boolean enable){

@@ -6,15 +6,15 @@ import frc.robot.Constants;
 
 public class Transport {
 
-    TalonSRX rampLeft, rampRight;
+    TalonSRX rampFront, rampBack;
 
     public Transport() {
-        rampLeft = Constants.Transport.rampLeft;
-        rampRight = Constants.Transport.rampRight;
+        rampFront = Constants.Transport.rampFront;
+        rampBack = Constants.Transport.rampBack;
     }
 
     public void runRamp(double percent) {
-        rampLeft.set(ControlMode.PercentOutput, percent);
-        rampRight.set(ControlMode.PercentOutput, percent);
+        rampFront.set(ControlMode.PercentOutput, -percent);
+        rampBack.set(ControlMode.PercentOutput, -percent);
     }
 }

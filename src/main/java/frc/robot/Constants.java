@@ -62,10 +62,10 @@ public class Constants {
         public static double kI = 0;
         public static double kD = 0;
         public static double kIz = 0;
-        public static double kFF = 0.000174;
+        public static double kFF = 0.0002; // 0.000294
 
         public static double kMaxOutput = 1;
-        public static double kMinOutput = -1;
+        public static double kMinOutput = 0;
         public static double maxRPM = 5500;
 
         // Smart Motion Coefficients
@@ -82,8 +82,8 @@ public class Constants {
     }
 
     public static class Transport {
-        public static TalonSRX rampLeft = new TalonSRX(20);
-        public static TalonSRX rampRight = new TalonSRX(31);
+        public static TalonSRX rampFront = new TalonSRX(20);
+        public static TalonSRX rampBack = new TalonSRX(31);
     }
 
     public static class Turret {

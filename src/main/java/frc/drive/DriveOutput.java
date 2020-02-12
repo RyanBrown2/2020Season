@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import frc.coordinates.Coordinate;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
 
@@ -113,11 +113,11 @@ public class DriveOutput extends Thread{
     }
 
     public void display(){
-        SmartDashboard.putNumber("Right Vel SI", mDrive.getRightVel());
-        SmartDashboard.putNumber("Left Vel SI", mDrive.getLeftVel());
+//        SmartDashboard.putNumber("Right Vel SI", mDrive.getRightVel());
+//        SmartDashboard.putNumber("Left Vel SI", mDrive.getLeftVel());
         Coordinate error = new Coordinate(vController.getError());
         error.mult(1/Units.Length.feet);
-        SmartDashboard.putNumber("Right Error", error.getX());
-        SmartDashboard.putNumber("Left Error", error.getY());
+//        SmartDashboard.putNumber("Right Error", error.getX());
+//        SmartDashboard.putNumber("Left Error", error.getY());
     }
 }
