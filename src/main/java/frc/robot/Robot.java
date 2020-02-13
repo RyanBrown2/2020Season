@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
     return cb;
   }
 
-  int _smoothing = 0;
+  TeleopControls teleopControls;
 
   AutoMode auto;
 
@@ -30,23 +30,24 @@ public class Robot extends TimedRobot {
   DriveOutput driveOutput;
   PositionTracker positionTracker;
 
-  ScaledDrive scaledDrive;
-
   IntakeController intake;
 
   Transport transport;
   Flywheel flywheel;
   Hood hood;
-  Feeder feeder;
+  Turret turret;
+
+  ScaledDrive drive;
 
   PowerDistributionPanel pdp;
 
   @Override
   public void robotInit() {
+    teleopControls = new TeleopControls();
+
     Constants.Drive.pigeon.setYaw(0);
 
     auto = new PathTest();
-    scaledDrive = new ScaledDrive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
@@ -54,21 +55,20 @@ public class Robot extends TimedRobot {
 
     positionTracker = PositionTracker.getInstance();
 
-    scaledDrive = new ScaledDrive();
-    scaledDrive.enabled(true);
-
     intake = IntakeController.getInstance();
-
 
     transport = new Transport();
     flywheel = new Flywheel();
     hood = new Hood();
-    feeder = new Feeder();
+    turret = new Turret();
+
+    drive = new ScaledDrive();
+    drive.enabled(true);
 
     pdp = new PowerDistributionPanel();
 
-//    compressor = new Compressor(0);
-//    compressor.setClosedLoopControl(true);
+    compressor = new Compressor(0);
+    compressor.setClosedLoopControl(true);
 
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -79,7 +79,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-//    turret.updateEncoder(false);
     display();
   }
 
@@ -94,24 +93,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-//    flywheel.setVelocity(3500);
+//      turret.toSetpoint(0);
+    flywheel.setVelocity(1000);
   }
 
   @Override
   public void teleopPeriodic() {
-//      flywheel.run();
-//      hood.setAngle(0);
-//    flywheel.output(12);
-//      transport.runRamp(0.5);
-    if(cb.feederActuate()) {
-      intake.feederActuateTeleop();
-    }
-//
-    if(cb.rollers()) {
-      intake.rollersTeleop(true);
-    } else {
-      intake.rollersTeleop(false);
-    }
+    flywheel.run();
+//    turret.run();
+    teleopControls.run();
+//    drive.run();
   }
 
   @Override

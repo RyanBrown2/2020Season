@@ -6,58 +6,38 @@ import frc.robot.Constants;
 
 public class Feeder {
 
-    public enum Actuation {in, out};
+    DoubleSolenoid feederPiston = Constants.Feeder.solenoid;
     public enum Rollers {off, in, out}
 
-
-    Actuation actuation;
+    boolean isOut = false;
 
     public Feeder() {
-        actuation = Actuation.in;
     }
 
     public void rollers(Rollers rollers) {
         if (rollers == Rollers.off) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0);
         } else if (rollers == Rollers.in) {
-            Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 1);
-        } else if (rollers == Rollers.out) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, -1);
+        } else if (rollers == Rollers.out) {
+            Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 1);
         }
     }
 
     public void actuate() {
-        Constants.Feeder.solenoid.set(DoubleSolenoid.Value.kReverse);
-//        switch (actuation) {
-//            case in:
-//                Constants.Feeder.solenoid.set(DoubleSolenoid.Value.kForward);
-//                actuation = Actuation.out;
-//                break;
-//            case out:
-//                Constants.Feeder.solenoid.set(DoubleSolenoid.Value.kReverse);
-//                actuation = Actuation.in;
-//                break;
-//        }
+        if(!isOut) {
+            feederPiston.set(DoubleSolenoid.Value.kForward);
+            isOut = true;
+        } else if(isOut) {
+            feederPiston.set(DoubleSolenoid.Value.kReverse);
+            isOut = false;
+        } else {
+            isOut = false;
+        }
     }
 
     public void panic() {
 
-    }
-
-    public boolean isIn() {
-        if (actuation == Actuation.in) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isOut() {
-        if (actuation == Actuation.out) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public void display() {

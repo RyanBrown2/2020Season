@@ -51,4 +51,9 @@ public class ControlBoard extends IControlBoard{
         return buttonPad.getRawButtonPressed(ControlBindings.CoDriver.panic);
     }
 
+    @Override
+    public boolean mixer() {
+        return joy.getRawButton(ControlBindings.Driver.mixer);
+    }
+
 }
