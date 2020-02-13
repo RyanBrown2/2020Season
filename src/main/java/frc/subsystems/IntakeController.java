@@ -6,6 +6,7 @@ import frc.controlBoard.IControlBoard;
 
 public class IntakeController {
     private static IntakeController instance = null;
+
     public static IntakeController getInstance() {
         if (instance == null) {
             instance = new IntakeController();
@@ -14,7 +15,8 @@ public class IntakeController {
     }
 
     private static IControlBoard cb = new ControlBoard();
-    public static IControlBoard getControlBoard(){
+
+    public static IControlBoard getControlBoard() {
         return cb;
     }
 
@@ -23,9 +25,11 @@ public class IntakeController {
     public enum States {
         disabled,
         enabled,
-        feederOut,
+        idle,
+        intakeOut,
         rollers,
-        feederIn,
+        intakeIn,
+        feeding,
         panic
     }
 
@@ -45,20 +49,21 @@ public class IntakeController {
                 }
                 break;
             case enabled:
-
+                state = States.idle;
                 break;
-            case feederOut:
-                if (feeder.isIn()) {
-                    feeder.actuate();
-                }
+            case idle:
+                break;
+            case intakeOut:
+                feeder.actuate();
                 break;
             case rollers:
-                feeder.rollers(cb.rollers());
+
                 break;
-            case feederIn:
-                if (feeder.isOut()) {
-                    feeder.actuate();
-                }
+            case intakeIn:
+
+                break;
+            case feeding:
+
                 break;
             case panic:
 
@@ -66,19 +71,35 @@ public class IntakeController {
         }
     }
 
-    public void feederActuate() {
-        if (feeder.isIn()) {
-            state = States.feederOut;
-        } else if (feeder.isOut()) {
-            state = States.feederIn;
+    public void feederActuateTeleop() {
+        if (busy()) {
+            return;
+        } else {
+            feeder.actuate();
         }
     }
 
-    public void rollers() {
-        if (feeder.isOut()) {
-            state = States.rollers;
+    public void rollersTeleop(boolean on) {
+        if (busy()) {
+            feeder.rollers(Feeder.Rollers.off);
+        } else {
+            if (on) {
+                feeder.rollers(Feeder.Rollers.in);
+            } else {
+                feeder.rollers(Feeder.Rollers.off);
+            }
         }
     }
+
+    // Used to prevent teleop controls from overriding the feeder
+    public boolean busy() {
+        if (state==States.feeding) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public void panic() {
 

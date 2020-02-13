@@ -9,8 +9,8 @@ public class ControlBoard extends IControlBoard{
     public ControlBoard() {
         joy = new Joystick(0);
         wheel = new Joystick(1);
-        buttonPad = new Joystick(2);
-        cojoy = new Joystick(3);
+        buttonPad = new Joystick(3);
+        cojoy = new Joystick(2);
     }
 
 	@Override

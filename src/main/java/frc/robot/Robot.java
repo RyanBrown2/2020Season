@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
   Transport transport;
   Flywheel flywheel;
   Hood hood;
+  Feeder feeder;
 
   PowerDistributionPanel pdp;
 
@@ -62,6 +63,7 @@ public class Robot extends TimedRobot {
     transport = new Transport();
     flywheel = new Flywheel();
     hood = new Hood();
+    feeder = new Feeder();
 
     pdp = new PowerDistributionPanel();
 
@@ -92,22 +94,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    flywheel.setVelocity(3500);
+//    flywheel.setVelocity(3500);
   }
 
   @Override
   public void teleopPeriodic() {
-      flywheel.run();
-      hood.setAngle(0);
+//      flywheel.run();
+//      hood.setAngle(0);
 //    flywheel.output(12);
 //      transport.runRamp(0.5);
-//    if(cb.feederActuate()) {
-//      intake.feederActuate();
-//    }
+    if(cb.feederActuate()) {
+      intake.feederActuateTeleop();
+    }
 //
-//    if(cb.rollers()) {
-//      intake.rollers();
-//    }
+    if(cb.rollers()) {
+      intake.rollersTeleop(true);
+    } else {
+      intake.rollersTeleop(false);
+    }
   }
 
   @Override

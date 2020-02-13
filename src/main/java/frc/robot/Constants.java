@@ -47,8 +47,7 @@ public class Constants {
     }
 
     public static class Feeder {
-        public static DoubleSolenoid leftSolenoid = new DoubleSolenoid(1, 2); // todo
-        public static DoubleSolenoid rightSolenoid = new DoubleSolenoid(3,4); // todo
+        public static DoubleSolenoid solenoid = new DoubleSolenoid(2, 6); // todo
 
         public static TalonSRX rollerMotor = new TalonSRX(pigeonTalonID);
     }
