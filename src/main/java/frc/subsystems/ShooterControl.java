@@ -23,7 +23,7 @@ public class ShooterControl {
 
     NetworkTableInstance tableInstance;
     NetworkTable table;
-    NetworkTableEntry turretAngle, distance;
+    NetworkTableEntry goalPosition;
 
     public enum States {
         disbabled,
@@ -41,14 +41,17 @@ public class ShooterControl {
 
         tableInstance = NetworkTableInstance.getDefault();
         table = tableInstance.getTable("ShooterData");
-        turretAngle = table.getEntry("turret");
-        distance = table.getEntry("distance");
+        goalPosition = table.getEntry("goalPosition");
 
     }
 
-    // Gets Data From Network Tables
-    public double[] getData() {
-        return new double[]{turretAngle.getDouble(0), distance.getDouble(0)};
+    /*
+    Get data from NetworkTables
+    The data should be a 3D vector that represents the position of
+    the goal, relative to where the turret is facing.
+     */
+    private double[] getGoalData() {
+        return goalPosition.getDoubleArray(new double[]{0,0,0});
     }
 
     // Uses the velocity and angle of the robot to create a 3D velocity vector
@@ -56,6 +59,50 @@ public class ShooterControl {
         double xVel = Math.cos(angle) * vel;
         double yVel = Math.sin(angle) * vel;
         return new double[]{xVel, yVel, 0};
+    }
+
+    /*
+    Take the data from Network Tables and make it relative to the robot
+     */
+    public double[] goalPosRobot() {
+        return new double[]{
+                getGoalData()[0]*getTurretAngleRobot()[0][0] + getGoalData()[1]*getTurretAngleRobot()[1][0],
+                getGoalData()[0]*getTurretAngleRobot()[0][1] + getGoalData()[1]*getTurretAngleRobot()[1][1]
+        };
+    }
+
+    /*
+    Take the data from Network Tables and make it relative to the robot
+     */
+    public double[] goalPosField() {
+        return new double[]{
+                getGoalData()[0]*getTurretAngleField()[0][0] + getGoalData()[1]*getTurretAngleField()[1][0],
+                getGoalData()[0]*getTurretAngleField()[0][1] + getGoalData()[1]*getTurretAngleField()[1][1]
+        };
+    }
+
+    /*
+    Returns turret angle relative to robot
+    The angle is represented as a matrix for linear algebra
+     */
+    public double[][] getTurretAngleRobot() {
+        double angle = turret.getAngle(false);
+        return new double[][]{
+                new double[]{Math.cos(angle), Math.sin(angle)},
+                new double[]{-Math.sin(angle), Math.cos(angle)}
+        };
+    }
+
+    /*
+    Returns turret angle relative to field
+    The angle is represented as a matrix for linear algebra
+     */
+    public double[][] getTurretAngleField() {
+         double angle = turret.getAngle(true);
+         return new double[][]{
+                 new double[]{Math.cos(angle), Math.sin(angle)},
+                 new double[]{-Math.sin(angle), Math.cos(angle)}
+         };
     }
 
 }
