@@ -4,18 +4,14 @@ import com.revrobotics.*;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
-import frc.coordinates.Heading;
+import frc.display.UtilDisplay;
 import frc.drive.*;
 import frc.subsystems.*;
-import frc.trajectoryFollowing.DriveSubsystem;
 import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
@@ -45,6 +41,7 @@ public class Robot extends TimedRobot {
   ScaledDrive drive;
 
   PowerDistributionPanel pdp;
+  UtilDisplay utilDisplay;
 
   @Override
   public void robotInit() {
@@ -74,6 +71,8 @@ public class Robot extends TimedRobot {
 
     compressor = new Compressor(0);
     compressor.setClosedLoopControl(true);
+
+    utilDisplay = new UtilDisplay();
 
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -130,7 +129,7 @@ public class Robot extends TimedRobot {
     positionTracker.display();
     flywheel.display();
     turret.display();
-
     SmartDashboard.putNumber("Battery", pdp.getVoltage());
+    utilDisplay.battery(pdp.getVoltage());
   }
 }

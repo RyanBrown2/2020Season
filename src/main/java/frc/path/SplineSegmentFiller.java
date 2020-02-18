@@ -94,11 +94,11 @@ public class SplineSegmentFiller{
         jsonObject = (JSONObject) obj;
         
         JSONArray pointList = (JSONArray) jsonObject.get(points);
-        Iterator<JSONArray> iterator = pointList.iterator();
+        Iterator iterator = pointList.iterator();
         System.out.println("Current path");
         List<Pos2D> output = new ArrayList<>();
         while(iterator.hasNext()){
-            JSONArray cArray = iterator.next();
+            JSONArray cArray = (JSONArray) iterator.next();
             System.out.println("Raw data: "+cArray.toString());
             double Px = Double.parseDouble(cArray.get(0).toString())*Units.Length.feet; //x pos
             double Py = Double.parseDouble(cArray.get(1).toString())*Units.Length.feet; //y pos

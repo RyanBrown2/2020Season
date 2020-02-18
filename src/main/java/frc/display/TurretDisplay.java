@@ -12,7 +12,6 @@ public class TurretDisplay {
 
     public TurretDisplay() {
         tab = Shuffleboard.getTab("Shooter");
-//    }
 
         turretAngle =
                 tab.add("Turret Angle", 0)

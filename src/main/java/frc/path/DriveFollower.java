@@ -66,7 +66,7 @@ public class DriveFollower{
         // System.out.println(goalPosition.display("Goal Pos"));
         // System.out.println(goalPosition == null);
         if(goalPosition == null || goalPosition.getX() == Double.NaN || goalPosition.getY() == Double.NaN){
-            System.out.println(robotPos.getPos().multC(1/Units.Length.feet).display("Last Known Robot Pos"));
+//            System.out.println(robotPos.getPos().multC(1/Units.Length.feet).display("Last Known Robot Pos"));
 //            SmartDashboard.putString("Follower Message", "Goal Pos is null (HELP)");
         }
 //        SmartDashboard.putString("Goal Pos", goalPosition.multC(1/Units.Length.feet).display());
