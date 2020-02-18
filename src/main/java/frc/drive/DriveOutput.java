@@ -105,7 +105,7 @@ public class DriveOutput extends Thread{
                     vController.setSetpoint(new Coordinate(rightSet, leftSet));
                     Coordinate cVels = new Coordinate(mDrive.getRightVel(), mDrive.getLeftVel());
                     Coordinate out = vController.run(cVels);
-                    mDrive.outputToDrive(out.getX(), out.getY());
+                    mDrive.outputToDrive(-out.getX(), -out.getY());
                     break;
             }
             Timer.delay(0.006);

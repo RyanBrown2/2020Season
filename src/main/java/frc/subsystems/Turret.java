@@ -5,6 +5,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
@@ -77,7 +78,8 @@ public class Turret {
         else {
             ypr[0] = 0;
         }
-        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
+//        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
+        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
     }
 
     public double scaleSetpoint(double setpoint) {
@@ -90,7 +92,8 @@ public class Turret {
     }
 
     public void display() {
-        turretDisplay.angle(getAngle(true)/ Units.Angle.degrees);
-        turretDisplay.setpoint(setPoint);
+        SmartDashboard.putNumber("Turret Angle", getAngle(false) - ypr[0]);
+        SmartDashboard.putNumber("Raw Turret Ticks", getRawTicks());
+        SmartDashboard.putNumber("Turret Setpoint", setPoint - ypr[0]);
     }
 }

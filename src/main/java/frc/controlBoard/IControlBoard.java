@@ -6,6 +6,9 @@ public abstract class IControlBoard {
     public abstract double getWheel();
     public  abstract boolean rollers();
     public abstract boolean mixer();
+    public abstract boolean ramp();
+    public abstract boolean runAll();
+    public abstract boolean runAllNoFeeder();
 
     // CoDrive
     public abstract boolean feederActuate();

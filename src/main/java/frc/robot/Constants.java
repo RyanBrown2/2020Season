@@ -57,14 +57,14 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0;
-        public static double kI = 0;
-        public static double kD = 0;
-        public static double kIz = 0;
-        public static double kFF = 0.0002; // 0.000294
+        public static double kP = 0.001; //0.001
+        public static double kI = 0.0000125; //0.0000125
+        public static double kD = 0; //0
+        public static double kIz = 0.25; //0.25
+        public static double kFF = 0.000178; // 0.000178
 
         public static double kMaxOutput = 1;
-        public static double kMinOutput = 0;
+        public static double kMinOutput = 0.5; //0.5
         public static double maxRPM = 5500;
 
         // Smart Motion Coefficients
@@ -82,7 +82,7 @@ public class Constants {
 
     public static class Transport {
         public static TalonSRX rampFront = new TalonSRX(20);
-        public static TalonSRX rampBack = new TalonSRX(31);
+        public static TalonSRX rampBack = new TalonSRX(17);
         public static TalonSRX mixer = new TalonSRX(14);
     }
 
@@ -90,7 +90,7 @@ public class Constants {
         public static boolean fieldOriented = true;
 
         public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
-        public static TalonSRX turretEnc = new TalonSRX(20);
+        public static TalonSRX turretEnc = Transport.rampFront;
 
         public static double encoderOffset = 0;
 //        public static double ticksPerRev = (2048*(140/30))/3.14159;

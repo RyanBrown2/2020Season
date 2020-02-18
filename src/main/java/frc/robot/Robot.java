@@ -4,13 +4,18 @@ import com.revrobotics.*;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
+import frc.coordinates.Heading;
 import frc.drive.*;
 import frc.subsystems.*;
+import frc.trajectoryFollowing.DriveSubsystem;
 import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
@@ -94,14 +99,15 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 //      turret.toSetpoint(0);
-    flywheel.setVelocity(1000);
+    flywheel.setVelocity(3500);
+    teleopControls.resetTimers();
   }
 
   @Override
   public void teleopPeriodic() {
     flywheel.run();
 //    turret.run();
-    teleopControls.run();
+      teleopControls.run();
 //    drive.run();
   }
 
@@ -119,9 +125,11 @@ public class Robot extends TimedRobot {
   }
 
   public void display() {
+    SmartDashboard.putNumber("Raw Encoder Val", Constants.Turret.turretEnc.getSelectedSensorPosition());
     Drive.getInstance().display();
     positionTracker.display();
     flywheel.display();
+    turret.display();
 
     SmartDashboard.putNumber("Battery", pdp.getVoltage());
   }
