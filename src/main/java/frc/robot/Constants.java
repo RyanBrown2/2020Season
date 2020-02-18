@@ -64,7 +64,7 @@ public class Constants {
         public static double kFF = 0.000178; // 0.000178
 
         public static double kMaxOutput = 1;
-        public static double kMinOutput = 0.5; //0.5
+        public static double kMinOutput = 0; //0.5
         public static double maxRPM = 5500;
 
         // Smart Motion Coefficients

@@ -54,7 +54,8 @@ public class Turret {
         Constants.Drive.pigeon.getYawPitchRoll(ypr);
         ypr[0] *= Constants.degreesToRadians;
         ypr[0] = ypr[0] % (2*3.14159);
-        turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
+        turretPID.setReference(setPoint, ControlType.kPosition);
+        // turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
     }
 
     public void updateEncoder() {

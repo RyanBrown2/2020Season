@@ -20,7 +20,7 @@ public class Feeder {
         } else if (rollers == Rollers.in) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, -0.1);
         } else if (rollers == Rollers.out) {
-            Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0.1);
+            Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0.25);
         } else if (rollers == Rollers.maxIn) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, -1);
         } else if (rollers == Rollers.maxOut) {

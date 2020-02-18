@@ -43,7 +43,7 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean rollers() {
-        return cojoy.getRawButton(ControlBindings.Driver.rollers);
+        return (joy.getRawButton(ControlBindings.Driver.rollers) || cojoy.getRawButton(ControlBindings.CoDriver.rollers));
     }
 
     @Override
@@ -52,8 +52,8 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
-    public boolean runAll() {
-        return joy.getRawButton(ControlBindings.Driver.runAll);
+    public boolean reverseFeeder() {
+        return cojoy.getRawButton(ControlBindings.CoDriver.reverseFeeder);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean mixer() {
-        return joy.getRawButton(ControlBindings.CoDriver.mixer);
+        return cojoy.getRawButton(ControlBindings.CoDriver.mixer);
     }
 
 }

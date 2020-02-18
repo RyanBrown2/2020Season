@@ -13,8 +13,10 @@ public class Transport {
         rampBack = Constants.Transport.rampBack;
     }
 
-    public void runRamp(double percent) {
+    public void runRamp(double percent, boolean onlyFront) {
         rampFront.set(ControlMode.PercentOutput, -percent);
-        rampBack.set(ControlMode.PercentOutput, -percent);
+        if(!onlyFront) {
+            rampBack.set(ControlMode.PercentOutput, -percent);
+        }
     }
 }

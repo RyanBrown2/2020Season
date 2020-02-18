@@ -13,9 +13,9 @@ public class Mixer {
         if (rollers == Rollers.off) {
             Constants.Transport.mixer.set(ControlMode.PercentOutput, 0);
         } else if (rollers == Rollers.in) {
-            Constants.Transport.mixer.set(ControlMode.PercentOutput, 0.8);
+            Constants.Transport.mixer.set(ControlMode.PercentOutput, 0.7);
         } else if (rollers == Rollers.out) {
-            Constants.Transport.mixer.set(ControlMode.PercentOutput, -0.8);
+            Constants.Transport.mixer.set(ControlMode.PercentOutput, -0.7);
         }
     }
 }

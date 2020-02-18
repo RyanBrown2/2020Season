@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
   IntakeController intake;
 
   Transport transport;
-  Flywheel flywheel;
+//  Flywheel flywheel;
   Hood hood;
   Turret turret;
 
@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
     intake = IntakeController.getInstance();
 
     transport = new Transport();
-    flywheel = new Flywheel();
+//    flywheel = new Flywheel();
     hood = new Hood();
     turret = new Turret();
 
@@ -97,17 +97,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-//      turret.toSetpoint(0);
-    flywheel.setVelocity(3500);
+//    flywheel.setVelocity(3500);
+      turret.toSetpoint(0);
     teleopControls.resetTimers();
   }
 
   @Override
   public void teleopPeriodic() {
-    flywheel.run();
-//    turret.run();
-      teleopControls.run();
-//    drive.run();
+    turret.run();
+    teleopControls.run();
+    drive.run();
   }
 
   @Override
@@ -127,7 +126,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Raw Encoder Val", Constants.Turret.turretEnc.getSelectedSensorPosition());
     Drive.getInstance().display();
     positionTracker.display();
-    flywheel.display();
+//    flywheel.display();
+      teleopControls.display();
     turret.display();
     SmartDashboard.putNumber("Battery", pdp.getVoltage());
     utilDisplay.battery(pdp.getVoltage());

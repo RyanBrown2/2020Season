@@ -9,9 +9,11 @@ public class ControlBindings {
     }
 
     public static class CoDriver {
+        public static int rollers = 1;
         public static int feeder = 2;
+        public static int reverseFeeder = 5;
         public static int ramp = 3;
-        public static int mixer = 2;
+        public static int mixer = 4;
         public static int panic = 20;
     }
 

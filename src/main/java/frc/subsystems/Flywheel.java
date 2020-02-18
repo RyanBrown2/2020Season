@@ -46,7 +46,6 @@ public class Flywheel {
     }
 
     public void run() {
-//        flywheelMotor.setVoltage(4);
         flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
     }
 
@@ -58,6 +57,10 @@ public class Flywheel {
         velocitySetpoint = vel;
     }
 
+    public double getVelocity() {
+        return flywheelEncoder.getVelocity();
+    }
+
     public void panic() {
 
     }
@@ -65,8 +68,8 @@ public class Flywheel {
 
 
     public void display() {
-        flywheelDisplay.velocity(flywheelEncoder.getVelocity());
-        flywheelDisplay.setpoint(velocitySetpoint);
-        flywheelDisplay.current(flywheelMotor.getOutputCurrent());
+//        flywheelDisplay.velocity(flywheelEncoder.getVelocity());
+//        flywheelDisplay.setpoint(velocitySetpoint);
+//        flywheelDisplay.current(flywheelMotor.getOutputCurrent());
     }
 }
