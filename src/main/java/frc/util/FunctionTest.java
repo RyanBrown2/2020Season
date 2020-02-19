@@ -8,6 +8,7 @@ import frc.drive.Drive;
 import frc.drive.DriveOutput;
 import frc.robot.Constants;
 import frc.subsystems.Hood;
+import frc.robot.Constants;
 
 //hopefully runs drivetrain, flywheel, turret, maybe feeder and transport, and hood
 
@@ -85,29 +86,32 @@ public class FunctionTest {
                 }
                 break;
             case 6:
-                Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kForward);
-                Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kForward);
+                //todo
+//                Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kForward);
+//                Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kForward);
                 if (timer.get() >= 5){
                     timer.reset();
                     state = 7;
                 }
                 break;
             case 7:
-                Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-                Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+                //todo
+//                Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+//                Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kReverse);
                 if (timer.get() >= 5){
-                    Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kOff);
-                    Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kOff);
+//                    Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kOff);
+//                    Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kOff);
                     timer.reset();
                     state = 8;
                 }
                 break;
             case 8:
-                Constants.Transport.rampLeft.set(ControlMode.PercentOutput, 50);
-                Constants.Transport.rampRight.set(ControlMode.PercentOutput, 50);
+                //todo
+//                Constants.Transport.rampLeft.set(ControlMode.PercentOutput, 50);
+//                Constants.Transport.rampRight.set(ControlMode.PercentOutput, 50);
                 if(timer.get() >= 5){
-                    Constants.Transport.rampLeft.set(ControlMode.PercentOutput, 0);
-                    Constants.Transport.rampRight.set(ControlMode.PercentOutput, 0);
+//                    Constants.Transport.rampLeft.set(ControlMode.PercentOutput, 0);
+//                    Constants.Transport.rampRight.set(ControlMode.PercentOutput, 0);
                     timer.reset();
                     state = 9;
                 }
