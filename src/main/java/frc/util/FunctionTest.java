@@ -5,12 +5,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Timer;
 import frc.drive.Drive;
-import frc.drive.DriveOutput;
 import frc.robot.Constants;
 import frc.subsystems.Hood;
-import frc.robot.Constants;
 
-//hopefully runs drivetrain, flywheel, turret, maybe feeder and transport, and hood
+//runs drivetrain, flywheel, turret (tested)
+// maybe feeder and transport, and hood (not tested yet)
 
 public class FunctionTest {
 
@@ -29,6 +28,22 @@ public class FunctionTest {
     }
 
     public void run() {
+
+        /*
+        Display Following variables:
+            Drive.getInstance().getLeftPosition()
+            Drive.getInstance().getRightPosition()
+            Constants.Flywheel.flywheelMotor.getEncoder().getPosition()
+            Constants.Flywheel.flywheelMotor.getEncoder().getVelocity()
+            Constants.Turret.turretEnc.getSelectedSensorPosition()
+            Constants.Feeder.rollerMotor.getSelectedSensorPosition();
+            Constants.Transport.rampFront.getSelectedSensorPosition();
+            Constants.Transport.rampBack.getSelectedSensorPosition();
+            Constants.Transport.mixer.getSelectedSensorPosition();
+
+         */
+            //not sure what to display for hood
+
         switch (state) {
             case 1:
                 Drive.getInstance().outputToDrive(-0.25, 0.25);
@@ -89,6 +104,7 @@ public class FunctionTest {
                 //todo
 //                Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kForward);
 //                Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kForward);
+                Constants.Feeder.solenoid.set(DoubleSolenoid.Value.kForward);
                 if (timer.get() >= 5){
                     timer.reset();
                     state = 7;
@@ -98,37 +114,57 @@ public class FunctionTest {
                 //todo
 //                Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kReverse);
 //                Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-                if (timer.get() >= 5){
+                if (timer.get() >= 5) {
 //                    Constants.Feeder.leftSolenoid.set(DoubleSolenoid.Value.kOff);
 //                    Constants.Feeder.rightSolenoid.set(DoubleSolenoid.Value.kOff);
+                    Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0.25);
+                }
+                if (timer.get() >=2){
+                    Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0);
                     timer.reset();
                     state = 8;
                 }
-                break;
             case 8:
                 //todo
 //                Constants.Transport.rampLeft.set(ControlMode.PercentOutput, 50);
 //                Constants.Transport.rampRight.set(ControlMode.PercentOutput, 50);
-                if(timer.get() >= 5){
+                if(timer.get() >= 5) {
 //                    Constants.Transport.rampLeft.set(ControlMode.PercentOutput, 0);
 //                    Constants.Transport.rampRight.set(ControlMode.PercentOutput, 0);
+                    Constants.Feeder.solenoid.set(DoubleSolenoid.Value.kReverse);
+                }
+                if (timer.get() >= 5){
+                    Constants.Feeder.solenoid.set(DoubleSolenoid.Value.kOff);
                     timer.reset();
                     state = 9;
                 }
                 break;
             case 9:
-                hood.setAngle(1);
-                state = 10;
+                Constants.Transport.rampBack.set(ControlMode.PercentOutput, 50);
+                Constants.Transport.rampFront.set(ControlMode.PercentOutput, 50);
+                Constants.Transport.mixer.set(ControlMode.PercentOutput, 50);
+                if(timer.get() >= 5){
+                    Constants.Transport.rampBack.set(ControlMode.PercentOutput, 0);
+                    Constants.Transport.rampFront.set(ControlMode.PercentOutput, 0);
+                    Constants.Transport.mixer.set(ControlMode.PercentOutput, 0);
+                    timer.reset();
+                    state = 10;
+                }
                 break;
             case 10:
-                hood.setAngle(149);
+                hood.setAngle(1);
                 state = 11;
                 break;
             case 11:
+                hood.setAngle(149);
+                state = 12;
+                break;
+            case 12:
                 timer.stop();
                 break;
         }
 
     }
+
 
 }
