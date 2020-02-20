@@ -104,7 +104,4 @@ public class ShooterControl {
                  new double[]{-Math.sin(angle), Math.cos(angle)}
          };
     }
-
-
-
 }
