@@ -81,8 +81,8 @@ public class Constants {
     }
 
     public static class Transport {
-        public static TalonSRX rampFront = new TalonSRX(20);
-        public static TalonSRX rampBack = new TalonSRX(17);
+        public static TalonSRX rampFront = new TalonSRX(17);
+        public static TalonSRX rampBack = new TalonSRX(20);
         public static TalonSRX mixer = new TalonSRX(14);
     }
 

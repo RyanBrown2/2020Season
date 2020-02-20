@@ -1,8 +1,10 @@
 package frc.subsystems;
 
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
+import frc.robot.Robot;
 
 public class IntakeController {
     private static IntakeController instance = null;
@@ -20,86 +22,76 @@ public class IntakeController {
         return cb;
     }
 
-    Feeder feeder;
+    Timer timer = new Timer();
+    Timer stateTimer = new Timer();
 
     public enum States {
-        disabled,
-        enabled,
-        idle,
-        intakeOut,
-        rollers,
-        intakeIn,
-        feeding,
-        panic
+        spooling,
+        transport,
+        mixing,
+        feeder,
+        end
     }
 
     States state;
 
     private IntakeController() {
-        feeder = new Feeder();
-
-        state = States.disabled;
+        state = States.spooling;
     }
 
-    public void runIntake() {
-        switch (state) {
-            case disabled:
-                if (RobotState.isEnabled()) {
-                    state = States.enabled;
-                }
-                break;
-            case enabled:
-                state = States.idle;
-                break;
-            case idle:
-                break;
-            case intakeOut:
-                feeder.actuate();
-                break;
-            case rollers:
-
-                break;
-            case intakeIn:
-
-                break;
-            case feeding:
-
-                break;
-            case panic:
-
-                break;
-        }
+    public void intakeReset() {
+        state = States.spooling;
+        timer.stop();
+        timer.reset();
+        stateTimer.stop();
+        stateTimer.reset();
     }
 
-    public void feederActuateTeleop() {
-        if (busy()) {
-            return;
-        } else {
-            feeder.actuate();
-        }
-    }
-
-    public void rollersTeleop(boolean on) {
-        if (busy()) {
-            feeder.rollers(Feeder.Rollers.off);
-        } else {
-            if (on) {
-                feeder.rollers(Feeder.Rollers.in);
-            } else {
-                feeder.rollers(Feeder.Rollers.off);
+    public void runIntake(double RPM, boolean enabled) {
+        if(enabled) {
+            switch (state) {
+                case spooling:
+                    Robot.flywheel.setVelocity(RPM);
+                    if (Math.abs(Robot.flywheel.getVelocity() - RPM) < 200) {
+                        state = States.transport;
+                    }
+                    break;
+                case transport:
+                    Robot.transport.rollers(Transport.Rollers.in);
+                    state = States.mixing;
+                    break;
+                case mixing:
+                    if (stateTimer.get() == 0) {
+                        stateTimer.start();
+                    }
+                    pulseMixer();
+                    if (stateTimer.get() > 0.65) {
+                        state = States.feeder;
+                    }
+                    break;
+                case feeder:
+                    Robot.feeder.rollers(Feeder.Rollers.maxIn);
+                    if (stateTimer.get() > 1) {
+                        Robot.feeder.rollers(Feeder.Rollers.off);
+                        state = States.end;
+                    }
+                    break;
+                case end:
+                    break;
             }
         }
     }
 
-    // Used to prevent teleop controls from overriding the feeder
-    public boolean busy() {
-        if (state==States.feeding) {
-            return true;
+    public void pulseMixer() {
+        if(timer.get() == 0) {
+            timer.start();
+        }
+        if ((timer.get() % 0.75) < 0.5) {
+            Robot.mixer.rollers(Mixer.Rollers.in);
         } else {
-            return false;
+            Robot.mixer.rollers(Mixer.Rollers.off);
         }
     }
-
 
     public void panic() {
 

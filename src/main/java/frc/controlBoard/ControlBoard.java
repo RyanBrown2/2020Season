@@ -37,38 +37,68 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
-    public boolean feederActuate() {
+    public boolean feederActuatePressed() {
         return cojoy.getRawButtonPressed(ControlBindings.CoDriver.feeder);
     }
 
     @Override
-    public boolean rollers() {
+    public boolean feederActuateReleased() {
+        return cojoy.getRawButtonReleased(ControlBindings.CoDriver.feeder);
+    }
+
+    @Override
+    public boolean rollersPressed() {
         return (joy.getRawButton(ControlBindings.Driver.rollers) || cojoy.getRawButton(ControlBindings.CoDriver.rollers));
     }
 
     @Override
-    public boolean ramp() {
+    public boolean rollersReleased() {
+        return (joy.getRawButtonReleased(ControlBindings.Driver.rollers) || cojoy.getRawButtonReleased(ControlBindings.CoDriver.rollers));
+    }
+
+    @Override
+    public boolean rampPressed() {
         return cojoy.getRawButton(ControlBindings.CoDriver.ramp);
     }
 
     @Override
-    public boolean reverseFeeder() {
+    public boolean rampReleased() {
+        return cojoy.getRawButtonReleased(ControlBindings.CoDriver.ramp);
+    }
+
+    @Override
+    public boolean reverseFeederPressed() {
         return buttonPad.getRawButton(ControlBindings.ButtonPad.reverseFeeder);
     }
 
     @Override
-    public boolean runAllNoFeeder() {
-        return (joy.getRawButton(ControlBindings.Driver.runAllNoFeeder) || buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
+    public boolean reverseFeederReleased() {
+        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.reverseFeeder);
+    }
+
+    @Override
+    public boolean shootPressed() {
+        return (joy.getRawButtonPressed(ControlBindings.Driver.shoot) || buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.shoot));
+    }
+
+    @Override
+    public boolean shootReleased() {
+        return (joy.getRawButtonReleased(ControlBindings.Driver.shoot) || buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.shoot));
+    }
+
+    @Override
+    public boolean mixerPressed() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.mixer);
+    }
+
+    @Override
+    public boolean mixerReleased() {
+        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.mixer);
     }
 
     @Override
     public boolean panic() {
-        return buttonPad.getRawButtonPressed(ControlBindings.CoDriver.panic);
-    }
-
-    @Override
-    public boolean mixer() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.mixer);
+        return buttonPad.getRawButton(ControlBindings.CoDriver.panic);
     }
 
 }

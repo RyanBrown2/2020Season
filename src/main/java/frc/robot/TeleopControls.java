@@ -4,80 +4,95 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
-import frc.subsystems.Feeder;
-import frc.subsystems.Flywheel;
-import frc.subsystems.Mixer;
-import frc.subsystems.Transport;
+import frc.subsystems.*;
 
 public class TeleopControls {
     private static IControlBoard cb = new ControlBoard();
-
     public static IControlBoard getControlBoard(){
         return cb;
     }
 
-    public enum Controls {
-        none,
-        actuateFeeder,
-        feederRollers,
-        mixer,
-        ramp,
-        reverseFeeder
-    }
+    Feeder feeder = Robot.feeder;
+    Flywheel flywheel = Robot.flywheel;
+    Mixer mixer = Robot.mixer;
+    Transport transport = Robot.transport;
 
-    public static Feeder feeder = new Feeder();
-    public static Mixer mixer = new Mixer();
-    public static Transport transport = new Transport();
-    public static Flywheel flywheel = new Flywheel();
-    Timer timer;
-    Controls control = Controls.none;
+    IntakeController intakeController = Robot.intakeController;
+
+    // Timer for shooting timing
+    Timer timer = new Timer();
+
+    // Whether or not to shoot
+    boolean shooting = false;
 
     public TeleopControls() {
-        timer = new Timer();
-    }
 
-    public void resetTimers() {
-        timer.stop();
-        timer.reset();
-    }
-
-    public void display() {
-        flywheel.display();
-        SmartDashboard.putNumber("Timer Val Absolute", timer.get());
     }
 
     public void run() {
+
+
+        // Run flywheel PID loops
         flywheel.run();
-        SmartDashboard.putNumber("Timer w/ Modulus", (timer.get() % 1.25));
-        // Set state based on Control Board
-        if(cb.feederActuate()) {
-            control = Controls.actuateFeeder;
+
+        // Run shooter when enabled
+        intakeController.runIntake(3000, shooting);
+//        shooter();
+
+        // Buttons
+        if(cb.rollersPressed()) {
+            feeder.rollers(Feeder.Rollers.maxIn);
+        } if(cb.rollersReleased()) {
+            feeder.rollers(Feeder.Rollers.off);
+        } if(cb.mixerPressed()) {
+            transport.rollers(Transport.Rollers.onlyFront);
+            mixer.rollers(Mixer.Rollers.slowIn);
+        } if(cb.mixerReleased()) {
+            transport.rollers(Transport.Rollers.off);
+            mixer.rollers(Mixer.Rollers.off);
+        } if(cb.feederActuatePressed()) {
+            feeder.actuate();
+        } if(cb.feederActuateReleased()) {
+            feeder.rollers(Feeder.Rollers.off);
+        } if(cb.reverseFeederPressed()) {
+            feeder.rollers(Feeder.Rollers.out);
+        } if(cb.reverseFeederReleased()) {
+            feeder.rollers(Feeder.Rollers.off);
+        } if(cb.rampPressed()) {
+            transport.rollers(Transport.Rollers.in);
+        } if(cb.rampReleased()) {
+            transport.rollers(Transport.Rollers.off);
+        } if(cb.shootPressed()) {
+            intakeController.intakeReset();
+            shooting = true;
+//            flywheel.setVelocity(3000);
+//            shooting = true;
+        } if(cb.shootReleased()) {
+//            timer.stop();
+//            timer.reset();
+            shooting = false;
+            flywheel.setVelocity(0);
+            mixer.rollers(Mixer.Rollers.off);
+            transport.rollers(Transport.Rollers.off);
+            feeder.rollers(Feeder.Rollers.off);
         }
-        if(cb.rollers()) {
-            control = Controls.feederRollers;
-//            feeder.rollers(Feeder.Rollers.in);
-        }
-        if(cb.mixer()) {
-            control = Controls.mixer;
-        }
-        if(cb.reverseFeeder()) {
-            control = Controls.reverseFeeder;
-        }
-        if(cb.ramp()) {
-            control = Controls.ramp;
-        }
-        if(cb.runAllNoFeeder()) {
-            if(timer.get() == 0) {
-                timer.start();
-            }
-//            control = Controls.runAllNoFeeder;
-            flywheel.setVelocity(2000);
-            if(Math.abs(flywheel.getVelocity() - 2000) < 200) {
-                transport.runRamp(1, false);
-                if ((timer.get() % 0.75) <= 0.5) {
+    }
+
+    public void shooter() {
+        if(shooting) {
+            if (Math.abs(flywheel.getVelocity() - 3000) < 200) {
+                if(timer.get() == 0) {
+                    timer.start();
+                }
+                transport.rollers(Transport.Rollers.in);
+                if ((timer.get() % 0.75) < 0.5) {
                     mixer.rollers(Mixer.Rollers.in);
-                } else if (timer.get() >= 0.6) {
-                    feeder.rollers(Feeder.Rollers.in);
+                } else if (timer.get() >= 0.5 && timer.get() <= 0.65) {
+                    mixer.rollers(Mixer.Rollers.off);
+                } else if (timer.get() > 0.65 && timer.get() <= 1) {
+                    feeder.rollers(Feeder.Rollers.maxIn);
+                } else if (timer.get() > 1) {
+                    feeder.rollers(Feeder.Rollers.off);
                     mixer.rollers(Mixer.Rollers.off);
                 } else {
                     mixer.rollers(Mixer.Rollers.off);
@@ -85,45 +100,10 @@ public class TeleopControls {
                 }
             }
         }
-        else {
-            flywheel.setVelocity(0);
-            transport.runRamp(0, false);
-            feeder.rollers(Feeder.Rollers.off);
-            mixer.rollers(Mixer.Rollers.off);
-            resetTimers();
-        }
+    }
 
-        // State Machine safely handles possible problems
-        switch(control) {
-            case none:
-//                feeder.rollers(Feeder.Rollers.off);
-//                mixer.rollers(Mixer.Rollers.off);
-//                transport.runRamp(0);
-                break;
-            case actuateFeeder:
-                feeder.actuate();
-                control = Controls.none;
-                break;
-            case feederRollers:
-                feeder.rollers(Feeder.Rollers.maxIn);
-                control = Controls.none;
-                break;
-            case reverseFeeder:
-                feeder.rollers(Feeder.Rollers.out);
-                control = Controls.none;
-                break;
-            case mixer:
-                transport.runRamp(1, true);
-                mixer.rollers(Mixer.Rollers.in);
-                control = Controls.none;
-                break;
-            case ramp:
-                transport.runRamp(1, false);
-                control = Controls.none;
-                break;
-            default:
-                control = Controls.none;
-                break;
-        }
+    public void display() {
+        flywheel.display();
+        SmartDashboard.putNumber("Timer Val Absolute", timer.get());
     }
 }

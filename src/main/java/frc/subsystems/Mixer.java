@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.robot.Constants;
 
 public class Mixer {
-    public enum Rollers {off, in, out}
+    public enum Rollers {off, in, out, slowIn}
 
     public Mixer() {
     }
@@ -16,6 +16,8 @@ public class Mixer {
             Constants.Transport.mixer.set(ControlMode.PercentOutput, 0.7);
         } else if (rollers == Rollers.out) {
             Constants.Transport.mixer.set(ControlMode.PercentOutput, -0.7);
+        } else if (rollers == Rollers.slowIn) {
+            Constants.Transport.mixer.set(ControlMode.PercentOutput, 0.25);
         }
     }
 }

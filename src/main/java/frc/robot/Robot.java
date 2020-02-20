@@ -20,6 +20,17 @@ public class Robot extends TimedRobot {
     return cb;
   }
 
+  public static Feeder feeder = new Feeder();
+  public static Mixer mixer = new Mixer();
+  public static Transport transport = new Transport();
+  public static Flywheel flywheel = new Flywheel();
+  public static Turret turret = new Turret();
+  public static Hood hood = new Hood();
+
+  public static IntakeController intakeController = IntakeController.getInstance();
+
+  public static ScaledDrive scaledDrive = new ScaledDrive();
+
   TeleopControls teleopControls;
 
   AutoMode auto;
@@ -30,13 +41,6 @@ public class Robot extends TimedRobot {
   DriveController driveController;
   DriveOutput driveOutput;
   PositionTracker positionTracker;
-
-  IntakeController intake;
-
-  Hood hood;
-  Turret turret;
-
-  ScaledDrive drive;
 
   PowerDistributionPanel pdp;
   UtilDisplay utilDisplay;
@@ -55,13 +59,7 @@ public class Robot extends TimedRobot {
 
     positionTracker = PositionTracker.getInstance();
 
-    intake = IntakeController.getInstance();
-
-    hood = new Hood();
-    turret = new Turret();
-
-    drive = new ScaledDrive();
-    drive.enabled(true);
+    scaledDrive.enabled(true);
 
     pdp = new PowerDistributionPanel();
 
@@ -89,21 +87,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-      TeleopControls.flywheel.run();
+    flywheel.run();
   }
 
   @Override
   public void teleopInit() {
-//    flywheel.setVelocity(3500);
-      turret.toSetpoint(0);
-    teleopControls.resetTimers();
+    turret.toSetpoint(0);
   }
 
   @Override
   public void teleopPeriodic() {
     turret.run();
     teleopControls.run();
-    drive.run();
+    scaledDrive.run();
   }
 
   @Override
