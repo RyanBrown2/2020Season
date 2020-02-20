@@ -33,8 +33,6 @@ public class Robot extends TimedRobot {
 
   IntakeController intake;
 
-  Transport transport;
-//  Flywheel flywheel;
   Hood hood;
   Turret turret;
 
@@ -59,8 +57,6 @@ public class Robot extends TimedRobot {
 
     intake = IntakeController.getInstance();
 
-    transport = new Transport();
-//    flywheel = new Flywheel();
     hood = new Hood();
     turret = new Turret();
 
@@ -93,6 +89,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+      TeleopControls.flywheel.run();
   }
 
   @Override

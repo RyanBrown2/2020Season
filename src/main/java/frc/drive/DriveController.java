@@ -39,8 +39,8 @@ public class DriveController {
 		errorRight = goalRight - cVels.getX();
 		errorLeft = goalLeft - cVels.getY();
 
-		feedBack.setX(0.0001974*errorLeft + 0.3814*errorRight);
-		feedBack.setY(0.3814*errorLeft + 0.0001974*errorRight);
+		feedBack.setX(0.0003084*errorLeft + 0.3831*errorRight);
+		feedBack.setY(0.3831*errorLeft + 0.0003084*errorRight);
 		
 		feedForward.setX(0.01277*dGoalLeft + 0.4167*dGoalRight + 2.381e-17*goalLeft + 2.385*goalRight);
 		feedForward.setY(0.4167*dGoalLeft + 0.01277*dGoalRight + 2.385*goalLeft + 1.406e-17*goalRight);

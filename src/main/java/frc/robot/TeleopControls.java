@@ -25,28 +25,25 @@ public class TeleopControls {
         reverseFeeder
     }
 
-    Feeder feeder;
-    Mixer mixer;
-    Transport transport;
+    public static Feeder feeder = new Feeder();
+    public static Mixer mixer = new Mixer();
+    public static Transport transport = new Transport();
     public static Flywheel flywheel = new Flywheel();
     Timer timer;
     Controls control = Controls.none;
 
     public TeleopControls() {
-
-        feeder = new Feeder();
-        mixer = new Mixer();
-        transport = new Transport();
         timer = new Timer();
-        timer.start();
     }
 
     public void resetTimers() {
+        timer.stop();
         timer.reset();
     }
 
     public void display() {
         flywheel.display();
+        SmartDashboard.putNumber("Timer Val Absolute", timer.get());
     }
 
     public void run() {
@@ -70,17 +67,21 @@ public class TeleopControls {
             control = Controls.ramp;
         }
         if(cb.runAllNoFeeder()) {
+            if(timer.get() == 0) {
+                timer.start();
+            }
 //            control = Controls.runAllNoFeeder;
             flywheel.setVelocity(2000);
             if(Math.abs(flywheel.getVelocity() - 2000) < 200) {
                 transport.runRamp(1, false);
-                if ((timer.get() % 1.25) <= 1) {
+                if ((timer.get() % 0.75) <= 0.5) {
                     mixer.rollers(Mixer.Rollers.in);
-                } else if (timer.get() >= 1.5) {
+                } else if (timer.get() >= 0.6) {
                     feeder.rollers(Feeder.Rollers.in);
                     mixer.rollers(Mixer.Rollers.off);
                 } else {
                     mixer.rollers(Mixer.Rollers.off);
+                    feeder.rollers(Feeder.Rollers.off);
                 }
             }
         }
@@ -89,12 +90,13 @@ public class TeleopControls {
             transport.runRamp(0, false);
             feeder.rollers(Feeder.Rollers.off);
             mixer.rollers(Mixer.Rollers.off);
+            resetTimers();
         }
 
         // State Machine safely handles possible problems
         switch(control) {
             case none:
-                feeder.rollers(Feeder.Rollers.off);
+//                feeder.rollers(Feeder.Rollers.off);
 //                mixer.rollers(Mixer.Rollers.off);
 //                transport.runRamp(0);
                 break;

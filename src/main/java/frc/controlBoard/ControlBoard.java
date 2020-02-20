@@ -9,13 +9,13 @@ public class ControlBoard extends IControlBoard{
     public ControlBoard() {
         joy = new Joystick(0);
         wheel = new Joystick(1);
-        buttonPad = new Joystick(3);
         cojoy = new Joystick(2);
+        buttonPad = new Joystick(3);
     }
 
 	@Override
 	public double getThrottle() {
-        if (Math.abs(joy.getY()) < 0.05) {
+        if (Math.abs(joy.getY()) < 0.025) {
             return 0;
         } else {
             return joy.getY();
@@ -53,12 +53,12 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean reverseFeeder() {
-        return cojoy.getRawButton(ControlBindings.CoDriver.reverseFeeder);
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.reverseFeeder);
     }
 
     @Override
     public boolean runAllNoFeeder() {
-        return joy.getRawButton(ControlBindings.Driver.runAllNoFeeder);
+        return (joy.getRawButton(ControlBindings.Driver.runAllNoFeeder) || buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean mixer() {
-        return cojoy.getRawButton(ControlBindings.CoDriver.mixer);
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.mixer);
     }
 
 }

@@ -1,6 +1,8 @@
 package frc.autos.modes;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.coordinates.Heading;
+import frc.drive.Drive;
 import frc.robot.TeleopControls;
 import frc.subsystems.*;
 import frc.utilPackage.Units;
@@ -13,34 +15,32 @@ import frc.autos.AutoEndedException;
 public class PathTest extends AutoMode {
 
     DrivePath underPanel, reverseToShoot, toFirstBall;
-    WaitAction wait5;
-    Feeder feeder;
-    Mixer mixer;
-    Transport transport;
-    Turret turret;
+    WaitAction waitForFeeder, waitForShooting;
+    PointTurn hard90;
     Timer timer;
 
     public PathTest() {
-        feeder = new Feeder();
-        mixer = new Mixer();
-        transport = new Transport();
-        turret = new Turret();
         timer = new Timer();
 
         timer.start();
 
-        TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 10*Units.Length.feet, 5*Units.Length.feet);
-        TrapezoidalMp.constraints revConstraints = new TrapezoidalMp.constraints(0, 10*Units.Length.feet, 5*Units.Length.feet);
+        waitForFeeder = new WaitAction(1.5);
+        waitForShooting = new WaitAction(3);
+
+        TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 14*Units.Length.feet, 9*Units.Length.feet);
+        TrapezoidalMp.constraints revConstraints = new TrapezoidalMp.constraints(0, 14*Units.Length.feet, 9*Units.Length.feet);
 
         underPanel = DrivePath.createFromFileOnRoboRio("TestAuto", "underPanel", constraints);
         underPanel.setReverse(false);
         underPanel.setHorizontalThresh(1*Units.Length.feet);
-        underPanel.setlookAhead(1*Units.Length.feet);
+        underPanel.setlookAhead(1.5*Units.Length.feet);
 
         reverseToShoot = DrivePath.createFromFileOnRoboRio("TestAuto", "reverseToShoot", revConstraints);
         reverseToShoot.setReverse(true);
         reverseToShoot.setHorizontalThresh(1*Units.Length.feet);
-        reverseToShoot.setlookAhead(1*Units.Length.feet);
+        reverseToShoot.setlookAhead(1.5*Units.Length.feet);
+
+        hard90 = new PointTurn(new Heading(180*Units.Angle.degrees));
 
         toFirstBall = DrivePath.createFromFileOnRoboRio("TestAuto", "toFirstBall", constraints);
         toFirstBall.setReverse(false);
@@ -52,30 +52,50 @@ public class PathTest extends AutoMode {
     }
 
     public void auto() throws AutoEndedException {
-        TeleopControls.flywheel.run();
         PositionTracker.getInstance().robotForward();
-        feeder.actuate();
-        feeder.rollers(Feeder.Rollers.maxIn);
+        TeleopControls.feeder.actuate();
+        TeleopControls.feeder.rollers(Feeder.Rollers.maxIn);
         runAction(underPanel);
         if(underPanel.isFinished()) {
-            feeder.rollers(Feeder.Rollers.off);
+            TeleopControls.feeder.rollers(Feeder.Rollers.off);
             TeleopControls.flywheel.setVelocity(2000);
         }
         runAction(reverseToShoot);
         if(reverseToShoot.isFinished()) {
-            if(Math.abs(TeleopControls.flywheel.getVelocity() - 2000) < 200) {
-                transport.runRamp(1, false);
-                if ((timer.get() % 1.25) <= 1) {
-                    mixer.rollers(Mixer.Rollers.in);
-                } else if (timer.get() >= 1.5) {
-                    feeder.rollers(Feeder.Rollers.in);
-                    mixer.rollers(Mixer.Rollers.off);
-                } else {
-                    mixer.rollers(Mixer.Rollers.off);
-                }
-            }
+            TeleopControls.transport.runRamp(1, false);
+            TeleopControls.mixer.rollers(Mixer.Rollers.in);
         }
-        runAction(wait5);
+        runAction(waitForFeeder);
+        if(waitForFeeder.isFinished()) {
+            TeleopControls.feeder.actuate();
+            TeleopControls.feeder.rollers(Feeder.Rollers.maxIn);
+        }
+        runAction(waitForShooting);
+        if(waitForShooting.isFinished()) {
+            // Stop running mechs
+            TeleopControls.transport.runRamp(0, false);
+            TeleopControls.mixer.rollers(Mixer.Rollers.off);
+
+            // Deploy feeder
+            TeleopControls.feeder.actuate();
+        }
+        runAction(hard90);
         runAction(toFirstBall);
+        if(toFirstBall.isFinished()) {
+            TeleopControls.transport.runRamp(1, false);
+            TeleopControls.mixer.rollers(Mixer.Rollers.in);
+        }
+        runAction(waitForFeeder);
+        if(waitForFeeder.isFinished()) {
+            TeleopControls.feeder.actuate();
+            TeleopControls.feeder.rollers(Feeder.Rollers.maxIn);
+        }
+        runAction(waitForShooting);
+        if(waitForShooting.isFinished()) {
+            TeleopControls.feeder.rollers(Feeder.Rollers.off);
+            TeleopControls.mixer.rollers(Mixer.Rollers.off);
+            TeleopControls.flywheel.setVelocity(0);
+            TeleopControls.transport.runRamp(0, false);
+        }
     }
 }

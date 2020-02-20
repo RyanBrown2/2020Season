@@ -18,7 +18,7 @@ public class Feeder {
         if (rollers == Rollers.off) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0);
         } else if (rollers == Rollers.in) {
-            Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, -0.1);
+            Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, -0.75);
         } else if (rollers == Rollers.out) {
             Constants.Feeder.rollerMotor.set(ControlMode.PercentOutput, 0.25);
         } else if (rollers == Rollers.maxIn) {

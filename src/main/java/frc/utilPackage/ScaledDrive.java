@@ -7,7 +7,7 @@ import frc.robot.Robot;
 
 public class ScaledDrive {
     DriveOutput drive;
-    double wheelScalar = 0.7;
+    double wheelScalar = 0.7 * 2;
     double throttleScalar = -0.8;
     double kWheelNonLinearity = 1;
 
