@@ -12,6 +12,7 @@ import frc.controlBoard.IControlBoard;
 import frc.display.UtilDisplay;
 import frc.drive.*;
 import frc.subsystems.*;
+import frc.util.FunctionTest;
 import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
@@ -43,6 +44,8 @@ public class Robot extends TimedRobot {
   PowerDistributionPanel pdp;
   UtilDisplay utilDisplay;
 
+  FunctionTest functionTest;
+
   @Override
   public void robotInit() {
     teleopControls = new TeleopControls();
@@ -73,6 +76,8 @@ public class Robot extends TimedRobot {
     compressor.setClosedLoopControl(true);
 
     utilDisplay = new UtilDisplay();
+
+    functionTest = new FunctionTest();
 
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -111,7 +116,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-
+    functionTest.reset();
+    functionTest.run();
   }
 
   @Override
