@@ -63,13 +63,8 @@ public class TeleopControls {
         } if(cb.rampReleased()) {
             transport.rollers(Transport.Rollers.off);
         } if(cb.shootPressed()) {
-            intakeController.intakeReset();
             shooting = true;
-//            flywheel.setVelocity(3000);
-//            shooting = true;
         } if(cb.shootReleased()) {
-//            timer.stop();
-//            timer.reset();
             shooting = false;
             flywheel.setVelocity(0);
             mixer.rollers(Mixer.Rollers.off);

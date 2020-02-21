@@ -35,50 +35,56 @@ public class IntakeController {
 
     States state;
 
+    Boolean panicMode = false;
+
     private IntakeController() {
         state = States.spooling;
     }
 
-    public void intakeReset() {
-        state = States.spooling;
-        timer.stop();
-        timer.reset();
-        stateTimer.stop();
-        stateTimer.reset();
-    }
-
     public void runIntake(double RPM, boolean enabled) {
-        if(enabled) {
-            switch (state) {
-                case spooling:
-                    Robot.flywheel.setVelocity(RPM);
-                    if (Math.abs(Robot.flywheel.getVelocity() - RPM) < 200) {
-                        state = States.transport;
-                    }
-                    break;
-                case transport:
-                    Robot.transport.rollers(Transport.Rollers.in);
-                    state = States.mixing;
-                    break;
-                case mixing:
-                    if (stateTimer.get() == 0) {
-                        stateTimer.start();
-                    }
-                    pulseMixer();
-                    if (stateTimer.get() > 0.65) {
-                        state = States.feeder;
-                    }
-                    break;
-                case feeder:
-                    Robot.feeder.rollers(Feeder.Rollers.maxIn);
-                    if (stateTimer.get() > 1) {
-                        Robot.feeder.rollers(Feeder.Rollers.off);
-                        state = States.end;
-                    }
-                    break;
-                case end:
-                    break;
+        if(!panicMode) {
+            if (enabled) {
+                switch (state) {
+                    case spooling:
+                        Robot.flywheel.setVelocity(RPM);
+                        if (Math.abs(Robot.flywheel.getVelocity() - RPM) < 200) {
+                            state = States.transport;
+                        }
+                        break;
+                    case transport:
+                        Robot.transport.rollers(Transport.Rollers.in);
+                        state = States.mixing;
+                        break;
+                    case mixing:
+                        if (stateTimer.get() == 0) {
+                            stateTimer.start();
+                        }
+                        pulseMixer();
+                        if (stateTimer.get() > 0.65) {
+                            state = States.feeder;
+                        }
+                        break;
+                    case feeder:
+                        pulseMixer();
+                        Robot.feeder.rollers(Feeder.Rollers.maxIn);
+                        if (stateTimer.get() > 1) {
+                            Robot.feeder.rollers(Feeder.Rollers.off);
+                            state = States.end;
+                        }
+                        break;
+                    case end:
+                        pulseMixer();
+                        break;
+                }
+            } else {
+                state = States.spooling;
+                timer.stop();
+                timer.reset();
+                stateTimer.stop();
+                stateTimer.reset();
             }
+        } else {
+
         }
     }
 
@@ -93,7 +99,7 @@ public class IntakeController {
         }
     }
 
-    public void panic() {
-
+    public void panic(boolean isPanic) {
+        panicMode = isPanic;
     }
 }
