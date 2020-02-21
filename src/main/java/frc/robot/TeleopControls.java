@@ -1,16 +1,10 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.subsystems.*;
 
 public class TeleopControls {
-    private static IControlBoard cb = new ControlBoard();
-    public static IControlBoard getControlBoard(){
-        return cb;
-    }
+    private static IControlBoard cb = Robot.getControlBoard();
 
     Feeder feeder = Robot.feeder;
     Flywheel flywheel = Robot.flywheel;
@@ -19,10 +13,7 @@ public class TeleopControls {
 
     IntakeController intakeController = Robot.intakeController;
 
-    // Timer for shooting timing
-    Timer timer = new Timer();
-
-    // Whether or not to shoot
+    // Runs shooter by switching according to button inputs
     boolean shooting = false;
 
     public TeleopControls() {
@@ -30,16 +21,13 @@ public class TeleopControls {
     }
 
     public void run() {
-
-
-        // Run flywheel PID loops
+        // Always run flywheel PID loops
         flywheel.run();
 
-        // Run shooter when enabled
+        // Run shooter based on state of boolean "shooting"
         intakeController.runIntake(3000, shooting);
-//        shooter();
 
-        // Buttons
+        // Buttons run different actions
         if(cb.rollersPressed()) {
             feeder.rollers(Feeder.Rollers.maxIn);
         } if(cb.rollersReleased()) {
@@ -63,42 +51,21 @@ public class TeleopControls {
         } if(cb.rampReleased()) {
             transport.rollers(Transport.Rollers.off);
         } if(cb.shootPressed()) {
+            // Enable the shooter
             shooting = true;
         } if(cb.shootReleased()) {
+            // Disable the shooter
             shooting = false;
+            // Stop the flywheel
             flywheel.setVelocity(0);
+            // Disable running subsystems
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);
             feeder.rollers(Feeder.Rollers.off);
         }
     }
 
-    public void shooter() {
-        if(shooting) {
-            if (Math.abs(flywheel.getVelocity() - 3000) < 200) {
-                if(timer.get() == 0) {
-                    timer.start();
-                }
-                transport.rollers(Transport.Rollers.in);
-                if ((timer.get() % 0.75) < 0.5) {
-                    mixer.rollers(Mixer.Rollers.in);
-                } else if (timer.get() >= 0.5 && timer.get() <= 0.65) {
-                    mixer.rollers(Mixer.Rollers.off);
-                } else if (timer.get() > 0.65 && timer.get() <= 1) {
-                    feeder.rollers(Feeder.Rollers.maxIn);
-                } else if (timer.get() > 1) {
-                    feeder.rollers(Feeder.Rollers.off);
-                    mixer.rollers(Mixer.Rollers.off);
-                } else {
-                    mixer.rollers(Mixer.Rollers.off);
-                    feeder.rollers(Feeder.Rollers.off);
-                }
-            }
-        }
-    }
-
     public void display() {
         flywheel.display();
-        SmartDashboard.putNumber("Timer Val Absolute", timer.get());
     }
 }

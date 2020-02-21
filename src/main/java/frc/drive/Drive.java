@@ -39,16 +39,12 @@ public class Drive {
 	public void display(){
     	driveDisplay.position(getEnc()[0]);
     	driveDisplay.velocity(getEnc()[1]);
-//		SmartDashboard.putNumber("Encoder Pos", getEnc()[0]);
-//		SmartDashboard.putNumber("Encoder Vel", getEnc()[1]);
 
 		driveDisplay.left(getLeftPosition());
 		driveDisplay.right(getRightPosition());
-//		SmartDashboard.putNumber("Left Encoder Pos", getLeftPosition());
-//		SmartDashboard.putNumber("Right Encoder Pos", getRightPosition());
 	}
 	
-    /*
+    /**
      * Output puts a voltage to the drive
      * @param  : right voltage, left voltage
      */

@@ -24,7 +24,6 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public double getWheel() {
-        double output;
         if (Math.abs(wheel.getX()) < 0.05) {
             return 0;
         } else {
@@ -53,7 +52,10 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean rollersReleased() {
-        return (joy.getRawButtonReleased(ControlBindings.Driver.rollers) || cojoy.getRawButtonReleased(ControlBindings.CoDriver.rollers));
+        return ((joy.getRawButtonReleased(ControlBindings.Driver.rollers) ||
+                cojoy.getRawButtonReleased(ControlBindings.CoDriver.rollers)) &&
+                !joy.getRawButton(ControlBindings.Driver.rollers) &&
+                !cojoy.getRawButton(ControlBindings.CoDriver.rollers));
     }
 
     @Override
@@ -83,7 +85,10 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean shootReleased() {
-        return (joy.getRawButtonReleased(ControlBindings.Driver.shoot) || buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.shoot));
+        return ((joy.getRawButtonReleased(ControlBindings.Driver.shoot) ||
+                buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.shoot)) &&
+                !joy.getRawButton(ControlBindings.Driver.shoot) &&
+                !buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
     }
 
     @Override
@@ -98,7 +103,7 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean panic() {
-        return buttonPad.getRawButton(ControlBindings.CoDriver.panic);
+        return buttonPad.getRawButtonPressed(ControlBindings.CoDriver.panic);
     }
 
 }
