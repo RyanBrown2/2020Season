@@ -28,6 +28,7 @@ public class Feeder {
         }
     }
 
+    // Actuate solenoids and track the state using boolean isOut
     public void actuate() {
         if(!isOut) {
             feederPiston.set(DoubleSolenoid.Value.kForward);
@@ -42,11 +43,8 @@ public class Feeder {
     }
 
     public void panic() {
-
     }
 
     public void display() {
-
     }
-
 }

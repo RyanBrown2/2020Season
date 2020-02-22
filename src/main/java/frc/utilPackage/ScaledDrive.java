@@ -7,15 +7,17 @@ import frc.robot.Robot;
 
 public class ScaledDrive {
     DriveOutput drive;
+    // Increase to make the wheel more aggressive
     double wheelScalar = 0.7 * 2;
+    // Increase to make the throttle more aggressive
     double throttleScalar = -0.8;
+    // Adjusts how nonlinear the wheel is
     double kWheelNonLinearity = 1;
 
     boolean enabled = true;
 
     public ScaledDrive() {
         drive = DriveOutput.getInstance();
-//        SmartDashboard.putNumber("Wheel Linearity", kWheelNonLinearity);
     }
 
     public void enabled(boolean enable){
@@ -23,18 +25,23 @@ public class ScaledDrive {
     }
 
     public void run(){
+        // Get the raw value of the wheel
         double wheel = Robot.getControlBoard().getWheel();
         double x = outputWheel(kWheelNonLinearity, wheel);
         double y = Robot.getControlBoard().getThrottle();
+        // Multiply the wheel and throttle values by scalars
         y*= throttleScalar;
         x *= wheelScalar;
+        // Convert from percentage to voltage
         double rightVal = 12*(y-x);
         double leftVal = 12*(y+x);
         if(enabled)
+            // Set the drivebase voltages
             drive.set(Modes.Voltage, -rightVal, -leftVal);
     }
 
-    private double outputWheel(double wheelNonLinearity, double wheel){
+    // Uses a sine function to scale the wheel such that it stays between -1 and 1 but is no longer linear
+    private double outputWheel(double wheelNonLinearity, double wheel) {
         final double denominator = Math.sin(Math.PI / 2.0 * wheelNonLinearity);
         return Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / denominator;
     }

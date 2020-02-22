@@ -46,11 +46,8 @@ public class Flywheel {
     }
 
     public void run() {
+        // Update the PID velocity setpoint constantly
         flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
-    }
-
-    public void output(double voltage) {
-        flywheelMotor.setVoltage(voltage);
     }
 
     public void setVelocity(double vel) {
@@ -62,14 +59,8 @@ public class Flywheel {
     }
 
     public void panic() {
-
     }
 
-
-
     public void display() {
-//        flywheelDisplay.velocity(flywheelEncoder.getVelocity());
-//        flywheelDisplay.setpoint(velocitySetpoint);
-//        flywheelDisplay.current(flywheelMotor.getOutputCurrent());
     }
 }

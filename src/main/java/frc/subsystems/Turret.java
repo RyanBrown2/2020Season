@@ -17,6 +17,7 @@ public class Turret {
     CANEncoder turretEncoder;
     public int smartMotionSlot;
     double setPoint;
+    // Yaw-Pitch-Roll (ypr) is used to store the gyro data
     double[] ypr = new double[3];
 
     public Turret() {
@@ -58,6 +59,7 @@ public class Turret {
         // turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
     }
 
+    // Encoder not plugged directly into Spark Max, so update a 'fake' encoder with the actual value for the PID loops
     public void updateEncoder() {
         turretEncoder.setPosition(getAngle(false));
     }
@@ -70,6 +72,7 @@ public class Turret {
         return -Constants.Turret.turretEnc.getSelectedSensorPosition();
     }
 
+    // Angle is returned in radians, and can be relative to the robot's starting position
     public double getAngle(boolean fieldOriented) {
         if(fieldOriented) {
             Constants.Drive.pigeon.getYawPitchRoll(ypr);
@@ -77,13 +80,16 @@ public class Turret {
             ypr[0] = (ypr[0] / 2) % (3.14159 / 2);
         }
         else {
+            // If not field oriented, don't account for the robot's yaw
             ypr[0] = 0;
         }
 //        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
         return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
     }
 
+    // Setpoint is scaled to prevent damage to wires by going more than one rotation
     public double scaleSetpoint(double setpoint) {
+        // Use modulus operator to keep setpoint under one full rotation
         double scaledSetpoint = setpoint % (3.14159*2);
         return scaledSetpoint;
     }
