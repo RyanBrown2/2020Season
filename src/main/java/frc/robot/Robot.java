@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
   PowerDistributionPanel pdp;
   UtilDisplay utilDisplay;
 
-//  FunctionTest functionTest;
+  FunctionTest functionTest;
 
   @Override
   public void robotInit() {
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 
     utilDisplay = new UtilDisplay();
 
-//    functionTest = new FunctionTest();
+    functionTest = new FunctionTest();
 
     // Set drivebase motor idle modes to brake
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -110,8 +110,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-//    functionTest.reset();
-//    functionTest.run();
+    functionTest.reset();
+    functionTest.run();
   }
 
   @Override
