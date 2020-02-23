@@ -1,9 +1,6 @@
 package frc.subsystems;
 
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
-import frc.controlBoard.ControlBoard;
-import frc.controlBoard.IControlBoard;
 import frc.robot.Robot;
 
 public class IntakeController {
@@ -29,13 +26,26 @@ public class IntakeController {
 
     States state;
 
-    Boolean panicMode = false;
+    boolean panicMode = false;
+
+    boolean enabled = false;
+    double RPM = 0;
 
     private IntakeController() {
         state = States.spooling;
     }
 
-    public void runIntake(double RPM, boolean enabled) {
+    public void setEnabled(boolean enable) {
+        enabled = enable;
+    }
+
+    public void setVelocity(double rpms) {
+        RPM = rpms;
+        Robot.flywheel.setVelocity(rpms);
+    }
+
+    public void runIntake() {
+        Robot.flywheel.run();
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
@@ -58,25 +68,21 @@ public class IntakeController {
                         if (stateTimer.get() == 0) {
                             stateTimer.start();
                         }
-                        // Run the pulsing of the mixer
-                        pulseMixer();
-                        // After 0.65 secs of mixer run the feeder
-                        if (stateTimer.get() > 0.65) {
+                        Robot.mixer.rollers(Mixer.Rollers.in);
+                        // After 0.3 secs of mixer run the feeder
+                        if (stateTimer.get() > 0.4) {
                             state = States.feeder;
                         }
                         break;
                     case feeder:
-                        pulseMixer();
                         Robot.feeder.rollers(Feeder.Rollers.maxIn);
-                        // Stop running feeder after 1 second
-                        if (stateTimer.get() > 1) {
+                        // Stop running feeder after 0.25 seconds
+                        if (stateTimer.get() > 0.8) {
                             Robot.feeder.rollers(Feeder.Rollers.off);
                             state = States.end;
                         }
                         break;
                     case end:
-                        // Continue pulsing mixer to ensure all balls go through
-                        pulseMixer();
                         break;
                 }
             } else {
@@ -103,7 +109,7 @@ public class IntakeController {
             timer.start();
         }
         // Use modulus operator to limit the timer value to 0.75 seconds
-        if ((timer.get() % 0.75) < 0.5) {
+        if ((timer.get() % (0.5 + 0.125)) < 0.5) {
             // Run rollers for 0.5 seconds
             Robot.mixer.rollers(Mixer.Rollers.in);
         } else {

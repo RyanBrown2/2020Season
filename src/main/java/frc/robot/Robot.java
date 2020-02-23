@@ -6,13 +6,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import com.revrobotics.ColorSensorV3;
 import frc.autos.modes.AutoMode;
-import frc.autos.modes.PathTest;
+import frc.autos.modes.FiveThenFour;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.display.UtilDisplay;
 import frc.drive.*;
 import frc.subsystems.*;
-import frc.util.FunctionTest;
 import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
@@ -55,7 +54,7 @@ public class Robot extends TimedRobot {
 
     Constants.Drive.pigeon.setYaw(0);
 
-    auto = new PathTest();
+    auto = new FiveThenFour();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
@@ -81,6 +80,11 @@ public class Robot extends TimedRobot {
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+    Constants.Drive.left1.setSmartCurrentLimit(45);
+    Constants.Drive.left2.setSmartCurrentLimit(45);
+    Constants.Drive.right1.setSmartCurrentLimit(45);
+    Constants.Drive.right2.setSmartCurrentLimit(45);
+
   }
 
   @Override
@@ -96,16 +100,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    intakeController.runIntake();
     flywheel.run();
   }
 
   @Override
   public void teleopInit() {
     turret.toSetpoint(0);
+    intakeController.setEnabled(false);
+    intakeController.setVelocity(0);
   }
 
   @Override
   public void teleopPeriodic() {
+    intakeController.runIntake();
+    flywheel.run();
     turret.run();
     teleopControls.run();
     scaledDrive.run();
@@ -126,11 +135,9 @@ public class Robot extends TimedRobot {
   }
 
   public void display() {
-    SmartDashboard.putNumber("Raw Encoder Val", Constants.Turret.turretEnc.getSelectedSensorPosition());
     Drive.getInstance().display();
     positionTracker.display();
-//    flywheel.display();
-      teleopControls.display();
+    teleopControls.display();
     turret.display();
     SmartDashboard.putNumber("Battery", pdp.getVoltage());
     utilDisplay.battery(pdp.getVoltage());

@@ -13,20 +13,11 @@ public class TeleopControls {
 
     IntakeController intakeController = Robot.intakeController;
 
-    // Runs shooter by switching according to button inputs
-    boolean shooting = false;
-
     public TeleopControls() {
 
     }
 
     public void run() {
-        // Always run flywheel PID loops
-        flywheel.run();
-
-        // Run shooter based on state of boolean "shooting"
-        intakeController.runIntake(3000, shooting);
-
         // Buttons run different actions
         if(cb.rollersPressed()) {
             feeder.rollers(Feeder.Rollers.maxIn);
@@ -40,8 +31,6 @@ public class TeleopControls {
             mixer.rollers(Mixer.Rollers.off);
         } if(cb.feederActuatePressed()) {
             feeder.actuate();
-        } if(cb.feederActuateReleased()) {
-            feeder.rollers(Feeder.Rollers.off);
         } if(cb.reverseFeederPressed()) {
             feeder.rollers(Feeder.Rollers.out);
         } if(cb.reverseFeederReleased()) {
@@ -52,12 +41,12 @@ public class TeleopControls {
             transport.rollers(Transport.Rollers.off);
         } if(cb.shootPressed()) {
             // Enable the shooter
-            shooting = true;
+            intakeController.setVelocity(3000);
+            intakeController.setEnabled(true);
         } if(cb.shootReleased()) {
             // Disable the shooter
-            shooting = false;
-            // Stop the flywheel
-            flywheel.setVelocity(0);
+            intakeController.setVelocity(0);
+            intakeController.setEnabled(false);
             // Disable running subsystems
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);

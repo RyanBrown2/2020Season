@@ -9,6 +9,11 @@ import frc.robot.Constants;
 
 public class Flywheel {
     double velocitySetpoint;
+    double error;
+    double tbh = 0;
+    double lastError = 10;
+    double motorPower = 0;
+    double gain = 0.00001;
 
     CANSparkMax flywheelMotor, flywheelMotorI;
     CANPIDController flywheelPID;
@@ -38,11 +43,6 @@ public class Flywheel {
         flywheelPID.setIZone(Constants.Flywheel.kIz);
         flywheelPID.setFF(Constants.Flywheel.kFF);
         flywheelPID.setOutputRange(Constants.Flywheel.kMinOutput, Constants.Flywheel.kMaxOutput);
-
-//        flywheelPID.setSmartMotionMinOutputVelocity(Constants.Flywheel.minVel, 0);
-//        flywheelPID.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, 0);
-//        flywheelPID.setSmartMotionAllowedClosedLoopError(Constants.Flywheel.allowedErr, 0);
-//        flywheelPID.setSmartMotionMaxVelocity(Constants.Flywheel.maxRPM, 0);
     }
 
     public void run() {
@@ -51,11 +51,49 @@ public class Flywheel {
     }
 
     public void setVelocity(double vel) {
+        //Set up values for optimized spinup to the target
+        if(velocitySetpoint < vel) {
+            lastError = 1;
+        }
+        else if(velocitySetpoint > vel) {
+            lastError = -1;
+        }
+        tbh = (2 * (vel / Constants.Flywheel.maxRPM)) - 1;
+
         velocitySetpoint = vel;
     }
 
     public double getVelocity() {
         return flywheelEncoder.getVelocity();
+    }
+
+    public void tbhControl() {
+        error = velocitySetpoint - getVelocity();
+        motorPower += gain * error;
+        motorPower = clamp(motorPower);
+
+        if (isPositive(lastError) != isPositive(error)) {
+            motorPower = 0.5 * (motorPower + tbh);
+            tbh = motorPower;
+
+            lastError = error;
+        }
+
+        flywheelMotor.setVoltage(motorPower*12);
+    }
+
+    public boolean isPositive(double input) {
+        return input > 0;
+    }
+
+    public double clamp(double input) {
+        if (input > 1) {
+            return 1;
+        }
+        if (input < -1) {
+            return -1;
+        }
+        return input;
     }
 
     public void panic() {
