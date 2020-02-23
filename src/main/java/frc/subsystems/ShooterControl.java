@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class ShooterControl {
     private static ShooterControl instance = null;
@@ -17,9 +18,7 @@ public class ShooterControl {
 
     PigeonIMU pigeon;
 
-    Flywheel flywheel;
-    Hood hood;
-    Turret turret;
+    double angleDiff, visionAngle, currentAngle;
 
     NetworkTableInstance tableInstance;
     NetworkTable table;
@@ -33,16 +32,19 @@ public class ShooterControl {
     }
 
     private ShooterControl() {
-        flywheel = new Flywheel();
-        hood = new Hood();
-        turret = new Turret();
-
         pigeon = Constants.Drive.pigeon;
 
         tableInstance = NetworkTableInstance.getDefault();
         table = tableInstance.getTable("ShooterData");
         goalPosition = table.getEntry("goalPosition");
 
+    }
+
+    public void trackVision() {
+        visionAngle = 0 * Constants.degreesToRadians /*TODO*/;
+        currentAngle = Robot.turret.getAngle(true);
+        angleDiff = currentAngle - visionAngle;
+        Robot.turret.toSetpoint(angleDiff);
     }
 
     /*
@@ -86,7 +88,7 @@ public class ShooterControl {
     The angle is represented as a matrix for linear algebra
      */
     public double[][] getTurretAngleRobot() {
-        double angle = turret.getAngle(false);
+        double angle = Robot.turret.getAngle(false);
         return new double[][]{
                 new double[]{Math.cos(angle), Math.sin(angle)},
                 new double[]{-Math.sin(angle), Math.cos(angle)}
@@ -98,7 +100,7 @@ public class ShooterControl {
     The angle is represented as a matrix for linear algebra
      */
     public double[][] getTurretAngleField() {
-         double angle = turret.getAngle(true);
+         double angle = Robot.turret.getAngle(true);
          return new double[][]{
                  new double[]{Math.cos(angle), Math.sin(angle)},
                  new double[]{-Math.sin(angle), Math.cos(angle)}

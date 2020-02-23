@@ -55,8 +55,8 @@ public class Turret {
         Constants.Drive.pigeon.getYawPitchRoll(ypr);
         ypr[0] *= Constants.degreesToRadians;
         ypr[0] = ypr[0] % (2*3.14159);
-        turretPID.setReference(setPoint, ControlType.kPosition);
-        // turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
+//        turretPID.setReference(setPoint, ControlType.kPosition);
+         turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
     }
 
     // Encoder not plugged directly into Spark Max, so update a 'fake' encoder with the actual value for the PID loops
@@ -83,8 +83,8 @@ public class Turret {
             // If not field oriented, don't account for the robot's yaw
             ypr[0] = 0;
         }
-//        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
-        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
+        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
+//        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
     }
 
     // Setpoint is scaled to prevent damage to wires by going more than one rotation

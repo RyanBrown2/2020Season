@@ -30,8 +30,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
         positionTrackerDisplay = new PositionTrackerDisplay();
         pigeon = new PigeonIMU(Constants.Drive.gyro);
         pigeon.setFusedHeading(0.0);
-//        SmartDashboard.putNumber("Location Reset X (feet)", 0);
-//        SmartDashboard.putNumber("Location Reset Y (feet)", 0);
         this.start();
     }
 
@@ -59,8 +57,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
     public void run() {
 
         double last = Timer.getFPGATimestamp();
-//        SmartDashboard.putBoolean("Reset Location", false);
-//        SmartDashboard.putBoolean("Reset Heading", false);
         heading = new Heading();
         heading.setRobotAngle(getAngle());
         Heading pHeading = new Heading(heading);
@@ -150,20 +146,14 @@ public class PositionTracker extends Thread implements IPositionTracker{
     }
 
     public void display(){
-//        positionTrackerDisplay.untoggleButtons();
         if(positionTrackerDisplay.locationReset()){
             double x = positionTrackerDisplay.getXReset();
             double y = positionTrackerDisplay.getYReset();
-
-//            double x = SmartDashboard.getNumber("Location Reset X (feet)",0);
-//            double y = SmartDashboard.getNumber("Location Reset Y (feet)",0);
             setInitPosFeet(x, y);
-//            SmartDashboard.putBoolean("Reset Location", false);
         }
 
         if(positionTrackerDisplay.headingReset()){
             robotForward();
-//            SmartDashboard.putBoolean("Reset Heading", false);
         }
 
         try{
@@ -174,9 +164,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
             positionTrackerDisplay.yPosition(position.getY());
             positionTrackerDisplay.setAngle(getAngle()/Units.Angle.degrees);
 
-//            SmartDashboard.putNumber("X direction feet", position.getX());
-//            SmartDashboard.putNumber("Y direction feet", position.getY());
-//            SmartDashboard.putNumber("Angle", getAngle()/Units.Angle.degrees);
         }catch(Exception e){
             e.printStackTrace();
         }

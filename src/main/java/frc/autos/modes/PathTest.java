@@ -53,7 +53,7 @@ public class PathTest extends AutoMode {
 
     public void auto() throws AutoEndedException {
         PositionTracker.getInstance().robotForward();
-        Robot.feeder.actuate();
+        Robot.feeder.deploy();
         Robot.feeder.rollers(Feeder.Rollers.maxIn);
         runAction(underPanel);
         if(underPanel.isFinished()) {
@@ -67,7 +67,7 @@ public class PathTest extends AutoMode {
         }
         runAction(waitForFeeder);
         if(waitForFeeder.isFinished()) {
-            Robot.feeder.actuate();
+            Robot.feeder.retract();
             Robot.feeder.rollers(Feeder.Rollers.maxIn);
         }
         runAction(waitForShooting);
@@ -77,7 +77,7 @@ public class PathTest extends AutoMode {
             Robot.mixer.rollers(Mixer.Rollers.off);
 
             // Deploy feeder
-            Robot.feeder.actuate();
+            Robot.feeder.deploy();
         }
         runAction(hard90);
         if(hard90.isFinished()) {
@@ -90,7 +90,7 @@ public class PathTest extends AutoMode {
         }
         runAction(waitForFeeder);
         if(waitForFeeder.isFinished()) {
-            Robot.feeder.actuate();
+            Robot.feeder.retract();
             Robot.feeder.rollers(Feeder.Rollers.maxIn);
         }
         runAction(waitForShooting);

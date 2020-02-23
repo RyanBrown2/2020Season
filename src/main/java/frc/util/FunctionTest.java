@@ -42,7 +42,7 @@ public class FunctionTest {
             Constants.Transport.mixer.getSelectedSensorPosition();
 
          */
-            //not sure what to display for hood
+            // not sure what to display for hood
 
         switch (state) {
             case 1:

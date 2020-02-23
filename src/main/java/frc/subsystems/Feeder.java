@@ -34,12 +34,22 @@ public class Feeder {
             feederPiston.set(DoubleSolenoid.Value.kForward);
             isOut = true;
         } else if(isOut) {
-            rollers(Rollers.in);
             feederPiston.set(DoubleSolenoid.Value.kReverse);
             isOut = false;
         } else {
             isOut = false;
         }
+    }
+
+    // Specific functions for deploying and retracting prevent autos from getting flipped
+    public void retract() {
+        feederPiston.set(DoubleSolenoid.Value.kReverse);
+        isOut = false;
+    }
+
+    public void deploy() {
+        feederPiston.set(DoubleSolenoid.Value.kForward);
+        isOut = true;
     }
 
     public void panic() {
