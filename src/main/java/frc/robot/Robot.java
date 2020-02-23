@@ -1,10 +1,10 @@
 package frc.robot;
 
 import com.revrobotics.*;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import com.revrobotics.ColorSensorV3;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.PathTest;
 import frc.controlBoard.ControlBoard;
@@ -46,7 +46,8 @@ public class Robot extends TimedRobot {
   PowerDistributionPanel pdp;
   UtilDisplay utilDisplay;
 
-  FunctionTest functionTest;
+//  FunctionTest functionTest;
+  ColorWheel colorWheel;
 
   @Override
   public void robotInit() {
@@ -71,8 +72,9 @@ public class Robot extends TimedRobot {
 
     utilDisplay = new UtilDisplay();
 
-    functionTest = new FunctionTest();
+//    functionTest = new FunctionTest();
 
+    colorWheel = new ColorWheel();
     // Set drivebase motor idle modes to brake
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     display();
+    SmartDashboard.putString("Color", colorWheel.getColor());
   }
 
   @Override
@@ -110,8 +113,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    functionTest.reset();
-    functionTest.run();
+//    functionTest.reset();
+//    functionTest.run();
   }
 
   @Override
