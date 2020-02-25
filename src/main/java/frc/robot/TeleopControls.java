@@ -12,6 +12,7 @@ public class TeleopControls {
     Transport transport = Robot.transport;
 
     IntakeController intakeController = Robot.intakeController;
+    ShooterControl shooterController = Robot.shooterController;
 
     public TeleopControls() {
 
@@ -41,12 +42,14 @@ public class TeleopControls {
             transport.rollers(Transport.Rollers.off);
         } if(cb.shootPressed()) {
             // Enable the shooter
-            intakeController.setVelocity(3000);
+            shooterController.setFlywheel(3000);
             intakeController.setEnabled(true);
+            shooterController.setEnabled(true);
         } if(cb.shootReleased()) {
             // Disable the shooter
-            intakeController.setVelocity(0);
+            shooterController.setFlywheel(0);
             intakeController.setEnabled(false);
+            shooterController.setEnabled(false);
             // Disable running subsystems
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);

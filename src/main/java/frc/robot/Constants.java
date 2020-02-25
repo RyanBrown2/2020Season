@@ -87,7 +87,7 @@ public class Constants {
     }
 
     public static class Turret {
-        public static boolean fieldOriented = true;
+        public static double acceptedError = 0.044;
 
         public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
         public static TalonSRX turretEnc = Transport.rampFront;

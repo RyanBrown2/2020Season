@@ -39,20 +39,14 @@ public class IntakeController {
         enabled = enable;
     }
 
-    public void setVelocity(double rpms) {
-        RPM = rpms;
-        Robot.flywheel.setVelocity(rpms);
-    }
-
     public void runIntake() {
-        Robot.flywheel.run();
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case spooling:
-                        Robot.flywheel.setVelocity(RPM);
+//                        Robot.flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint
                         if (Math.abs(Robot.flywheel.getVelocity() - RPM) < 200) {
                             state = States.transport;
@@ -95,7 +89,7 @@ public class IntakeController {
             }
         } else {
             // If robot is in panic mode, stop everything intake-related
-            Robot.flywheel.setVelocity(0);
+//            Robot.flywheel.setVelocity(0);
             Robot.mixer.rollers(Mixer.Rollers.off);
             Robot.transport.rollers(Transport.Rollers.off);
             Robot.feeder.rollers(Feeder.Rollers.off);

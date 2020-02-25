@@ -59,7 +59,7 @@ public class FiveThenFour extends AutoMode {
         PositionTracker.getInstance().robotForward();
         Robot.feeder.deploy();
         Robot.feeder.rollers(Feeder.Rollers.maxIn);
-        Robot.intakeController.setVelocity(3000);
+        Robot.shooterController.setFlywheel(3000);
 
         runAction(firstBalls);
         if(firstBalls.isFinished()) {
@@ -73,7 +73,7 @@ public class FiveThenFour extends AutoMode {
             Robot.intakeController.setEnabled(false);
             Robot.transport.rollers(Transport.Rollers.off);
             Robot.mixer.rollers(Mixer.Rollers.off);
-            Robot.intakeController.setVelocity(0);
+            Robot.shooterController.setFlywheel(0);
             Robot.feeder.deploy();
             Robot.feeder.rollers(Feeder.Rollers.maxIn);
         }
@@ -84,7 +84,7 @@ public class FiveThenFour extends AutoMode {
         runAction(reverse);
         runAction(ninety);
         if(ninety.isFinished()) {
-            Robot.intakeController.setVelocity(3000);
+            Robot.shooterController.setFlywheel(3000);
             Robot.feeder.deploy();
             Robot.feeder.rollers(Feeder.Rollers.maxIn);
         }
@@ -98,7 +98,7 @@ public class FiveThenFour extends AutoMode {
 
         runAction(waitForShootingAgain);
         if(waitForShootingAgain.isFinished()) {
-            Robot.intakeController.setVelocity(0);
+            Robot.shooterController.setFlywheel(0);
             Robot.intakeController.setEnabled(false);
             Robot.feeder.rollers(Feeder.Rollers.off);
             Robot.transport.rollers(Transport.Rollers.off);

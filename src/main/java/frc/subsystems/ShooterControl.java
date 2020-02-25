@@ -4,6 +4,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.display.ShooterDisplay;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -18,33 +19,95 @@ public class ShooterControl {
 
     PigeonIMU pigeon;
 
+    ShooterDisplay shooterDisplay;
+
     double angleDiff, visionAngle, currentAngle;
+    double flyWheelRpm;
 
     NetworkTableInstance tableInstance;
     NetworkTable table;
-    NetworkTableEntry goalPosition;
+    NetworkTableEntry angle, distance;
+
+    Flywheel flywheel;
+    Hood hood;
+    Turret turret;
 
     public enum States {
-        disbabled,
-        enabled,
         tracking,
+        spooling,
         shooting
     }
+
+    States state;
+
+    Boolean enabled, panicMode;
 
     private ShooterControl() {
         pigeon = Constants.Drive.pigeon;
 
+        shooterDisplay = new ShooterDisplay();
+
+        flywheel = Robot.flywheel;
+        hood = Robot.hood;
+        turret = Robot.turret;
+
         tableInstance = NetworkTableInstance.getDefault();
-        table = tableInstance.getTable("ShooterData");
-        goalPosition = table.getEntry("goalPosition");
+        table = tableInstance.getTable("VisionData");
+        angle = table.getEntry("angle");
+        distance = table.getEntry("distance");
+
+        enabled = false;
+        panicMode = false;
+
+        state = States.tracking;
 
     }
 
+    public void setEnabled(boolean enable) {
+        this.enabled = enable;
+    }
+
+    public void run() {
+        if (enabled && !panicMode) {
+            turret.run();
+            switch (state) {
+                case tracking:
+                    trackVision();
+                    if(turret.atSetpoint()) {
+                        state = States.spooling;
+                    }
+                    break;
+                case spooling:
+                    flywheel.setVelocity(flyWheelRpm);
+
+                    if(Math.abs(flywheel.getVelocity() - flyWheelRpm) < 200) {
+                        state = States.shooting;
+                    }
+                    break;
+                case shooting:
+                    if (!turret.atSetpoint()) {
+                        state = States.tracking;
+                    }
+                    break;
+            }
+
+//            turret.run();
+//            flywheel.run();
+        } else {
+            setFlywheel(0);
+            flywheel.setVelocity(0);
+        }
+    }
+
+    public void setFlywheel(double rpm) {
+        flyWheelRpm = rpm;
+    }
+
     public void trackVision() {
-        visionAngle = 0 * Constants.degreesToRadians /*TODO*/;
+        visionAngle = getAngle() * Constants.degreesToRadians;
         currentAngle = Robot.turret.getAngle(true);
         angleDiff = currentAngle - visionAngle;
-        Robot.turret.toSetpoint(angleDiff);
+        turret.toSetpoint(angleDiff);
     }
 
     /*
@@ -52,8 +115,16 @@ public class ShooterControl {
     The data should be a 3D vector that represents the position of
     the goal, relative to where the turret is facing.
      */
+    private double getAngle() {
+        return angle.getDouble(0);
+    }
+
+    private double getDistance() {
+        return distance.getDouble(0);
+    }
+
     private double[] getGoalData() {
-        return goalPosition.getDoubleArray(new double[]{0,0,0});
+        return new double[]{0,0,0};
     }
 
     // Uses the velocity and angle of the robot to create a 3D velocity vector
@@ -100,10 +171,15 @@ public class ShooterControl {
     The angle is represented as a matrix for linear algebra
      */
     public double[][] getTurretAngleField() {
-         double angle = Robot.turret.getAngle(true);
-         return new double[][]{
-                 new double[]{Math.cos(angle), Math.sin(angle)},
-                 new double[]{-Math.sin(angle), Math.cos(angle)}
-         };
+        double angle = Robot.turret.getAngle(true);
+        return new double[][]{
+                new double[]{Math.cos(angle), Math.sin(angle)},
+                new double[]{-Math.sin(angle), Math.cos(angle)}
+        };
+    }
+
+    public void display() {
+        shooterDisplay.angle(getAngle());
+        shooterDisplay.distance(getDistance());
     }
 }

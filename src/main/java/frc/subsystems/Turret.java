@@ -77,7 +77,7 @@ public class Turret {
         if(fieldOriented) {
             Constants.Drive.pigeon.getYawPitchRoll(ypr);
             ypr[0] *= Constants.degreesToRadians;
-            ypr[0] = (ypr[0] / 2) % (3.14159 / 2);
+            ypr[0] = (ypr[0]) % (3.14159 * 2);
         }
         else {
             // If not field oriented, don't account for the robot's yaw
@@ -85,6 +85,16 @@ public class Turret {
         }
         return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
 //        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
+    }
+
+    // Returns true if turret is at setpoint
+    public boolean atSetpoint() {
+        double setpoint = this.setPoint;
+        if (Math.abs(setpoint - getAngle(true)) < Constants.Turret.acceptedError) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Setpoint is scaled to prevent damage to wires by going more than one rotation
@@ -99,7 +109,8 @@ public class Turret {
     }
 
     public void display() {
-        SmartDashboard.putNumber("Turret Angle", getAngle(false) - ypr[0]);
+        turretDisplay.angle(getAngle(true)/Units.Angle.degrees);
+        SmartDashboard.putNumber("Turret Angle", getAngle(true));
         SmartDashboard.putNumber("Raw Turret Ticks", getRawTicks());
         SmartDashboard.putNumber("Turret Setpoint", setPoint - ypr[0]);
     }

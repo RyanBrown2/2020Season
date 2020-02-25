@@ -12,10 +12,14 @@ import frc.controlBoard.IControlBoard;
 import frc.display.UtilDisplay;
 import frc.drive.*;
 import frc.subsystems.*;
+import frc.util.udpServer;
 import frc.utilPackage.ScaledDrive;
+
+import java.io.IOException;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
+
   public static IControlBoard getControlBoard(){
     return cb;
   }
@@ -28,8 +32,11 @@ public class Robot extends TimedRobot {
   public static Hood hood = new Hood();
 
   public static IntakeController intakeController = IntakeController.getInstance();
+  public static ShooterControl shooterController = ShooterControl.getInstance();
 
   public static ScaledDrive scaledDrive = new ScaledDrive();
+
+//  tcpServer server = tcpServer.getInstance();
 
   TeleopControls teleopControls;
 
@@ -42,11 +49,12 @@ public class Robot extends TimedRobot {
   DriveOutput driveOutput;
   PositionTracker positionTracker;
 
-  PowerDistributionPanel pdp;
   UtilDisplay utilDisplay;
 
 //  FunctionTest functionTest;
   ColorWheel colorWheel;
+
+  frc.util.udpServer udpServer;
 
   @Override
   public void robotInit() {
@@ -64,8 +72,6 @@ public class Robot extends TimedRobot {
 
     scaledDrive.enabled(true);
 
-    pdp = new PowerDistributionPanel();
-
     compressor = new Compressor(0);
     compressor.setClosedLoopControl(true);
 
@@ -74,6 +80,15 @@ public class Robot extends TimedRobot {
 //    functionTest = new FunctionTest();
 
     colorWheel = new ColorWheel();
+
+    try {
+      udpServer = new udpServer(5100);
+      Thread thread = new Thread(udpServer);
+      thread.start();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     // Set drivebase motor idle modes to brake
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -90,7 +105,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     display();
-    SmartDashboard.putString("Color", colorWheel.getColor());
+//    try {
+//      double data = server.getData()[0];
+//      SmartDashboard.putNumber("TestData", data);
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//    SmartDashboard.putString("Color", colorWheel.getColor());
   }
 
   @Override
@@ -108,12 +129,15 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     turret.toSetpoint(0);
     intakeController.setEnabled(false);
-    intakeController.setVelocity(0);
+    shooterController.setEnabled(false);
+    shooterController.setFlywheel(0);
   }
 
   @Override
   public void teleopPeriodic() {
     intakeController.runIntake();
+    shooterController.run();
+//    shooterController.trackVision();
     flywheel.run();
     turret.run();
     teleopControls.run();
@@ -139,7 +163,6 @@ public class Robot extends TimedRobot {
     positionTracker.display();
     teleopControls.display();
     turret.display();
-    SmartDashboard.putNumber("Battery", pdp.getVoltage());
-    utilDisplay.battery(pdp.getVoltage());
+    shooterController.display();
   }
 }
