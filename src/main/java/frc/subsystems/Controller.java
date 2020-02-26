@@ -75,6 +75,10 @@ public class Controller {
 
     public void driverInput(Commands command){
         switch (command) {
+            case panic:
+                feeding = Feeding.idle;
+                shooting = Shooting.idle;
+                break;
             case idle:
                 break;
             case feedIn:
@@ -87,6 +91,7 @@ public class Controller {
                 if (shooting == Shooting.idle) {
                     feeding = Feeding.feedOut;
                 }
+                break;
             case shoot:
                 feeding = Feeding.idle;
                 shooting = Shooting.startShooting;
@@ -158,6 +163,13 @@ public class Controller {
 
     public void feederActuate() {
         feeder.actuate();
+    }
+
+    public void display() {
+        feeder.display();
+        flywheel.display();
+        hood.display();
+        turret.display();
     }
 
 //    public void trackVision() {

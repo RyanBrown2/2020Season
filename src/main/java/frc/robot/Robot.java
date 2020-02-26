@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
 
   UtilDisplay utilDisplay;
 
-  Controller controller = Controller.getInstance();
+  Controller controller;
 
 //  FunctionTest functionTest;
 
@@ -70,6 +70,8 @@ public class Robot extends TimedRobot {
     utilDisplay = new UtilDisplay();
 
 //    functionTest = new FunctionTest();
+
+    controller = Controller.getInstance();
 
     try {
       udpServer = new udpServer(5100);
@@ -100,11 +102,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     auto.start();
+
   }
 
   @Override
   public void autonomousPeriodic() {
-
+    controller.run();
   }
 
   @Override
@@ -114,7 +117,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
+    controller.run();
   }
 
   @Override
@@ -127,13 +130,10 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
   }
 
-  public void panic() {
-
-  }
-
   public void display() {
     Drive.getInstance().display();
     positionTracker.display();
     teleopControls.display();
+    controller.display();
   }
 }
