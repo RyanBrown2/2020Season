@@ -46,8 +46,6 @@ public class Robot extends TimedRobot {
 
 //  FunctionTest functionTest;
 
-  frc.util.udpServer udpServer;
-
   @Override
   public void robotInit() {
     teleopControls = new TeleopControls();
@@ -72,14 +70,6 @@ public class Robot extends TimedRobot {
 //    functionTest = new FunctionTest();
 
     controller = Controller.getInstance();
-
-    try {
-      udpServer = new udpServer(5100);
-      Thread thread = new Thread(udpServer);
-      thread.start();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     // Set drivebase motor idle modes to brake
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -118,6 +108,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     controller.run();
+    teleopControls.run();
   }
 
   @Override

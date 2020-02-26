@@ -58,15 +58,6 @@ public class Flywheel {
     }
 
     public void setVelocity(double vel) {
-        //Set up values for optimized spinup to the target
-        if(velocitySetpoint < vel) {
-            lastError = 1;
-        }
-        else if(velocitySetpoint > vel) {
-            lastError = -1;
-        }
-        tbh = (2 * (vel / Constants.Flywheel.maxRPM)) - 1;
-
         velocitySetpoint = vel;
     }
 

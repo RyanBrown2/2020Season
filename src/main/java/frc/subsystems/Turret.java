@@ -95,9 +95,9 @@ public class Turret {
     }
 
     // Returns true if turret is at setpoint
-    public boolean atSetpoint() {
+    public boolean atSetpoint(boolean fieldOriented) {
         double setpoint = this.setPoint;
-        if (Math.abs(setpoint - getAngle(true)) < Constants.Turret.acceptedError) {
+        if (Math.abs(setpoint - getAngle(fieldOriented)) < Constants.Turret.acceptedError) {
             return true;
         } else {
             return false;
@@ -117,8 +117,10 @@ public class Turret {
 
     public void display() {
         turretDisplay.angle(getAngle(true)/Units.Angle.degrees);
-        SmartDashboard.putNumber("Turret Angle", getAngle(true));
-        SmartDashboard.putNumber("Raw Turret Ticks", getRawTicks());
-        SmartDashboard.putNumber("Turret Setpoint", setPoint - ypr[0]);
+        turretDisplay.setpoint(setPoint);
+        turretDisplay.atSetpoint(atSetpoint(false));
+//        SmartDashboard.putNumber("Turret Angle", getAngle(true));
+//        SmartDashboard.putNumber("Raw Turret Ticks", getRawTicks());
+//        SmartDashboard.putNumber("Turret Setpoint", setPoint - ypr[0]);
     }
 }

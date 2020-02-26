@@ -36,7 +36,7 @@ public class TeleopControls {
             // Enable the shooter
             controller.driverInput(Controller.Commands.shoot);
         } if(cb.shootReleased()) {
-            // Disable the shooter
+//             Disable the shooter
             controller.driverInput(Controller.Commands.idle);
         } if(cb.panic()) {
             controller.driverInput(Controller.Commands.panic);
