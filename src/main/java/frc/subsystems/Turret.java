@@ -11,6 +11,13 @@ import frc.robot.Constants;
 import frc.utilPackage.Units;
 
 public class Turret {
+    private static Turret instance = null;
+    public static Turret getInstance() {
+        if (instance == null) {
+            instance = new Turret();
+        }
+        return instance;
+    }
     TurretDisplay turretDisplay;
     CANSparkMax turretMotor;
     CANPIDController turretPID;
@@ -20,7 +27,7 @@ public class Turret {
     // Yaw-Pitch-Roll (ypr) is used to store the gyro data
     double[] ypr = new double[3];
 
-    public Turret() {
+    private Turret() {
         turretMotor = Constants.Turret.turret;
         turretDisplay = new TurretDisplay();
         turretPID = turretMotor.getPIDController();

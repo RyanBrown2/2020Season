@@ -5,12 +5,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
 
 public class Transport {
-
+    private static Transport instance = null;
+    public static Transport getInstance() {
+        if (instance == null) {
+            instance = new Transport();
+        }
+        return instance;
+    }
     TalonSRX rampFront, rampBack;
 
     public enum Rollers {in, out, off, onlyFront}
 
-    public Transport() {
+    private Transport() {
         rampFront = Constants.Transport.rampFront;
         rampBack = Constants.Transport.rampBack;
     }

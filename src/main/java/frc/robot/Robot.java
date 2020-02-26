@@ -12,6 +12,7 @@ import frc.controlBoard.IControlBoard;
 import frc.display.UtilDisplay;
 import frc.drive.*;
 import frc.subsystems.*;
+import frc.subsystems.Controller;
 import frc.util.udpServer;
 import frc.utilPackage.ScaledDrive;
 
@@ -23,16 +24,6 @@ public class Robot extends TimedRobot {
   public static IControlBoard getControlBoard(){
     return cb;
   }
-
-  public static Feeder feeder = new Feeder();
-  public static Mixer mixer = new Mixer();
-  public static Transport transport = new Transport();
-  public static Flywheel flywheel = new Flywheel();
-  public static Turret turret = new Turret();
-  public static Hood hood = new Hood();
-
-  public static IntakeController intakeController = IntakeController.getInstance();
-  public static ShooterControl shooterController = ShooterControl.getInstance();
 
   public static ScaledDrive scaledDrive = new ScaledDrive();
 
@@ -51,8 +42,9 @@ public class Robot extends TimedRobot {
 
   UtilDisplay utilDisplay;
 
+  Controller controller = Controller.getInstance();
+
 //  FunctionTest functionTest;
-  ColorWheel colorWheel;
 
   frc.util.udpServer udpServer;
 
@@ -79,8 +71,6 @@ public class Robot extends TimedRobot {
 
 //    functionTest = new FunctionTest();
 
-    colorWheel = new ColorWheel();
-
     try {
       udpServer = new udpServer(5100);
       Thread thread = new Thread(udpServer);
@@ -105,13 +95,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     display();
-//    try {
-//      double data = server.getData()[0];
-//      SmartDashboard.putNumber("TestData", data);
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//    SmartDashboard.putString("Color", colorWheel.getColor());
   }
 
   @Override
@@ -121,27 +104,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    intakeController.runIntake();
-    flywheel.run();
+
   }
 
   @Override
   public void teleopInit() {
-    turret.toSetpoint(0);
-    intakeController.setEnabled(false);
-    shooterController.setEnabled(false);
-    shooterController.setFlywheel(0);
+
   }
 
   @Override
   public void teleopPeriodic() {
-    intakeController.runIntake();
-    shooterController.run();
-//    shooterController.trackVision();
-    flywheel.run();
-    turret.run();
-    teleopControls.run();
-    scaledDrive.run();
+
   }
 
   @Override
@@ -162,7 +135,5 @@ public class Robot extends TimedRobot {
     Drive.getInstance().display();
     positionTracker.display();
     teleopControls.display();
-    turret.display();
-    shooterController.display();
   }
 }

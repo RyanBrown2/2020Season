@@ -6,13 +6,20 @@ import frc.robot.Constants;
 import frc.utilPackage.Units;
 
 public class Hood {
+    private static Hood instance = null;
+    public static Hood getInstance() {
+        if (instance == null) {
+            instance = new Hood();
+        }
+        return instance;
+    }
 
     Servo hood;
     HoodDisplay hoodDisplay;
 
     public double setpoint = 180;
 
-    public Hood() {
+    private Hood() {
         hood = new Servo(Constants.Hood.hoodServo);
         hoodDisplay = new HoodDisplay();
     }

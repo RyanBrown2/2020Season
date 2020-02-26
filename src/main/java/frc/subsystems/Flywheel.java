@@ -8,6 +8,13 @@ import frc.display.FlywheelDisplay;
 import frc.robot.Constants;
 
 public class Flywheel {
+    private static Flywheel instance = null;
+    public static Flywheel getInstance() {
+        if (instance == null) {
+            instance = new Flywheel();
+        }
+        return instance;
+    }
     double velocitySetpoint;
     double error;
     double tbh = 0;
@@ -21,7 +28,7 @@ public class Flywheel {
 
     FlywheelDisplay flywheelDisplay;
 
-    public Flywheel() {
+    private Flywheel() {
         flywheelDisplay = new FlywheelDisplay();
 
         flywheelMotor = Constants.Flywheel.flywheelMotor;

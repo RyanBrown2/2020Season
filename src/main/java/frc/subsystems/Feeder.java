@@ -5,14 +5,20 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.Constants;
 
 public class Feeder {
+    private static Feeder instance = null;
+    public static Feeder getInstance() {
+        if (instance == null) {
+            instance = new Feeder();
+        }
+        return instance;
+    }
 
     DoubleSolenoid feederPiston = Constants.Feeder.solenoid;
     public enum Rollers {off, in, out, maxIn, maxOut}
 
     boolean isOut = false;
 
-    public Feeder() {
-    }
+    private Feeder() {}
 
     public void rollers(Rollers rollers) {
         if (rollers == Rollers.off) {

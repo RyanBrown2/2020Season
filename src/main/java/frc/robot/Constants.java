@@ -7,6 +7,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -84,6 +85,8 @@ public class Constants {
         public static TalonSRX rampFront = new TalonSRX(17);
         public static TalonSRX rampBack = new TalonSRX(20);
         public static TalonSRX mixer = new TalonSRX(14);
+
+        public static DigitalInput ballSensor = new DigitalInput(9);
     }
 
     public static class Turret {

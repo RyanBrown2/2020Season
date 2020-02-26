@@ -34,4 +34,8 @@ public class ShooterDisplay {
         this.distance.setDouble(distance);
     }
 
+//    public void state(ShooterControl.States state) {
+//        this.state.data;
+//    }
+
 }

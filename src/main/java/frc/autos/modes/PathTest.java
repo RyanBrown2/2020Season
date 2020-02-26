@@ -53,31 +53,31 @@ public class PathTest extends AutoMode {
 
     public void auto() throws AutoEndedException {
         PositionTracker.getInstance().robotForward();
-        Robot.feeder.deploy();
-        Robot.feeder.rollers(Feeder.Rollers.maxIn);
+//        Robot.feeder.deploy();
+//        Robot.feeder.rollers(Feeder.Rollers.maxIn);
         runAction(underPanel);
         if(underPanel.isFinished()) {
-            Robot.feeder.rollers(Feeder.Rollers.off);
-            Robot.flywheel.setVelocity(3000);
+//            Robot.feeder.rollers(Feeder.Rollers.off);
+//            Robot.flywheel.setVelocity(3000);
         }
         runAction(reverseToShoot);
         if(reverseToShoot.isFinished()) {
-            Robot.transport.rollers(Transport.Rollers.in);
-            Robot.mixer.rollers(Mixer.Rollers.in);
+//            Robot.transport.rollers(Transport.Rollers.in);
+//            Robot.mixer.rollers(Mixer.Rollers.in);
         }
         runAction(waitForFeeder);
         if(waitForFeeder.isFinished()) {
-            Robot.feeder.retract();
-            Robot.feeder.rollers(Feeder.Rollers.maxIn);
+//            Robot.feeder.retract();
+//            Robot.feeder.rollers(Feeder.Rollers.maxIn);
         }
         runAction(waitForShooting);
         if(waitForShooting.isFinished()) {
             // Stop running mechs
-            Robot.transport.rollers(Transport.Rollers.off);
-            Robot.mixer.rollers(Mixer.Rollers.off);
+//            Robot.transport.rollers(Transport.Rollers.off);
+//            Robot.mixer.rollers(Mixer.Rollers.off);
 
             // Deploy feeder
-            Robot.feeder.deploy();
+//            Robot.feeder.deploy();
         }
         runAction(hard90);
         if(hard90.isFinished()) {
@@ -85,20 +85,20 @@ public class PathTest extends AutoMode {
         }
         runAction(toFirstBall);
         if(toFirstBall.isFinished()) {
-            Robot.transport.rollers(Transport.Rollers.in);
-            Robot.mixer.rollers(Mixer.Rollers.in);
+//            Robot.transport.rollers(Transport.Rollers.in);
+//            Robot.mixer.rollers(Mixer.Rollers.in);
         }
         runAction(waitForFeeder);
         if(waitForFeeder.isFinished()) {
-            Robot.feeder.retract();
-            Robot.feeder.rollers(Feeder.Rollers.maxIn);
+//            Robot.feeder.retract();
+//            Robot.feeder.rollers(Feeder.Rollers.maxIn);
         }
         runAction(waitForShooting);
         if(waitForShooting.isFinished()) {
-            Robot.feeder.rollers(Feeder.Rollers.off);
-            Robot.mixer.rollers(Mixer.Rollers.off);
-            Robot.flywheel.setVelocity(0);
-            Robot.transport.rollers(Transport.Rollers.off);
+//            Robot.feeder.rollers(Feeder.Rollers.off);
+//            Robot.mixer.rollers(Mixer.Rollers.off);
+//            Robot.flywheel.setVelocity(0);
+//            Robot.transport.rollers(Transport.Rollers.off);
         }
     }
 }

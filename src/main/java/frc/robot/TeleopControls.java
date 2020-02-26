@@ -6,13 +6,7 @@ import frc.subsystems.*;
 public class TeleopControls {
     private static IControlBoard cb = Robot.getControlBoard();
 
-    Feeder feeder = Robot.feeder;
-    Flywheel flywheel = Robot.flywheel;
-    Mixer mixer = Robot.mixer;
-    Transport transport = Robot.transport;
-
-    IntakeController intakeController = Robot.intakeController;
-    ShooterControl shooterController = Robot.shooterController;
+    Controller controller = Controller.getInstance();
 
     public TeleopControls() {
 
@@ -21,43 +15,31 @@ public class TeleopControls {
     public void run() {
         // Buttons run different actions
         if(cb.rollersPressed()) {
-            feeder.rollers(Feeder.Rollers.maxIn);
+            controller.driverInput(Controller.Commands.feedIn);
         } if(cb.rollersReleased()) {
-            feeder.rollers(Feeder.Rollers.off);
+            controller.driverInput(Controller.Commands.idle);
         } if(cb.mixerPressed()) {
-            transport.rollers(Transport.Rollers.onlyFront);
-            mixer.rollers(Mixer.Rollers.slowIn);
+
         } if(cb.mixerReleased()) {
-            transport.rollers(Transport.Rollers.off);
-            mixer.rollers(Mixer.Rollers.off);
+
         } if(cb.feederActuatePressed()) {
-            feeder.actuate();
+            controller.feederActuate();
         } if(cb.reverseFeederPressed()) {
-            feeder.rollers(Feeder.Rollers.out);
+            controller.driverInput(Controller.Commands.feedOut);
         } if(cb.reverseFeederReleased()) {
-            feeder.rollers(Feeder.Rollers.off);
+            controller.driverInput(Controller.Commands.idle);
         } if(cb.rampPressed()) {
-            transport.rollers(Transport.Rollers.in);
+
         } if(cb.rampReleased()) {
-            transport.rollers(Transport.Rollers.off);
+
         } if(cb.shootPressed()) {
             // Enable the shooter
-            shooterController.setFlywheel(3000);
-            intakeController.setEnabled(true);
-            shooterController.setEnabled(true);
+            controller.driverInput(Controller.Commands.shoot);
         } if(cb.shootReleased()) {
             // Disable the shooter
-            shooterController.setFlywheel(0);
-            intakeController.setEnabled(false);
-            shooterController.setEnabled(false);
-            // Disable running subsystems
-            mixer.rollers(Mixer.Rollers.off);
-            transport.rollers(Transport.Rollers.off);
-            feeder.rollers(Feeder.Rollers.off);
+            controller.driverInput(Controller.Commands.idle);
         }
     }
 
-    public void display() {
-        flywheel.display();
-    }
+    public void display() {}
 }

@@ -5,12 +5,19 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class ColorWheel {
+    private static ColorWheel instance = null;
+    public static ColorWheel getInstance() {
+        if (instance == null) {
+            instance = new ColorWheel();
+        }
+        return instance;
+    }
 
     I2C.Port ic2Port;
     ColorSensorV3 colorSensor;
     Color detectedColor;
 
-    public ColorWheel() {
+    private ColorWheel() {
         ic2Port = I2C.Port.kOnboard;
         colorSensor = new ColorSensorV3(ic2Port);
     }

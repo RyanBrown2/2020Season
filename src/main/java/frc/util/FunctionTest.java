@@ -1,5 +1,6 @@
 package frc.util;
 
+/*
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -13,14 +14,14 @@ import frc.subsystems.Hood;
 
 public class FunctionTest {
 
-    Hood hood = new Hood();
-    Timer timer = new Timer();
+//    Hood hood = new Hood();
+//    Timer timer = new Timer();
     //time is in seconds
     int state = 1;
 
     public FunctionTest() {
-        timer.reset();
-        timer.start();
+//        timer.reset();
+//        timer.start();
     }
 
     public void reset() {
@@ -41,9 +42,8 @@ public class FunctionTest {
             Constants.Transport.rampBack.getSelectedSensorPosition();
             Constants.Transport.mixer.getSelectedSensorPosition();
 
-         */
-            // not sure what to display for hood
 
+            // not sure what to display for hood
         switch (state) {
             case 1:
                 Drive.getInstance().outputToDrive(-0.25, 0.25);
@@ -166,5 +166,4 @@ public class FunctionTest {
 
     }
 
-
-}
+}*/
