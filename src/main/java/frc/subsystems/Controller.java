@@ -1,6 +1,7 @@
 package frc.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 import frc.util.udpServer;
 
@@ -9,13 +10,14 @@ import java.net.SocketException;
 
 public class Controller {
     private static Controller instance = null;
-
     public static Controller getInstance() {
         if (instance == null) {
             instance = new Controller();
         }
         return instance;
     }
+
+    Timer timer;
 
     ColorWheel colorWheel;
     Feeder feeder;
@@ -34,7 +36,10 @@ public class Controller {
         feedIn,
         feedOut,
         runAll,
-        runFeeder
+        runFeeder,
+        shoot,
+        feederShoot,
+        panic
     }
 
     private enum Shooting {
@@ -42,7 +47,11 @@ public class Controller {
         startShooting,
         tracking,
         spooling,
-        shooting
+        shooting,
+        manualTrack,
+        manualSpool,
+        manualShoot,
+        panic
     }
 
     public enum Commands {
@@ -52,6 +61,9 @@ public class Controller {
         feederActuate,
         trackingToggle,
         shoot,
+        manualTrack,
+        manualSpool,
+        manualShoot,
         panic
     }
 
@@ -75,6 +87,8 @@ public class Controller {
         feeding = Feeding.idle;
         shooting = Shooting.idle;
 
+        timer = new Timer();
+
         try {
             visionServer = new udpServer(5100);
             Thread thread = new Thread(visionServer);
@@ -89,8 +103,8 @@ public class Controller {
     public void driverInput(Commands command) {
         switch (command) {
             case panic:
-                feeding = Feeding.idle;
-                shooting = Shooting.idle;
+                feeding = Feeding.panic;
+                shooting = Shooting.panic;
                 break;
             case idle:
                 feeding = Feeding.idle;
@@ -103,12 +117,12 @@ public class Controller {
                 }
                 break;
             case feedOut:
-                if (shooting == Shooting.idle) {
+//                if (shooting == Shooting.idle) {
 //                    feeding = Feeding.feedOut;
-                }
+//                }
                 break;
             case shoot:
-                feeding = Feeding.idle;
+                feeding = Feeding.shoot;
                 shooting = Shooting.startShooting;
                 break;
             case feederActuate:
@@ -117,6 +131,16 @@ public class Controller {
                 }
                 break;
             case trackingToggle:
+                break;
+            case manualTrack:
+                shooting = Shooting.manualTrack;
+                break;
+            case manualSpool:
+                shooting = Shooting.manualSpool;
+                break;
+            case manualShoot:
+                shooting = Shooting.manualTrack;
+                feeding = Feeding.shoot;
                 break;
         }
         previousCommand = command;
@@ -135,13 +159,19 @@ public class Controller {
                 mixer.rollers(Mixer.Rollers.in);
                 transport.rollers(Transport.Rollers.onlyFront);
                 if (ballSensor.get()) {
-                    feeding = Feeding.runAll;
+                    feeding = Feeding.runFeeder;
                 }
                 break;
             case runFeeder:
                 feeder.rollers(Feeder.Rollers.in);
                 mixer.rollers(Mixer.Rollers.off);
                 transport.rollers(Transport.Rollers.off);
+                break;
+            case shoot:
+                mixer.rollers(Mixer.Rollers.in);
+                break;
+            case feederShoot:
+                feeder.rollers(Feeder.Rollers.in);
                 break;
         }
 
@@ -175,8 +205,17 @@ public class Controller {
                 turret.run();
                 flywheel.run();
                 break;
+            case manualTrack:
+                turret.updateEncoder();
+                turret.run();
+                flywheel.setVelocity(flywheelSetpoint);
+                flywheel.run();
+                break;
+            case manualSpool:
+                flywheel.setVelocity(flywheelSetpoint);
+                flywheel.run();
+                break;
         }
-
     }
 
     public void feederActuate() {
