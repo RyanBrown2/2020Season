@@ -98,5 +98,7 @@ public class Flywheel {
     }
 
     public void display() {
+        flywheelDisplay.velocity(getVelocity());
+        flywheelDisplay.setpoint(velocitySetpoint);
     }
 }

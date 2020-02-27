@@ -2,8 +2,10 @@ package frc.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.util.udpServer;
+import frc.utilPackage.Units;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -122,7 +124,7 @@ public class Controller {
 //                }
                 break;
             case shoot:
-                feeding = Feeding.shoot;
+//                feeding = Feeding.idle;
                 shooting = Shooting.startShooting;
                 break;
             case feederActuate:
@@ -169,6 +171,7 @@ public class Controller {
                 break;
             case shoot:
                 mixer.rollers(Mixer.Rollers.in);
+                transport.rollers(Transport.Rollers.in);
                 break;
             case feederShoot:
                 feeder.rollers(Feeder.Rollers.in);
@@ -187,7 +190,7 @@ public class Controller {
             case tracking:
                 turret.updateEncoder();
                 turret.run();
-                if (turret.atSetpoint(false)) {
+                if (turret.atSetpoint(true)) {
                     shooting = Shooting.spooling;
                 }
                 break;
@@ -197,10 +200,12 @@ public class Controller {
                 flywheel.setVelocity(flywheelSetpoint);
                 flywheel.run();
                 if (Math.abs(flywheel.getVelocity() - flywheelSetpoint) < 200) {
-                    shooting = Shooting.shooting;
+//                    shooting = Shooting.shooting;
+                    break;
                 }
                 break;
             case shooting:
+                feeding = Feeding.shoot;
                 turret.updateEncoder();
                 turret.run();
                 flywheel.run();
@@ -223,6 +228,7 @@ public class Controller {
     }
 
     public void display() {
+        SmartDashboard.putNumber("Vision Angle", trackAngle());
         feeder.display();
         flywheel.display();
         hood.display();
@@ -233,8 +239,8 @@ public class Controller {
         try {
             double visionAngle = visionServer.getData()[1] * Constants.degreesToRadians;
             double currentAngle = turret.getAngle(false);
-            double angleDiff = currentAngle - visionAngle;
-            return angleDiff;
+            double angleDiff = currentAngle + visionAngle;
+            return angleDiff - 10 * Units.Angle.degrees; //todo
         } catch (InterruptedException e) {
             e.printStackTrace();
             return turret.getAngle(false);
