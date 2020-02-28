@@ -46,8 +46,13 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
-    public boolean rollersPressed() {
+    public boolean rollers() {
         return (joy.getRawButton(ControlBindings.Driver.rollers) || cojoy.getRawButton(ControlBindings.CoDriver.rollers));
+    }
+
+    @Override
+    public boolean rollersPressed() {
+        return (joy.getRawButtonPressed(ControlBindings.Driver.rollers) || cojoy.getRawButtonPressed(ControlBindings.CoDriver.rollers));
     }
 
     @Override
@@ -59,23 +64,23 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
-    public boolean rampPressed() {
-        return cojoy.getRawButton(ControlBindings.CoDriver.ramp);
-    }
-
-    @Override
-    public boolean rampReleased() {
-        return cojoy.getRawButtonReleased(ControlBindings.CoDriver.ramp);
+    public boolean reverseFeeder() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.reverseFeeder);
     }
 
     @Override
     public boolean reverseFeederPressed() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.reverseFeeder);
+        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.reverseFeeder);
     }
 
     @Override
     public boolean reverseFeederReleased() {
         return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.reverseFeeder);
+    }
+
+    @Override
+    public boolean shoot() {
+        return (joy.getRawButton(ControlBindings.Driver.shoot) || buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
     }
 
     @Override
@@ -92,13 +97,33 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
-    public boolean mixerPressed() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.mixer);
+    public boolean climbArms() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.climbArms);
     }
 
     @Override
-    public boolean mixerReleased() {
-        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.mixer);
+    public boolean climbArmsPressed() {
+        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.climbArms);
+    }
+
+    @Override
+    public boolean climbArmsReleased() {
+        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.climbArms);
+    }
+
+    @Override
+    public boolean climb() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.climb);
+    }
+
+    @Override
+    public boolean climbPressed() {
+        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.climb);
+    }
+
+    @Override
+    public boolean climbReleased() {
+        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.climb);
     }
 
     @Override

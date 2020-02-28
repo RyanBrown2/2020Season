@@ -18,6 +18,8 @@ public class ControlBindings {
         public static int shoot = 14;
         public static int mixer = 13;
         public static int reverseFeeder = 17;
+        public static int climbArms = 11;
+        public static int climb = 15;
     }
 
 }

@@ -116,6 +116,13 @@ public class Constants {
         public static double minVel;
     }
 
+    public static class Climber {
+        public static TalonSRX climbArms = new TalonSRX(100); // TODO
+        public static TalonSRX climbGearbox = new TalonSRX(101); // TODO
+
+        public static DigitalInput climbLimit = new DigitalInput(8);
+    }
+
     public static class Image{
         public static int imageWidth = 320;
         public static int imageHeight = 240;

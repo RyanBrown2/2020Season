@@ -1,17 +1,16 @@
-package frc.subsystems;
+package frc.util;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.hal.ThreadsJNI;
 import frc.robot.Constants;
-import frc.robot.Robot;
 
-public class ShooterControl {
-    private static ShooterControl instance = null;
-    public static ShooterControl getInstance() {
+import java.io.IOException;
+
+public class VisionCalc {
+    private static VisionCalc instance = null;
+    public static VisionCalc getInstance() {
         if (instance == null) {
-            instance = new ShooterControl();
+            instance = new VisionCalc();
         }
         return instance;
     }
@@ -20,40 +19,34 @@ public class ShooterControl {
 
     double angleDiff, visionAngle, currentAngle;
 
-    NetworkTableInstance tableInstance;
-    NetworkTable table;
-    NetworkTableEntry goalPosition;
+    udpServer visionServer;
 
-    public enum States {
-        disbabled,
-        enabled,
-        tracking,
-        shooting
-    }
-
-    private ShooterControl() {
-        pigeon = Constants.Drive.pigeon;
-
-        tableInstance = NetworkTableInstance.getDefault();
-        table = tableInstance.getTable("ShooterData");
-        goalPosition = table.getEntry("goalPosition");
-
+    private VisionCalc() {
+        try {
+            visionServer = new udpServer(5100);
+            Thread thread = new Thread(visionServer);
+            thread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void trackVision() {
         visionAngle = 0 * Constants.degreesToRadians /*TODO*/;
-        currentAngle = Robot.turret.getAngle(true);
-        angleDiff = currentAngle - visionAngle;
-        Robot.turret.toSetpoint(angleDiff);
     }
 
     /*
-    Get data from NetworkTables
-    The data should be a 3D vector that represents the position of
-    the goal, relative to where the turret is facing.
-     */
+    Get data from Coprocessor
+    The data will a double array formatted as the following:
+        [<distance>,<angle>]
+    */
     private double[] getGoalData() {
-        return goalPosition.getDoubleArray(new double[]{0,0,0});
+        try {
+            return visionServer.getData();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new double[]{0, 0};
+        }
     }
 
     // Uses the velocity and angle of the robot to create a 3D velocity vector
@@ -87,23 +80,10 @@ public class ShooterControl {
     Returns turret angle relative to robot
     The angle is represented as a matrix for linear algebra
      */
-    public double[][] getTurretAngleRobot() {
-        double angle = Robot.turret.getAngle(false);
+    public double[][] getTurretAngle(double angle) {
         return new double[][]{
                 new double[]{Math.cos(angle), Math.sin(angle)},
                 new double[]{-Math.sin(angle), Math.cos(angle)}
         };
-    }
-
-    /*
-    Returns turret angle relative to field
-    The angle is represented as a matrix for linear algebra
-     */
-    public double[][] getTurretAngleField() {
-         double angle = Robot.turret.getAngle(true);
-         return new double[][]{
-                 new double[]{Math.cos(angle), Math.sin(angle)},
-                 new double[]{-Math.sin(angle), Math.cos(angle)}
-         };
     }
 }

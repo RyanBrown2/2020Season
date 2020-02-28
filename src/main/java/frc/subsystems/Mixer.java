@@ -13,8 +13,7 @@ public class Mixer {
     }
     public enum Rollers {off, in, out, slowIn}
 
-    private Mixer() {
-    }
+    private Mixer() {}
 
     public void rollers(Rollers rollers) {
         if (rollers == Rollers.off) {

@@ -12,7 +12,6 @@ import frc.controlBoard.IControlBoard;
 import frc.display.UtilDisplay;
 import frc.drive.*;
 import frc.subsystems.*;
-import frc.subsystems.Controller;
 import frc.util.udpServer;
 import frc.utilPackage.ScaledDrive;
 
@@ -27,7 +26,6 @@ public class Robot extends TimedRobot {
 
   public static ScaledDrive scaledDrive = new ScaledDrive();
 
-//  tcpServer server = tcpServer.getInstance();
 
   TeleopControls teleopControls;
 
@@ -42,7 +40,7 @@ public class Robot extends TimedRobot {
 
   UtilDisplay utilDisplay;
 
-  Controller controller;
+  Control controller;
 
 //  FunctionTest functionTest;
 
@@ -67,7 +65,7 @@ public class Robot extends TimedRobot {
 
 //    functionTest = new FunctionTest();
 
-    controller = Controller.getInstance();
+    controller = Control.getInstance();
 
     // Set drivebase motor idle modes to brake
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);

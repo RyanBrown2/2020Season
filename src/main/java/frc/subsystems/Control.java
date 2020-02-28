@@ -3,12 +3,12 @@ package frc.subsystems;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Robot;
 
-public class IntakeController {
-    private static IntakeController instance = null;
+public class Control {
+    private static Control instance = null;
 
-    public static IntakeController getInstance() {
+    public static Control getInstance() {
         if (instance == null) {
-            instance = new IntakeController();
+            instance = new Control();
         }
         return instance;
     }
@@ -31,7 +31,21 @@ public class IntakeController {
     boolean enabled = false;
     double RPM = 0;
 
-    private IntakeController() {
+    Feeder feeder;
+    Flywheel flywheel;
+    Hood hood;
+    Mixer mixer;
+    Transport transport;
+    Turret turret;
+
+    private Control() {
+        feeder = Feeder.getInstance();
+        flywheel = Flywheel.getInstance();
+        hood = Hood.getInstance();
+        mixer = Mixer.getInstance();
+        transport = Transport.getInstance();
+        turret = Turret.getInstance();
+
         state = States.spooling;
     }
 
@@ -41,26 +55,26 @@ public class IntakeController {
 
     public void setVelocity(double rpms) {
         RPM = rpms;
-        Robot.flywheel.setVelocity(rpms);
+        flywheel.setVelocity(rpms);
     }
 
-    public void runIntake() {
-        Robot.flywheel.run();
+    public void run() {
+        flywheel.run();
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case spooling:
-                        Robot.flywheel.setVelocity(RPM);
+                        flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint
-                        if (Math.abs(Robot.flywheel.getVelocity() - RPM) < 200) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 200) {
                             state = States.transport;
                         }
                         break;
                     case transport:
                         // Transport always runs
-                        Robot.transport.rollers(Transport.Rollers.in);
+                        transport.rollers(Transport.Rollers.in);
                         state = States.mixing;
                         break;
                     case mixing:
@@ -68,17 +82,17 @@ public class IntakeController {
                         if (stateTimer.get() == 0) {
                             stateTimer.start();
                         }
-                        Robot.mixer.rollers(Mixer.Rollers.in);
+                        mixer.rollers(Mixer.Rollers.in);
                         // After 0.3 secs of mixer run the feeder
                         if (stateTimer.get() > 0.4) {
                             state = States.feeder;
                         }
                         break;
                     case feeder:
-                        Robot.feeder.rollers(Feeder.Rollers.maxIn);
+                        feeder.rollers(Feeder.Rollers.maxIn);
                         // Stop running feeder after 0.25 seconds
                         if (stateTimer.get() > 0.8) {
-                            Robot.feeder.rollers(Feeder.Rollers.off);
+                            feeder.rollers(Feeder.Rollers.off);
                             state = States.end;
                         }
                         break;
@@ -95,10 +109,10 @@ public class IntakeController {
             }
         } else {
             // If robot is in panic mode, stop everything intake-related
-            Robot.flywheel.setVelocity(0);
-            Robot.mixer.rollers(Mixer.Rollers.off);
-            Robot.transport.rollers(Transport.Rollers.off);
-            Robot.feeder.rollers(Feeder.Rollers.off);
+            flywheel.setVelocity(0);
+            mixer.rollers(Mixer.Rollers.off);
+            transport.rollers(Transport.Rollers.off);
+            feeder.rollers(Feeder.Rollers.off);
         }
     }
 
@@ -111,15 +125,22 @@ public class IntakeController {
         // Use modulus operator to limit the timer value to 0.75 seconds
         if ((timer.get() % (0.5 + 0.125)) < 0.5) {
             // Run rollers for 0.5 seconds
-            Robot.mixer.rollers(Mixer.Rollers.in);
+            mixer.rollers(Mixer.Rollers.in);
         } else {
             // Stop rollers for 0.25 seconds
-            Robot.mixer.rollers(Mixer.Rollers.off);
+            mixer.rollers(Mixer.Rollers.off);
         }
     }
 
     // Panic mode shuts down all intake-related subsystems
     public void panic(boolean isPanic) {
         panicMode = isPanic;
+    }
+
+    public void display() {
+        feeder.display();
+        flywheel.display();
+        hood.display();
+        turret.display();
     }
 }

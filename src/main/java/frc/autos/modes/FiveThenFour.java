@@ -7,11 +7,10 @@ import frc.autos.actions.WaitAction;
 import frc.coordinates.Heading;
 import frc.drive.PositionTracker;
 import frc.robot.Robot;
-import frc.subsystems.Feeder;
-import frc.subsystems.Mixer;
 import frc.subsystems.Transport;
 import frc.utilPackage.TrapezoidalMp;
 import frc.utilPackage.Units;
+import frc.subsystems.*;
 
 public class FiveThenFour extends AutoMode {
     DrivePath firstBalls, throughTunnel, reverse, lastBalls;
@@ -19,6 +18,11 @@ public class FiveThenFour extends AutoMode {
     PointTurn ninety;
 
     boolean shooting = false;
+
+    Feeder feeder = Feeder.getInstance();
+    Mixer mixer = Mixer.getInstance();
+    Transport transport = Transport.getInstance();
+    IntakeController intake = IntakeController.getInstance();
 
     public FiveThenFour() {
         waitForShooting = new WaitAction(5);
@@ -57,25 +61,25 @@ public class FiveThenFour extends AutoMode {
     @Override
     public void auto() throws AutoEndedException {
         PositionTracker.getInstance().robotForward();
-//        Robot.feeder.deploy();
-//        Robot.feeder.rollers(Feeder.Rollers.maxIn);
-//        Robot.shooterController.setFlywheel(3000);
+       feeder.deploy();
+       feeder.rollers(Feeder.Rollers.maxIn);
+       intake.setVelocity(3000); // TODO
 
         runAction(firstBalls);
         if(firstBalls.isFinished()) {
-//            Robot.feeder.retract();
-//            Robot.feeder.rollers(Feeder.Rollers.off);
-//            Robot.intakeController.setEnabled(true);
+           feeder.retract();
+           feeder.rollers(Feeder.Rollers.off);
+           intake.setEnabled(true);
         }
 
         runAction(waitForShooting);
         if(waitForShooting.isFinished()) {
-//            Robot.intakeController.setEnabled(false);
-//            Robot.transport.rollers(Transport.Rollers.off);
-//            Robot.mixer.rollers(Mixer.Rollers.off);
-//            Robot.shooterController.setFlywheel(0);
-//            Robot.feeder.deploy();
-//            Robot.feeder.rollers(Feeder.Rollers.maxIn);
+           intake.setEnabled(false);
+           transport.rollers(Transport.Rollers.off);
+           mixer.rollers(Mixer.Rollers.off);
+           intake.setVelocity(0); // TODO
+           feeder.deploy();
+           feeder.rollers(Feeder.Rollers.maxIn);
         }
 
         runAction(waitForFeeder);
@@ -84,25 +88,25 @@ public class FiveThenFour extends AutoMode {
         runAction(reverse);
         runAction(ninety);
         if(ninety.isFinished()) {
-//            Robot.shooterController.setFlywheel(3000);
-//            Robot.feeder.deploy();
-//            Robot.feeder.rollers(Feeder.Rollers.maxIn);
+           intake.setVelocity(3000);
+           feeder.deploy();
+           feeder.rollers(Feeder.Rollers.maxIn);
         }
 
         runAction(lastBalls);
 
         if(lastBalls.isFinished()) {
-//            Robot.feeder.retract();
-//            Robot.intakeController.setEnabled(true);
+           feeder.retract();
+           intake.setEnabled(true);
         }
 
         runAction(waitForShootingAgain);
         if(waitForShootingAgain.isFinished()) {
-//            Robot.shooterController.setFlywheel(0);
-//            Robot.intakeController.setEnabled(false);
-//            Robot.feeder.rollers(Feeder.Rollers.off);
-//            Robot.transport.rollers(Transport.Rollers.off);
-//            Robot.mixer.rollers(Mixer.Rollers.off);
+           intake.setVelocity(0);
+           intake.setEnabled(false);
+           feeder.rollers(Feeder.Rollers.off);
+           transport.rollers(Transport.Rollers.off);
+           mixer.rollers(Mixer.Rollers.off);
         }
     }
 }

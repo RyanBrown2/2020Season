@@ -78,7 +78,6 @@ public class udpServer implements Runnable {
         distance = this.data[0];
         angle = this.data[1];
         this.lock.release();
-        SmartDashboard.putNumber("Vision Raw", angle);
         return new double[]{distance, angle};
     }
 }
