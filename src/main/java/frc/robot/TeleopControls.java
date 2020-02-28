@@ -18,14 +18,13 @@ public class TeleopControls {
             controller.driverInput(Controller.Commands.feedIn);
         } if(cb.rollersReleased()) {
             controller.driverInput(Controller.Commands.idle);
-        } if(cb.mixerPressed()) {
-
-        } if(cb.mixerReleased()) {
 
         } if(cb.feederActuatePressed()) {
             controller.feederActuate();
+
         } if(cb.reverseFeederPressed()) {
             controller.driverInput(Controller.Commands.feedOut);
+
         } if(cb.reverseFeederReleased()) {
             controller.driverInput(Controller.Commands.idle);
         } if(cb.rampPressed()) {

@@ -117,7 +117,7 @@ public class Turret {
 
     public void display() {
         turretDisplay.angle(getAngle(true)/Units.Angle.degrees);
-        turretDisplay.setpoint(setPoint);
+        turretDisplay.setpoint(setPoint/Units.Angle.degrees);
         turretDisplay.atSetpoint(atSetpoint(false));
 //        SmartDashboard.putNumber("Turret Angle", getAngle(true));
 //        SmartDashboard.putNumber("Raw Turret Ticks", getRawTicks());

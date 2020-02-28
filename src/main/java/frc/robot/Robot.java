@@ -65,8 +65,6 @@ public class Robot extends TimedRobot {
     compressor = new Compressor(0);
     compressor.setClosedLoopControl(true);
 
-    utilDisplay = new UtilDisplay();
-
 //    functionTest = new FunctionTest();
 
     controller = Controller.getInstance();

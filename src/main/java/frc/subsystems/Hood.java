@@ -31,10 +31,10 @@ public class Hood {
 
     // 0 degree min, 150 degree max
     public void setAngle(double angle) {
-        double setpoint = angle / Units.Angle.degrees;
-        setpoint = setpoint + Constants.Hood.angleOffset;
-        this.setpoint = setpoint;
-    }
+//        double setpoint = angle;
+//        setpoint = setpoint + Constants.Hood.angleOffset;
+        this.setpoint = angle;
+        }
 
     public void panic() {
 
@@ -42,6 +42,7 @@ public class Hood {
 
     public void display() {
         hoodDisplay.setpoint(setpoint);
+        hoodDisplay.angle(hood.getAngle());
     }
 
 }
