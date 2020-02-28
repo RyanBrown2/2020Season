@@ -12,6 +12,7 @@ public class Transport {
         }
         return instance;
     }
+
     TalonSRX rampFront, rampBack;
 
     public enum Rollers {in, out, off, onlyFront}

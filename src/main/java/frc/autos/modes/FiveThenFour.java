@@ -22,7 +22,7 @@ public class FiveThenFour extends AutoMode {
     Feeder feeder = Feeder.getInstance();
     Mixer mixer = Mixer.getInstance();
     Transport transport = Transport.getInstance();
-    IntakeController intake = IntakeController.getInstance();
+    Control controller = Control.getInstance();
 
     public FiveThenFour() {
         waitForShooting = new WaitAction(5);
@@ -63,21 +63,21 @@ public class FiveThenFour extends AutoMode {
         PositionTracker.getInstance().robotForward();
        feeder.deploy();
        feeder.rollers(Feeder.Rollers.maxIn);
-       intake.setVelocity(3000); // TODO
+       controller.setVelocity(3000); // TODO
 
         runAction(firstBalls);
         if(firstBalls.isFinished()) {
            feeder.retract();
            feeder.rollers(Feeder.Rollers.off);
-           intake.setEnabled(true);
+           controller.setEnabled(true);
         }
 
         runAction(waitForShooting);
         if(waitForShooting.isFinished()) {
-           intake.setEnabled(false);
+           controller.setEnabled(false);
            transport.rollers(Transport.Rollers.off);
            mixer.rollers(Mixer.Rollers.off);
-           intake.setVelocity(0); // TODO
+           controller.setVelocity(0); // TODO
            feeder.deploy();
            feeder.rollers(Feeder.Rollers.maxIn);
         }
@@ -88,7 +88,7 @@ public class FiveThenFour extends AutoMode {
         runAction(reverse);
         runAction(ninety);
         if(ninety.isFinished()) {
-           intake.setVelocity(3000);
+           controller.setVelocity(3000);
            feeder.deploy();
            feeder.rollers(Feeder.Rollers.maxIn);
         }
@@ -97,13 +97,13 @@ public class FiveThenFour extends AutoMode {
 
         if(lastBalls.isFinished()) {
            feeder.retract();
-           intake.setEnabled(true);
+           controller.setEnabled(true);
         }
 
         runAction(waitForShootingAgain);
         if(waitForShootingAgain.isFinished()) {
-           intake.setVelocity(0);
-           intake.setEnabled(false);
+           controller.setVelocity(0);
+           controller.setEnabled(false);
            feeder.rollers(Feeder.Rollers.off);
            transport.rollers(Transport.Rollers.off);
            mixer.rollers(Mixer.Rollers.off);

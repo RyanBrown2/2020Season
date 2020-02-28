@@ -1,19 +1,16 @@
 package frc.robot;
 
-import java.io.FileReader;
-
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.utilPackage.Units;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-
-import frc.utilPackage.Units;
+import java.io.FileReader;
 
 public class Constants {
 
@@ -82,8 +79,8 @@ public class Constants {
     }
 
     public static class Transport {
-        public static TalonSRX rampFront = new TalonSRX(17);
-        public static TalonSRX rampBack = new TalonSRX(20);
+        public static TalonSRX rampFront = new TalonSRX(20);
+        public static TalonSRX rampBack = new TalonSRX(17);
         public static TalonSRX mixer = new TalonSRX(14);
 
         public static DigitalInput ballSensor = new DigitalInput(9);
@@ -117,7 +114,7 @@ public class Constants {
     }
 
     public static class Climber {
-        public static TalonSRX climbArms = new TalonSRX(100); // TODO
+        public static TalonSRX climbArms = new TalonSRX(13);
         public static TalonSRX climbGearbox = new TalonSRX(101); // TODO
 
         public static DigitalInput climbLimit = new DigitalInput(8);

@@ -1,7 +1,6 @@
 package frc.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Robot;
 
 public class Control {
     private static Control instance = null;
@@ -13,7 +12,6 @@ public class Control {
         return instance;
     }
 
-    Timer timer = new Timer();
     Timer stateTimer = new Timer();
 
     public enum States {
@@ -102,8 +100,6 @@ public class Control {
             } else {
                 // Else statement serves as a reset for timers and state machine
                 state = States.spooling;
-                timer.stop();
-                timer.reset();
                 stateTimer.stop();
                 stateTimer.reset();
             }
@@ -113,22 +109,6 @@ public class Control {
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);
             feeder.rollers(Feeder.Rollers.off);
-        }
-    }
-
-    // Run the mixer on fixed intervals for optimal performance
-    public void pulseMixer() {
-        // If timer is not already running, start it
-        if(timer.get() == 0) {
-            timer.start();
-        }
-        // Use modulus operator to limit the timer value to 0.75 seconds
-        if ((timer.get() % (0.5 + 0.125)) < 0.5) {
-            // Run rollers for 0.5 seconds
-            mixer.rollers(Mixer.Rollers.in);
-        } else {
-            // Stop rollers for 0.25 seconds
-            mixer.rollers(Mixer.Rollers.off);
         }
     }
 

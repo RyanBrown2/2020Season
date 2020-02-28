@@ -1,44 +1,75 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import frc.controlBoard.IControlBoard;
-import frc.subsystems.*;
+import frc.subsystems.Control;
+import frc.subsystems.Feeder;
+import frc.subsystems.Mixer;
+import frc.subsystems.Transport;
 
 public class TeleopControls {
     private static IControlBoard cb = Robot.getControlBoard();
 
-    Controller controller = Controller.getInstance();
+    Control controller = Control.getInstance();
+    Transport transport = Transport.getInstance();
+    Mixer mixer = Mixer.getInstance();
+    Feeder feeder = Feeder.getInstance();
+
+    DigitalInput ballSensor = Constants.Transport.ballSensor;
+
+    boolean ballState = false;
+
+    Timer ballTimer = new Timer();
 
     public TeleopControls() {
 
     }
 
     public void run() {
+        if(ballSensor.get()) {
+            if(ballTimer.get() == 0) {
+                ballTimer.start();
+            } if(ballTimer.get() >= 0.25) {
+                ballState = true;
+                ballTimer.stop();
+                ballTimer.reset();
+            }
+        }
+
         // Buttons run different actions
-        if(cb.rollersPressed()) {
-            controller.driverInput(Controller.Commands.feedIn);
+        if(cb.rollers()) {
+            feeder.rollers(Feeder.Rollers.maxIn);
+            if(!ballState) {
+                mixer.rollers(Mixer.Rollers.slowIn);
+                transport.rollers(Transport.Rollers.onlyFront);
+            } else {
+                mixer.rollers(Mixer.Rollers.off);
+                transport.rollers(Transport.Rollers.off);
+            }
         } if(cb.rollersReleased()) {
-            controller.driverInput(Controller.Commands.idle);
-
+            feeder.rollers(Feeder.Rollers.off);
+            mixer.rollers(Mixer.Rollers.off);
+            transport.rollers(Transport.Rollers.off);
         } if(cb.feederActuatePressed()) {
-            controller.feederActuate();
-
+            feeder.actuate();
         } if(cb.reverseFeederPressed()) {
-            controller.driverInput(Controller.Commands.feedOut);
-
+            feeder.rollers(Feeder.Rollers.out);
         } if(cb.reverseFeederReleased()) {
-            controller.driverInput(Controller.Commands.idle);
-        } if(cb.rampPressed()) {
-
-        } if(cb.rampReleased()) {
-
-        } if(cb.shootPressed()) {
+            feeder.rollers(Feeder.Rollers.off);
+        } if(cb.shoot()) {
             // Enable the shooter
-            controller.driverInput(Controller.Commands.shoot);
+            controller.setVelocity(3000);
+            controller.setEnabled(true);
         } if(cb.shootReleased()) {
 //             Disable the shooter
-            controller.driverInput(Controller.Commands.idle);
+            controller.setVelocity(0);
+            controller.setEnabled(false);
+            mixer.rollers(Mixer.Rollers.off);
+            transport.rollers(Transport.Rollers.off);
+            feeder.rollers(Feeder.Rollers.off);
         } if(cb.panic()) {
-            controller.driverInput(Controller.Commands.panic);
+            controller.panic(true);
         }
     }
 

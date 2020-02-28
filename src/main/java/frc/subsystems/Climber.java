@@ -28,10 +28,12 @@ public class Climber {
 
     public void run() {
         if(cb.climbArms()) {
-            if() {
-                climbArms.set(ControlMode.PercentOutput, -0.5);
+            if(sensor.get()) {
+                climbArms.set(ControlMode.PercentOutput, -1);
+            } else if(!sensor.get()) {
+                climbArms.set(ControlMode.PercentOutput, -0.1);
             }
-        } if(!cb.climbArmsReleased()) {
+        } if(cb.climbArmsReleased()) {
             climbArms.set(ControlMode.PercentOutput, -0.1);
         } if(cb.climb()) {
             climbGearbox.set(ControlMode.PercentOutput, 0.5);

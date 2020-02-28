@@ -1,7 +1,6 @@
 package frc.util;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import edu.wpi.first.hal.ThreadsJNI;
 import frc.robot.Constants;
 
 import java.io.IOException;
@@ -61,8 +60,8 @@ public class VisionCalc {
      */
     public double[] goalPosRobot() {
         return new double[]{
-                getGoalData()[0]*getTurretAngleRobot()[0][0] + getGoalData()[1]*getTurretAngleRobot()[1][0],
-                getGoalData()[0]*getTurretAngleRobot()[0][1] + getGoalData()[1]*getTurretAngleRobot()[1][1]
+//                getGoalData()[0]*getTurretAngleRobot()[0][0] + getGoalData()[1]*getTurretAngleRobot()[1][0],
+//                getGoalData()[0]*getTurretAngleRobot()[0][1] + getGoalData()[1]*getTurretAngleRobot()[1][1]
         };
     }
 
@@ -71,8 +70,8 @@ public class VisionCalc {
      */
     public double[] goalPosField() {
         return new double[]{
-                getGoalData()[0]*getTurretAngleField()[0][0] + getGoalData()[1]*getTurretAngleField()[1][0],
-                getGoalData()[0]*getTurretAngleField()[0][1] + getGoalData()[1]*getTurretAngleField()[1][1]
+//                getGoalData()[0]*getTurretAngleField()[0][0] + getGoalData()[1]*getTurretAngleField()[1][0],
+//                getGoalData()[0]*getTurretAngleField()[0][1] + getGoalData()[1]*getTurretAngleField()[1][1]
         };
     }
 

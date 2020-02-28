@@ -1,21 +1,21 @@
 package frc.robot;
 
-import com.revrobotics.*;
-import edu.wpi.first.wpilibj.*;
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import com.revrobotics.ColorSensorV3;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.FiveThenFour;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.display.UtilDisplay;
-import frc.drive.*;
-import frc.subsystems.*;
-import frc.util.udpServer;
+import frc.drive.Drive;
+import frc.drive.DriveController;
+import frc.drive.DriveOutput;
+import frc.drive.PositionTracker;
+import frc.subsystems.Climber;
+import frc.subsystems.Control;
 import frc.utilPackage.ScaledDrive;
-
-import java.io.IOException;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
@@ -25,7 +25,6 @@ public class Robot extends TimedRobot {
   }
 
   public static ScaledDrive scaledDrive = new ScaledDrive();
-
 
   TeleopControls teleopControls;
 
@@ -41,6 +40,7 @@ public class Robot extends TimedRobot {
   UtilDisplay utilDisplay;
 
   Control controller;
+  Climber climber;
 
 //  FunctionTest functionTest;
 
@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
     teleopControls = new TeleopControls();
 
     Constants.Drive.pigeon.setYaw(0);
+
+    climber = Climber.getInstance();
 
     auto = new FiveThenFour();
     driveAuto = Drive.getInstance();
@@ -105,6 +107,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     controller.run();
     teleopControls.run();
+    scaledDrive.run();
+    climber.run();
   }
 
   @Override
@@ -122,5 +126,6 @@ public class Robot extends TimedRobot {
     positionTracker.display();
     teleopControls.display();
     controller.display();
+    SmartDashboard.putBoolean("Climb Limit State", Constants.Climber.climbLimit.get());
   }
 }
