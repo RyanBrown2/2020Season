@@ -180,7 +180,7 @@ public class Controller {
                 break;
             case start:
                 feeding = Feeding.idle;
-                turret.toSetpoint(trackAngle());
+                turret.toSetpoint(trackData()[1]);
                 shooting = Shooting.tracking;
                 break;
             case tracking:
@@ -255,10 +255,11 @@ public class Controller {
             double visionAngle = visionServer.getData()[1] * Constants.degreesToRadians;
             double currentAngle = turret.getAngle(true);
             double angleDiff = currentAngle - visionAngle;
-            return new double[](visionServer.getData()[0], angleDiff);
+            return new double[]{visionServer.getData()[0], angleDiff};
         } catch (InterruptedException e) {
             e.printStackTrace();
-            double[] emptyData = [turret.getAngle(true), turret.getAngle(true)];
+            double[] emptyData = {0, turret.getAngle(true)};
+            return emptyData;
         }
     }
 }
