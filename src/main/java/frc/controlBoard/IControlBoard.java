@@ -21,6 +21,9 @@ public abstract class IControlBoard {
     public abstract boolean climb();
     public abstract boolean climbPressed();
     public abstract boolean climbReleased();
+    public abstract boolean colorWheelActuate();
+    public abstract boolean colorWheelRoller();
+    public abstract boolean colorWheelRollerReleased();
     public abstract boolean panic();
 
     // Both

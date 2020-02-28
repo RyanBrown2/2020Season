@@ -20,6 +20,8 @@ public class ControlBindings {
         public static int reverseFeeder = 17;
         public static int climbArms = 11;
         public static int climb = 15;
+        public static int colorWheelActuate = 12; //TODO
+        public static int colorWheelRoller = 16; //TODO
     }
 
 }

@@ -127,6 +127,21 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
+    public boolean colorWheelActuate() {
+        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.colorWheelActuate);
+    }
+
+    @Override
+    public boolean colorWheelRoller() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.colorWheelRoller);
+    }
+
+    @Override
+    public boolean colorWheelRollerReleased() {
+        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.colorWheelRoller);
+    }
+
+    @Override
     public boolean panic() {
         return buttonPad.getRawButtonPressed(ControlBindings.CoDriver.panic);
     }

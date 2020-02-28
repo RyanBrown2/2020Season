@@ -120,6 +120,11 @@ public class Constants {
         public static DigitalInput climbLimit = new DigitalInput(8);
     }
 
+    public static class ColorWheel {
+        public static TalonSRX wheelRoller = new TalonSRX(102); // TODO
+        public static DoubleSolenoid wheelPiston = new DoubleSolenoid(1, 5);
+    }
+
     public static class Image{
         public static int imageWidth = 320;
         public static int imageHeight = 240;

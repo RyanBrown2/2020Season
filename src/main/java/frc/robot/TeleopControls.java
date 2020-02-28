@@ -3,10 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import frc.controlBoard.IControlBoard;
-import frc.subsystems.Control;
-import frc.subsystems.Feeder;
-import frc.subsystems.Mixer;
-import frc.subsystems.Transport;
+import frc.subsystems.*;
 
 public class TeleopControls {
     private static IControlBoard cb = Robot.getControlBoard();
@@ -15,6 +12,7 @@ public class TeleopControls {
     Transport transport = Transport.getInstance();
     Mixer mixer = Mixer.getInstance();
     Feeder feeder = Feeder.getInstance();
+    ColorWheel colorWheel = ColorWheel.getInstance();
 
     DigitalInput ballSensor = Constants.Transport.ballSensor;
 
@@ -68,6 +66,12 @@ public class TeleopControls {
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);
             feeder.rollers(Feeder.Rollers.off);
+        } if(cb.colorWheelActuate()) {
+            colorWheel.actuate();
+        } if(cb.colorWheelRoller()) {
+            colorWheel.roller(ColorWheel.Roller.clockWise);
+        } if(cb.colorWheelRollerReleased()) {
+            colorWheel.roller(ColorWheel.Roller.off);
         } if(cb.panic()) {
             controller.panic(true);
         }
