@@ -5,6 +5,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
@@ -83,6 +84,7 @@ public class Turret {
     public double getAngle(boolean fieldOriented) {
         if(fieldOriented) {
             Constants.Drive.pigeon.getYawPitchRoll(ypr);
+//            SmartDashboard.putNumber("Gyro")
             ypr[0] *= Constants.degreesToRadians;
             ypr[0] = (ypr[0]) % (3.14159 * 2);
         }

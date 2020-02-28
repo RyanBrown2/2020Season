@@ -1,15 +1,15 @@
 package frc.util;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import frc.robot.Constants;
+import frc.utilPackage.Units;
 
 import java.io.IOException;
 
-public class VisionCalc {
-    private static VisionCalc instance = null;
-    public static VisionCalc getInstance() {
+public class Vision {
+    private static Vision instance = null;
+    public static Vision getInstance() {
         if (instance == null) {
-            instance = new VisionCalc();
+            instance = new Vision();
         }
         return instance;
     }
@@ -20,7 +20,7 @@ public class VisionCalc {
 
     udpServer visionServer;
 
-    private VisionCalc() {
+    private Vision() {
         try {
             visionServer = new udpServer(5100);
             Thread thread = new Thread(visionServer);
@@ -30,22 +30,34 @@ public class VisionCalc {
         }
     }
 
-    public void trackVision() {
-        visionAngle = 0 * Constants.degreesToRadians /*TODO*/;
-    }
+
 
     /*
     Get data from Coprocessor
     The data will a double array formatted as the following:
         [<distance>,<angle>]
     */
-    private double[] getGoalData() {
+    public double[] getTargetData() {
         try {
             return visionServer.getData();
         } catch (InterruptedException e) {
             e.printStackTrace();
             return new double[]{0, 0};
         }
+    }
+
+    // Get angle from vision
+    public double getAngle() {
+        return getTargetData()[1] * Units.Angle.degrees;
+    }
+
+    // Get distance from vision
+    public double getDistance() {
+        return getTargetData()[0];
+    }
+
+    public double offsetAngle(double angle, double offset) {
+        return angle - offset;
     }
 
     // Uses the velocity and angle of the robot to create a 3D velocity vector
@@ -56,33 +68,28 @@ public class VisionCalc {
     }
 
     /*
-    Take the data from Network Tables and make it relative to the robot
+    Transform a point with linear algebra
      */
-    public double[] goalPosRobot() {
+    public double[] translate(double[] point, double[][] translationMatrix) {
         return new double[]{
-//                getGoalData()[0]*getTurretAngleRobot()[0][0] + getGoalData()[1]*getTurretAngleRobot()[1][0],
-//                getGoalData()[0]*getTurretAngleRobot()[0][1] + getGoalData()[1]*getTurretAngleRobot()[1][1]
+                point[0]*translationMatrix[0][0] + point[1]*translationMatrix[1][0],
+                point[0]*translationMatrix[0][1] + point[1]*translationMatrix[1][1]
         };
     }
 
     /*
-    Take the data from Network Tables and make it relative to the robot
+    This function is used to convert an angle to a transformation matrix
+    This is useful for linear algebra
      */
-    public double[] goalPosField() {
-        return new double[]{
-//                getGoalData()[0]*getTurretAngleField()[0][0] + getGoalData()[1]*getTurretAngleField()[1][0],
-//                getGoalData()[0]*getTurretAngleField()[0][1] + getGoalData()[1]*getTurretAngleField()[1][1]
-        };
-    }
-
-    /*
-    Returns turret angle relative to robot
-    The angle is represented as a matrix for linear algebra
-     */
-    public double[][] getTurretAngle(double angle) {
+    public double[][] angleToMatrix(double angle) {
         return new double[][]{
                 new double[]{Math.cos(angle), Math.sin(angle)},
                 new double[]{-Math.sin(angle), Math.cos(angle)}
         };
+    }
+
+    // DO NOT RUN THIS IN AN INFINITE LOOP
+    public void display() {
+
     }
 }

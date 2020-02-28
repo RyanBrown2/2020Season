@@ -90,7 +90,7 @@ public class Constants {
         public static double acceptedError = 0.044;
 
         public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
-        public static TalonSRX turretEnc = Transport.rampFront;
+        public static TalonSRX turretEnc = Transport.rampBack;
 
         public static double encoderOffset = 0;
 //        public static double ticksPerRev = (2048*(140/30))/3.14159;

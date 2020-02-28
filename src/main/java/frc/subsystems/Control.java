@@ -1,10 +1,10 @@
 package frc.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.util.Vision;
 
 public class Control {
     private static Control instance = null;
-
     public static Control getInstance() {
         if (instance == null) {
             instance = new Control();
@@ -15,6 +15,7 @@ public class Control {
     Timer stateTimer = new Timer();
 
     public enum States {
+        tracking,
         spooling,
         transport,
         mixing,
@@ -36,6 +37,8 @@ public class Control {
     Transport transport;
     Turret turret;
 
+    Vision vision;
+
     private Control() {
         feeder = Feeder.getInstance();
         flywheel = Flywheel.getInstance();
@@ -44,7 +47,9 @@ public class Control {
         transport = Transport.getInstance();
         turret = Turret.getInstance();
 
-        state = States.spooling;
+        vision = Vision.getInstance();
+
+        state = States.tracking;
     }
 
     public void setEnabled(boolean enable) {
@@ -58,15 +63,22 @@ public class Control {
 
     public void run() {
         flywheel.run();
+        turret.run();
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
+                    // Get tracking data from vision and set turret setpoint, then switch to spooling state
+                    case tracking:
+                        // Determines and moves the turret to track target
+                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
+                        state = States.spooling;
+                        break;
                     case spooling:
                         flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint
-                        if (Math.abs(flywheel.getVelocity() - RPM) < 200) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(true)) {
                             state = States.transport;
                         }
                         break;
@@ -99,7 +111,7 @@ public class Control {
                 }
             } else {
                 // Else statement serves as a reset for timers and state machine
-                state = States.spooling;
+                state = States.tracking;
                 stateTimer.stop();
                 stateTimer.reset();
             }
