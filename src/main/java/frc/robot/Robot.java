@@ -8,7 +8,6 @@ import frc.autos.modes.AutoMode;
 import frc.autos.modes.FiveThenFour;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
-import frc.display.UtilDisplay;
 import frc.drive.Drive;
 import frc.drive.DriveController;
 import frc.drive.DriveOutput;
@@ -36,8 +35,6 @@ public class Robot extends TimedRobot {
   DriveController driveController;
   DriveOutput driveOutput;
   PositionTracker positionTracker;
-
-  UtilDisplay utilDisplay;
 
   Control controller;
   Climber climber;
