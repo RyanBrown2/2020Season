@@ -36,7 +36,6 @@ public class Control {
     Mixer mixer;
     Transport transport;
     Turret turret;
-
     Vision vision;
 
     private Control() {
