@@ -34,7 +34,7 @@ public class Turret {
 
         turretPID.setFeedbackDevice(turretEncoder);
 
-        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         Constants.Turret.turretEnc.setSelectedSensorPosition(0);
 
         turretEncoder.setPositionConversionFactor(1);
@@ -107,8 +107,8 @@ public class Turret {
     // Setpoint is scaled to prevent damage to wires by going more than one rotation
     public double scaleSetpoint(double setpoint) {
         // Use modulus operator to keep setpoint under one full rotation
-//        double scaledSetpoint = setpoint % (3.14159*2);
-        double scaledSetpoint = 0;
+        double scaledSetpoint = setpoint /*% (3.14159*2)*/;
+//        double scaledSetpoint = 0;
         return scaledSetpoint;
     }
 

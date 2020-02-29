@@ -100,11 +100,7 @@ public class Control {
                         break;
                     case feeder:
                         feeder.rollers(Feeder.Rollers.maxIn);
-                        // Stop running feeder after 0.25 seconds
-                        if (stateTimer.get() > 0.8) {
-                            feeder.rollers(Feeder.Rollers.off);
-                            state = States.end;
-                        }
+                        state = States.end;
                         break;
                     case end:
                         break;
