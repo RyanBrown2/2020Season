@@ -65,7 +65,7 @@ public class Control {
         hood.setAngle(33);
         hood.run();
         flywheel.run();
-        turret.run(false);
+        turret.run(true);
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
@@ -74,13 +74,13 @@ public class Control {
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
                         // Determines and moves the turret to track target
-                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
+                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         state = States.spooling;
                         break;
                     case spooling:
                         flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
-                        if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(false)) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(true)) {
 //                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
                             state = States.transport;
                         }

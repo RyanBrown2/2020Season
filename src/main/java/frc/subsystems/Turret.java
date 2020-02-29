@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.ControlType;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
@@ -58,6 +59,12 @@ public class Turret {
 
     public void run(boolean fieldOriented) {
         updateEncoder();
+        if((setPoint - getYaw()) > Constants.Turret.upperRadianLimit) {
+            setPoint = Constants.Turret.upperRadianLimit + getYaw();
+        } if((setPoint - getYaw()) < Constants.Turret.lowerRadianLimit) {
+            setPoint = Constants.Turret.lowerRadianLimit + getYaw();
+        }
+
          if(fieldOriented) {
              turretPID.setReference(setPoint - getYaw(), ControlType.kPosition);
          } else {
@@ -107,8 +114,7 @@ public class Turret {
     // Setpoint is scaled to prevent damage to wires by going more than one rotation
     public double scaleSetpoint(double setpoint) {
         // Use modulus operator to keep setpoint under one full rotation
-        double scaledSetpoint = setpoint /*% (3.14159*2)*/;
-//        double scaledSetpoint = 0;
+        double scaledSetpoint = setpoint % (3.14159 * 2);
         return scaledSetpoint;
     }
 
@@ -117,11 +123,13 @@ public class Turret {
     }
 
     public void display() {
+        updateEncoder();
         turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
         turretDisplay.setpoint(setPoint/Units.Angle.degrees);
         turretDisplay.atSetpoint(atSetpoint(false));
-//        SmartDashboard.putNumber("Turret Angle", getAngle(true));
-//        SmartDashboard.putNumber("Raw Turret Ticks", getRawTicks());
-//        SmartDashboard.putNumber("Turret Setpoint", setPoint - ypr[0]);
+        SmartDashboard.putNumber("Encoder Angle", turretEncoder.getPosition());
+        SmartDashboard.putNumber("Setpoint", setPoint);
+        SmartDashboard.putNumber("Setpoint + ypr", setPoint + getYaw());
+        SmartDashboard.putNumber("Setpoint - ypr", setPoint - getYaw());
     }
 }

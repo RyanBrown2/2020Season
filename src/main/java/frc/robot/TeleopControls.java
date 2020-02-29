@@ -60,7 +60,7 @@ public class TeleopControls {
             controller.setVelocity(4100);
             controller.setEnabled(true);
         } if(cb.shootReleased()) {
-//             Disable the shooter
+            // Disable the shooter
             controller.setVelocity(0);
             controller.setEnabled(false);
             ballState = false;
