@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-//    controller.run();
+    controller.run();
     teleopControls.run();
     scaledDrive.run();
     climber.run();
