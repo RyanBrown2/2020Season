@@ -63,6 +63,7 @@ public class TeleopControls {
 //             Disable the shooter
             controller.setVelocity(0);
             controller.setEnabled(false);
+            ballState = false;
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);
             feeder.rollers(Feeder.Rollers.off);

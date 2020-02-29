@@ -5,8 +5,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
@@ -58,13 +56,13 @@ public class Turret {
         turretPID.setSmartMotionAllowedClosedLoopError(Constants.Turret.allowedErr, smartMotionSlot);
     }
 
-    public void run() {
+    public void run(boolean fieldOriented) {
         updateEncoder();
-        Constants.Drive.pigeon.getYawPitchRoll(ypr);
-        ypr[0] *= Constants.degreesToRadians;
-        ypr[0] = ypr[0] % (2*3.14159);
-//        turretPID.setReference(setPoint, ControlType.kPosition);
-         turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
+         if(fieldOriented) {
+             turretPID.setReference(setPoint - getYaw(), ControlType.kPosition);
+         } else {
+             turretPID.setReference(setPoint, ControlType.kPosition);
+         }
     }
 
     // Encoder not plugged directly into Spark Max, so update a 'fake' encoder with the actual value for the PID loops
@@ -83,17 +81,17 @@ public class Turret {
     // Angle is returned in radians, and can be relative to the robot's starting position
     public double getAngle(boolean fieldOriented) {
         if(fieldOriented) {
-            Constants.Drive.pigeon.getYawPitchRoll(ypr);
-//            SmartDashboard.putNumber("Gyro")
-            ypr[0] *= Constants.degreesToRadians;
-            ypr[0] = (ypr[0]) % (3.14159 * 2);
+            return (getRawTicks() - Constants.Turret.encoderOffset) / Constants.Turret.ticksPerRev + getYaw();
+        } else {
+            return (getRawTicks() - Constants.Turret.encoderOffset) / Constants.Turret.ticksPerRev;
         }
-        else {
-            // If not field oriented, don't account for the robot's yaw
-            ypr[0] = 0;
-        }
-        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev + ypr[0];
-//        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
+    }
+
+    public double getYaw() {
+        Constants.Drive.pigeon.getYawPitchRoll(ypr);
+        ypr[0] *= Constants.degreesToRadians;
+        ypr[0] = (ypr[0]) % (3.14159*2);
+        return ypr[0];
     }
 
     // Returns true if turret is at setpoint
@@ -109,7 +107,8 @@ public class Turret {
     // Setpoint is scaled to prevent damage to wires by going more than one rotation
     public double scaleSetpoint(double setpoint) {
         // Use modulus operator to keep setpoint under one full rotation
-        double scaledSetpoint = setpoint % (3.14159*2);
+//        double scaledSetpoint = setpoint % (3.14159*2);
+        double scaledSetpoint = 0;
         return scaledSetpoint;
     }
 
@@ -118,7 +117,7 @@ public class Turret {
     }
 
     public void display() {
-        turretDisplay.angle(getAngle(true)/Units.Angle.degrees);
+        turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
         turretDisplay.setpoint(setPoint/Units.Angle.degrees);
         turretDisplay.atSetpoint(atSetpoint(false));
 //        SmartDashboard.putNumber("Turret Angle", getAngle(true));
