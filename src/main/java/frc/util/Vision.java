@@ -4,6 +4,8 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.utilPackage.Units;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Vision {
     private static Vision instance = null;
@@ -20,7 +22,10 @@ public class Vision {
 
     udpServer visionServer;
 
+    Map<Double, double[]> map;
+
     private Vision() {
+        map = new HashMap<>();
         try {
             visionServer = new udpServer(5100);
             Thread thread = new Thread(visionServer);
@@ -28,6 +33,48 @@ public class Vision {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void loadData() {
+        map.put((double) 7, new double[]{3900, 125});
+        map.put(7.3, new double[]{3900, 125});
+        map.put(7.6, new double[]{3900, 125});
+        map.put((double) 8, new double[]{3900, 125});
+        map.put(8.3, new double[]{3900, 125});
+        map.put(8.6, new double[]{3900, 125});
+        map.put((double) 9, new double[]{3900, 120});
+        map.put(9.3, new double[]{3900, 108});
+        map.put(9.6, new double[]{3900, 98});
+        map.put((double) 10, new double[]{3900, 90});
+        map.put(10.3, new double[]{3900, 85});
+        map.put(10.6, new double[]{3900, 80});
+        map.put((double) 11, new double[]{3900, 80});
+        map.put(11.3, new double[]{3900, 80});
+        map.put(11.6, new double[]{3900, 68});
+        map.put((double) 12, new double[]{4500, 30});
+        map.put(12.3, new double[]{4500, 30});
+        map.put(12.6, new double[]{4500, 30});
+        map.put((double) 13, new double[]{4500, 30});
+        map.put(13.3, new double[]{4500, 30});
+        map.put(13.6, new double[]{4500, 30});
+        map.put((double) 14, new double[]{4500, 40});
+        map.put(14.3, new double[]{4500, 30});
+        map.put(14.6, new double[]{4500, 30});
+        map.put((double) 15, new double[]{4500, 30});
+        map.put(15.3, new double[]{4000, 30});
+        map.put(15.6, new double[]{4000, 30});
+        map.put((double) 16, new double[]{4000, 30});
+        map.put(16.5, new double[]{4000, 30});
+        map.put((double) 17, new double[]{3800, 30});
+        map.put(17.5, new double[]{3800, 30});
+        map.put((double) 18, new double[]{3800, 30});
+        map.put(18.5, new double[]{3800, 30});
+        map.put((double) 19, new double[]{3900, 30});
+        map.put(19.5, new double[]{4000, 30});
+        map.put((double) 20, new double[]{4000, 30});
+        map.put(20.5, new double[]{4000, 33});
+        map.put((double) 21, new double[]{4100, 33});
+
     }
 
 
