@@ -57,7 +57,7 @@ public class TeleopControls {
             feeder.rollers(Feeder.Rollers.off);
         } if(cb.shoot()) {
             // Enable the shooter
-            controller.setVelocity(3000);
+            controller.setVelocity(4100);
             controller.setEnabled(true);
         } if(cb.shootReleased()) {
 //             Disable the shooter

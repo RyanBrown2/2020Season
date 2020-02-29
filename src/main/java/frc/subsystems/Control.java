@@ -62,6 +62,8 @@ public class Control {
     }
 
     public void run() {
+        hood.setAngle(33);
+        hood.run();
         flywheel.run();
         turret.run(false);
         // Don't run anything if the robot is set to panic mode
@@ -77,9 +79,9 @@ public class Control {
                         break;
                     case spooling:
                         flywheel.setVelocity(RPM);
-                        // Don't go on to the next state unless the flywheel is +- 200 of its setpoint
+                        // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
                         if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(false)) {
-                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
+//                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
                             state = States.transport;
                         }
                         break;
