@@ -118,7 +118,7 @@ public class Constants {
 
     public static class Climber {
         public static TalonSRX climbArms = new TalonSRX(13);
-        public static TalonSRX climbGearbox = new TalonSRX(101); // TODO
+        public static TalonSRX climbGearbox = Drive.rightEncoder; // TODO
 
         public static DigitalInput climbLimit = new DigitalInput(8);
     }
