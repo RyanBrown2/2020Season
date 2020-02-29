@@ -79,6 +79,7 @@ public class Control {
                         flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint
                         if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(false)) {
+                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
                             state = States.transport;
                         }
                         break;
