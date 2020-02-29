@@ -24,7 +24,7 @@ public class ColorWheel {
     TalonSRX wheelMotor = Constants.ColorWheel.wheelRoller;
     DoubleSolenoid wheelPiston = Constants.ColorWheel.wheelPiston;
 
-    boolean isOut = false;
+    boolean isOut = true;
 
     public enum Roller {clockWise, antiClockWise, off}
 

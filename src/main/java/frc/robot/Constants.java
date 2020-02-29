@@ -96,6 +96,9 @@ public class Constants {
 //        public static double ticksPerRev = (2048*(140/30))/3.14159;
         public static double ticksPerRev = 18745/(2*3.14159);
 
+        public static double lowerRadianLimit = -3.14159;
+        public static double upperRadianLimit = 3.14159/2;
+
         //PID Constants
         public static double kP = 1;
         public static double kI = 0;
@@ -115,7 +118,7 @@ public class Constants {
 
     public static class Climber {
         public static TalonSRX climbArms = new TalonSRX(13);
-        public static TalonSRX climbGearbox = new TalonSRX(101); // TODO
+        public static TalonSRX climbGearbox = Drive.rightEncoder; // TODO
 
         public static DigitalInput climbLimit = new DigitalInput(8);
     }

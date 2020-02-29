@@ -36,8 +36,10 @@ public class Climber {
         } if(cb.climbArmsReleased()) {
             climbArms.set(ControlMode.PercentOutput, -0.1);
         } if(cb.climb()) {
-            climbGearbox.set(ControlMode.PercentOutput, 0.5);
+            climbArms.set(ControlMode.PercentOutput, 0);
+            climbGearbox.set(ControlMode.PercentOutput, 1);
         } if(cb.climbReleased()) {
+            climbArms.set(ControlMode.PercentOutput, 0);
             climbGearbox.set(ControlMode.PercentOutput, 0);
         }
     }
