@@ -14,6 +14,7 @@ import frc.drive.DriveOutput;
 import frc.drive.PositionTracker;
 import frc.subsystems.Climber;
 import frc.subsystems.Control;
+import frc.subsystems.Turret;
 import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
@@ -38,6 +39,8 @@ public class Robot extends TimedRobot {
 
   Control controller;
   Climber climber;
+
+  Turret turret = Turret.getInstance();
 
 //  FunctionTest functionTest;
 
@@ -102,9 +105,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    controller.run();
+//    controller.run();
     teleopControls.run();
-//    scaledDrive.run();
+    scaledDrive.run();
     climber.run();
   }
 
