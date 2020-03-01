@@ -6,11 +6,12 @@ import frc.autos.actions.PointTurn;
 import frc.autos.actions.WaitAction;
 import frc.coordinates.Heading;
 import frc.drive.PositionTracker;
-import frc.robot.Robot;
+import frc.subsystems.Control;
+import frc.subsystems.Feeder;
+import frc.subsystems.Mixer;
 import frc.subsystems.Transport;
 import frc.utilPackage.TrapezoidalMp;
 import frc.utilPackage.Units;
-import frc.subsystems.*;
 
 public class FiveThenFour extends AutoMode {
     DrivePath firstBalls, throughTunnel, reverse, lastBalls;
@@ -63,7 +64,6 @@ public class FiveThenFour extends AutoMode {
         PositionTracker.getInstance().robotForward();
        feeder.deploy();
        feeder.rollers(Feeder.Rollers.maxIn);
-       controller.setVelocity(3000); // TODO
 
         runAction(firstBalls);
         if(firstBalls.isFinished()) {
@@ -77,7 +77,6 @@ public class FiveThenFour extends AutoMode {
            controller.setEnabled(false);
            transport.rollers(Transport.Rollers.off);
            mixer.rollers(Mixer.Rollers.off);
-           controller.setVelocity(0); // TODO
            feeder.deploy();
            feeder.rollers(Feeder.Rollers.maxIn);
         }
@@ -88,7 +87,6 @@ public class FiveThenFour extends AutoMode {
         runAction(reverse);
         runAction(ninety);
         if(ninety.isFinished()) {
-           controller.setVelocity(3000);
            feeder.deploy();
            feeder.rollers(Feeder.Rollers.maxIn);
         }
@@ -102,7 +100,6 @@ public class FiveThenFour extends AutoMode {
 
         runAction(waitForShootingAgain);
         if(waitForShootingAgain.isFinished()) {
-           controller.setVelocity(0);
            controller.setEnabled(false);
            feeder.rollers(Feeder.Rollers.off);
            transport.rollers(Transport.Rollers.off);

@@ -67,7 +67,7 @@ public class Control {
 //        hood.setAngle(33);
         hood.run();
         flywheel.run();
-        turret.run(true);
+        turret.run(false);
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
