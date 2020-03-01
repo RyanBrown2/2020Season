@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
@@ -22,7 +23,8 @@ public class Turret {
     CANPIDController turretPID;
     CANEncoder turretEncoder;
     public int smartMotionSlot;
-    double setPoint, tempSetpoint, tempSetpointFieldOriented;
+    double setPoint = Constants.pi/4;
+    double tempSetpoint, tempSetpointFieldOriented;
     boolean holdPos;
     // Yaw-Pitch-Roll (ypr) is used to store the gyro data
     double[] ypr = new double[3];
@@ -62,6 +64,10 @@ public class Turret {
         setPoint = Constants.pi/4;
         tempSetpoint = (setPoint) % (Constants.pi*2);
         tempSetpointFieldOriented = tempSetpoint - (getYaw() - Constants.pi);
+        tempSetpointFieldOriented %= (2*Constants.pi);
+        if(tempSetpointFieldOriented < 0) {
+            tempSetpointFieldOriented = (2*Constants.pi + tempSetpointFieldOriented);
+        }
 
         if(tempSetpointFieldOriented > (3*Constants.pi/2)){
             turretPID.setOutputRange(0, 0);
@@ -71,11 +77,11 @@ public class Turret {
             SmartDashboard.putNumber("OutputRange Turret", 0.25);
         }
 
-//         if(fieldOriented) {
-//             turretPID.setReference(tempSetpointFieldOriented, ControlType.kPosition);
-//         } else {
-//             turretPID.setReference(setPoint, ControlType.kPosition);
-//         }
+         if(fieldOriented) {
+             turretPID.setReference(tempSetpointFieldOriented, ControlType.kPosition);
+         } else {
+             turretPID.setReference(setPoint, ControlType.kPosition);
+         }
     }
 
     // Encoder not plugged directly into Spark Max, so update a 'fake' encoder with the actual value for the PID loops
