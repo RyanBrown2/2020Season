@@ -79,24 +79,17 @@ public class Vision {
     };
 
     public double[] dataLookUp(double distance) {
-        double[][] distanceData = new double[0][];
+        double minError = 30;
+        int selectedIndex = 0;
         for (int i = 0; i < data.length; i++) {
             double error = Math.abs(distance - data[i][0]);
-            distanceData[i][0] = error;
-            distanceData[i][1] = i;
+            if (error < minError) {
+                minError = error;
+                selectedIndex = i;
+            }
         }
 
-        double minValue = distanceData[0][0];
-        for (int j = 0; j < distanceData.length; j++) {
-                if (distanceData[j][0] < minValue ) {
-                    minValue = distanceData[j][1];
-                }
-        }
-
-        double hoodAngle = data[(int)minValue][2];
-        double rpm = data[(int)minValue][1];
-
-        return new double[]{rpm, hoodAngle};
+        return new double[]{data[selectedIndex][1], data[selectedIndex][2]};
     }
 
     /*

@@ -57,11 +57,11 @@ public class TeleopControls {
             feeder.rollers(Feeder.Rollers.off);
         } if(cb.shoot()) {
             // Enable the shooter
-            controller.setVelocity(4100);
+//            controller.setVelocity(4100);
             controller.setEnabled(true);
         } if(cb.shootReleased()) {
             // Disable the shooter
-            controller.setVelocity(0);
+//            controller.setVelocity(0);
             controller.setEnabled(false);
             ballState = false;
             mixer.rollers(Mixer.Rollers.off);
