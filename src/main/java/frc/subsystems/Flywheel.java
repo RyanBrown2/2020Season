@@ -28,6 +28,8 @@ public class Flywheel {
 
     FlywheelDisplay flywheelDisplay;
 
+    double modifiedMin;
+
     private Flywheel() {
         flywheelDisplay = new FlywheelDisplay();
 
@@ -44,29 +46,30 @@ public class Flywheel {
         flywheelPID = flywheelMotor.getPIDController();
         flywheelPID.setFeedbackDevice(flywheelEncoder);
 
-        flywheelPID.setP(Constants.Flywheel.kP, 0);
-        flywheelPID.setI(Constants.Flywheel.kI, 0);
-        flywheelPID.setD(Constants.Flywheel.kD, 0);
-        flywheelPID.setIZone(Constants.Flywheel.kIz, 0);
-        flywheelPID.setFF(Constants.Flywheel.kFF, 0);
-        flywheelPID.setOutputRange(Constants.Flywheel.kMinOutput, Constants.Flywheel.kMaxOutput, 0);
-
-        flywheelPID.setP(Constants.Flywheel.rampkP, 1);
-        flywheelPID.setI(Constants.Flywheel.rampkI, 1);
-        flywheelPID.setD(Constants.Flywheel.rampkD, 1);
-        flywheelPID.setIZone(Constants.Flywheel.rampkIz, 1);
-        flywheelPID.setFF(Constants.Flywheel.rampkFF, 1);
-        flywheelPID.setOutputRange(Constants.Flywheel.rampMinOutput, Constants.Flywheel.rampMaxOutput, 1);
+        flywheelPID.setP(Constants.Flywheel.kP);
+        flywheelPID.setI(Constants.Flywheel.kI);
+        flywheelPID.setD(Constants.Flywheel.kD);
+        flywheelPID.setIZone(Constants.Flywheel.kIz);
+        flywheelPID.setFF(Constants.Flywheel.kFF);
+        flywheelPID.setOutputRange(Constants.Flywheel.kMinOutput, Constants.Flywheel.kMaxOutput);
     }
 
     public void run() {
-        flywheelPID.setOutputRange(velocitySetpoint/473, Constants.Flywheel.rampMaxOutput, 0);
+//        modifiedMin = (velocitySetpoint) / (460*12);
+//        SmartDashboard.putNumber("Min Val", modifiedMin);
+//        if(modifiedMin < 0) {
+//            modifiedMin = 0;
+//        }
+
+//        flywheelPID.setOutputRange(modifiedMin, Constants.Flywheel.rampMaxOutput, 0);
 
         // Update the PID velocity setpoint constantly
+        flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
+
         if(velocitySetpoint == 0) {
             flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity, 1);
-        } else if(getVelocity() > velocitySetpoint - 400) {
-            flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity, 0);
+        } else if(getVelocity() > velocitySetpoint - 200) {
+            flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity, 1);
         } else {
             flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity, 1);
         }

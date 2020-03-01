@@ -51,6 +51,7 @@ public class Vision {
     };
 
     public double[] dataLookUp(double distance) {
+        return null;
     }
 
     /*

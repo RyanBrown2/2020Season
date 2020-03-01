@@ -55,26 +55,15 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel shooting PID Constants
-        public static double kP = 0.001; //0.001
-        public static double kI = 0.0000125; //0.0000125
+        public static double kP = 320; //0.001
+        public static double kI = 64; //0.0000125
         public static double kD = 0; //0
-        public static double kIz = 0.25; //0.25
-        public static double kFF = 0.000178; // 0.000178
+        public static double kIz = 0.2; //0.25
+        public static double kFF = 0.0001851; // 0.0001953
 
         public static double kMaxOutput = 1;
-        public static double kMinOutput = 0.5; //0
+        public static double kMinOutput = 0; //0
         public static double maxRPM = 5500;
-
-        // Flywheel ramping PID constants
-        public static double rampkP = 0.001; // 0.001
-        public static double rampkI = 0.0000125; // 0.0000125
-        public static double rampkD = 0; // 0
-        public static double rampkIz = 0; // 0
-        public static double rampkFF = 0.000178; // 0.000178
-
-        public static double rampMaxOutput = 1;
-        public static double rampMinOutput = 0;
-        public static double rampMaxRPM = 5500;
     }
 
     public static class Hood {
