@@ -16,6 +16,8 @@ public class Constants {
 
     public static double degreesToRadians = 3.14159/180;
 
+    public static double pi = Math.PI;
+
     public static double robotWidth = 26*Units.Length.inches;
 
     public static int pigeonTalonID = 15;
@@ -92,12 +94,9 @@ public class Constants {
         public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
         public static TalonSRX turretEnc = Transport.rampBack;
 
-        public static double encoderOffset = 3.14159;
+        public static double encoderOffset = pi;
 //        public static double ticksPerRev = (2048*(140/30))/3.14159;
-        public static double ticksPerRev = 18745/(2*3.14159);
-
-        public static double lowerRadianLimit = 3.14159/2;
-        public static double upperRadianLimit = 3.14159;
+        public static double ticksPerRev = 18745/(2*pi);
 
         //PID Constants
         public static double kP = 1;

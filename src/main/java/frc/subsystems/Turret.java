@@ -23,7 +23,8 @@ public class Turret {
     CANPIDController turretPID;
     CANEncoder turretEncoder;
     public int smartMotionSlot;
-    double setPoint, tempSetpoint;
+    double setPoint, tempSetpoint, tempSetpointFieldOriented;
+    boolean holdPos;
     // Yaw-Pitch-Roll (ypr) is used to store the gyro data
     double[] ypr = new double[3];
 
@@ -36,7 +37,7 @@ public class Turret {
         turretPID.setFeedbackDevice(turretEncoder);
 
         Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        Constants.Turret.turretEnc.setSelectedSensorPosition(0);
+        Constants.Turret.turretEnc.setSelectedSensorPosition(6936);
 
         turretEncoder.setPositionConversionFactor(1);
 
@@ -59,16 +60,23 @@ public class Turret {
 
     public void run(boolean fieldOriented) {
         updateEncoder();
-        tempSetpoint = (setPoint + Constants.Turret.encoderOffset) % (3.14159*2);
-//        if((tempSetpoint - getYaw()) > Constants.Turret.upperRadianLimit) {
-//            tempSetpoint = Constants.Turret.upperRadianLimit + getYaw() - Constants.Turret.encoderOffset;
-//        } if((tempSetpoint - getYaw()) < Constants.Turret.lowerRadianLimit) {
-//            tempSetpoint = Constants.Turret.lowerRadianLimit + getYaw() - Constants.Turret.encoderOffset;
-//        }
-        SmartDashboard.putNumber("Temp Setpoint", tempSetpoint);
+        setPoint = Constants.pi/4;
+        tempSetpoint = (setPoint) % (Constants.pi*2);
+        tempSetpointFieldOriented = tempSetpoint - (getYaw() - Constants.pi);
+
+        SmartDashboard.putNumber("Temp Setpoint", tempSetpointFieldOriented);
+        SmartDashboard.putNumber("Turret Angle Fo Real", getAngle(false));
+
+        if(tempSetpointFieldOriented > (3*Constants.pi/2)){
+            turretPID.setOutputRange(0, 0);
+            SmartDashboard.putNumber("OutputRange Turret", 0);
+        } else {
+            turretPID.setOutputRange(-0.25, 0.25);
+            SmartDashboard.putNumber("OutputRange Turret", 0.25);
+        }
 
          if(fieldOriented) {
-             turretPID.setReference(tempSetpoint - getYaw(), ControlType.kPosition);
+             turretPID.setReference(tempSetpointFieldOriented, ControlType.kPosition);
          } else {
              turretPID.setReference(setPoint, ControlType.kPosition);
          }
@@ -90,21 +98,20 @@ public class Turret {
     // Angle is returned in radians, and can be relative to the robot's starting position
     public double getAngle(boolean fieldOriented) {
         if(fieldOriented) {
-            return (getRawTicks() / Constants.Turret.ticksPerRev) + getYaw() + Constants.Turret.encoderOffset;
+            return (getRawTicks() / Constants.Turret.ticksPerRev) + getYaw();
         } else {
-            return (getRawTicks() / Constants.Turret.ticksPerRev) /*+ Constants.Turret.encoderOffset*/;
+            return (getRawTicks() / Constants.Turret.ticksPerRev) + Constants.pi;
         }
     }
 
     public double getYaw() {
         Constants.Drive.pigeon.getYawPitchRoll(ypr);
         ypr[0] *= Constants.degreesToRadians;
-//        ypr[0] += Constants.Turret.encoderOffset;
-        ypr[0] %= (3.14159*2);
-//        if(ypr[0] < 0) {
-//            ypr[0] = 360 - Math.abs(ypr[0]);
-//        }
-//        ypr[0] = (ypr[0]) % (3.14159*2) + Constants.Turret.encoderOffset;
+        ypr[0] += Constants.pi;
+        if(ypr[0] < 0) {
+            ypr[0] = (Constants.pi*2) + ypr[0];
+        }
+        ypr[0] %= (Constants.pi*2);
         return ypr[0];
     }
 
@@ -126,5 +133,6 @@ public class Turret {
         SmartDashboard.putNumber("Encoder Angle", turretEncoder.getPosition());
         SmartDashboard.putNumber("Setpoint", setPoint);
         SmartDashboard.putNumber("TempSetpoint - yaw", tempSetpoint - getYaw());
+        SmartDashboard.putNumber("ypr", getYaw());
     }
 }

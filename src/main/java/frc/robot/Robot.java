@@ -127,5 +127,6 @@ public class Robot extends TimedRobot {
     teleopControls.display();
     controller.display();
     SmartDashboard.putBoolean("Climb Limit State", Constants.Climber.climbLimit.get());
+    SmartDashboard.putNumber("Raw Turret Ticks", Constants.Turret.turretEnc.getSelectedSensorPosition());
   }
 }
