@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
@@ -64,9 +63,6 @@ public class Turret {
         tempSetpoint = (setPoint) % (Constants.pi*2);
         tempSetpointFieldOriented = tempSetpoint - (getYaw() - Constants.pi);
 
-        SmartDashboard.putNumber("Temp Setpoint", tempSetpointFieldOriented);
-        SmartDashboard.putNumber("Turret Angle Fo Real", getAngle(false));
-
         if(tempSetpointFieldOriented > (3*Constants.pi/2)){
             turretPID.setOutputRange(0, 0);
             SmartDashboard.putNumber("OutputRange Turret", 0);
@@ -75,11 +71,11 @@ public class Turret {
             SmartDashboard.putNumber("OutputRange Turret", 0.25);
         }
 
-         if(fieldOriented) {
-             turretPID.setReference(tempSetpointFieldOriented, ControlType.kPosition);
-         } else {
-             turretPID.setReference(setPoint, ControlType.kPosition);
-         }
+//         if(fieldOriented) {
+//             turretPID.setReference(tempSetpointFieldOriented, ControlType.kPosition);
+//         } else {
+//             turretPID.setReference(setPoint, ControlType.kPosition);
+//         }
     }
 
     // Encoder not plugged directly into Spark Max, so update a 'fake' encoder with the actual value for the PID loops
@@ -108,6 +104,7 @@ public class Turret {
         Constants.Drive.pigeon.getYawPitchRoll(ypr);
         ypr[0] *= Constants.degreesToRadians;
         ypr[0] += Constants.pi;
+        ypr[0] %= (Constants.pi*2);
         if(ypr[0] < 0) {
             ypr[0] = (Constants.pi*2) + ypr[0];
         }
@@ -130,9 +127,8 @@ public class Turret {
         turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
         turretDisplay.setpoint(tempSetpoint/Units.Angle.degrees);
         turretDisplay.atSetpoint(atSetpoint(false));
-        SmartDashboard.putNumber("Encoder Angle", turretEncoder.getPosition());
-        SmartDashboard.putNumber("Setpoint", setPoint);
-        SmartDashboard.putNumber("TempSetpoint - yaw", tempSetpoint - getYaw());
-        SmartDashboard.putNumber("ypr", getYaw());
+        SmartDashboard.putNumber("Encoder Angle", getAngle(false));
+        SmartDashboard.putNumber("TempSetFieldOriented", tempSetpointFieldOriented);
+        SmartDashboard.putNumber("Yaw", getYaw());
     }
 }
