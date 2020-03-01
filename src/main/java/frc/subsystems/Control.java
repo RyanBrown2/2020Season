@@ -52,12 +52,15 @@ public class Control {
         vision = Vision.getInstance();
 
         state = States.tracking;
+
+        hood.setAngle(60);
     }
 
     public void setEnabled(boolean enable) {
         enabled = enable;
     }
 
+    // DON'T USE FOR TELEOP
     public void setVelocity(double rpms) {
         RPM = rpms;
         flywheel.setVelocity(rpms);
@@ -77,12 +80,13 @@ public class Control {
                     case tracking:
                         dataLookUp = vision.dataLookUp(vision.getDistance());
                         hood.setAngle(dataLookUp[1]);
+                        setVelocity(dataLookUp[0]);
                         // Determines and moves the turret to track target
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         state = States.spooling;
                         break;
                     case spooling:
-                        flywheel.setVelocity(dataLookUp[0]);
+                        flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
                         if (Math.abs(flywheel.getVelocity() - RPM) < 400 && turret.atSetpoint(true)) {
 //                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
@@ -114,6 +118,7 @@ public class Control {
                 }
             } else {
                 // Else statement serves as a reset for timers and state machine
+                flywheel.setVelocity(0);
                 state = States.tracking;
                 stateTimer.stop();
                 stateTimer.reset();
