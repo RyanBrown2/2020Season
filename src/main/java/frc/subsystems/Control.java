@@ -30,6 +30,8 @@ public class Control {
     boolean enabled = false;
     double RPM = 0;
 
+    double[] dataLookUp;
+
     Feeder feeder;
     Flywheel flywheel;
     Hood hood;
@@ -62,7 +64,7 @@ public class Control {
     }
 
     public void run() {
-        hood.setAngle(33);
+//        hood.setAngle(33);
         hood.run();
         flywheel.run();
         turret.run(true);
@@ -73,12 +75,14 @@ public class Control {
                 switch (state) {
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
+                        dataLookUp = vision.dataLookUp(vision.getDistance());
+                        hood.setAngle(dataLookUp[1]);
                         // Determines and moves the turret to track target
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         state = States.spooling;
                         break;
                     case spooling:
-                        flywheel.setVelocity(RPM);
+                        flywheel.setVelocity(dataLookUp[0]);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
                         if (Math.abs(flywheel.getVelocity() - RPM) < 400 && turret.atSetpoint(true)) {
 //                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
