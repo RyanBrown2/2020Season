@@ -80,7 +80,7 @@ public class Control {
                     case spooling:
                         flywheel.setVelocity(RPM);
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
-                        if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(true)) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 400 && turret.atSetpoint(true)) {
 //                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
                             state = States.transport;
                         }
