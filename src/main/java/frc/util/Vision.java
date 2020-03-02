@@ -106,6 +106,15 @@ public class Vision {
         }
     }
 
+    public boolean cameraTracking() {
+        try {
+            visionServer.getData();
+            return true;
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
     // Get angle from vision
     public double getAngle() {
         return getTargetData()[1] * Units.Angle.degrees;
@@ -125,6 +134,12 @@ public class Vision {
         double xVel = Math.cos(angle) * vel;
         double yVel = Math.sin(angle) * vel;
         return new double[]{xVel, yVel, 0};
+    }
+
+    public double trackPoint(double[] trackPoint, double[] origin) {
+        double x = trackPoint[0] - origin[0];
+        double y = trackPoint[1] - origin[1];
+        return Math.atan2(y, x);
     }
 
     /*

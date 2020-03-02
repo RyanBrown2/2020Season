@@ -1,7 +1,9 @@
 package frc.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.util.Vision;
+import frc.utilPackage.Units;
 
 public class Control {
     private static Control instance = null;
@@ -15,6 +17,7 @@ public class Control {
     Timer stateTimer = new Timer();
 
     public enum States {
+        scanning,
         tracking,
         finalTracking,
         spooling,
@@ -77,6 +80,10 @@ public class Control {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
+                    case scanning:
+
+                        break;
+
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
                         dataLookUp = vision.dataLookUp(vision.getDistance());
@@ -144,12 +151,27 @@ public class Control {
         }
     }
 
+    public enum Direction {left, right}
+
+    public void turretScan(Direction direction) { // todo
+        if (!vision.cameraTracking()) {
+            if (direction == Direction.left) {
+                turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), 5 * Units.Angle.degrees));
+            }
+
+            if (direction == Direction.right) {
+                turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), -5 * Units.Angle.degrees));
+            }
+        }
+    }
+
     // Panic mode shuts down all intake-related subsystems
     public void panic(boolean isPanic) {
         panicMode = isPanic;
     }
 
     public void display() {
+        SmartDashboard.putBoolean("Vision Detected", vision.cameraTracking());
         feeder.display();
         flywheel.display();
         hood.display();
