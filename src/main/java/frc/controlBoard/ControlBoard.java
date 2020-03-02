@@ -5,6 +5,7 @@ import frc.robot.Constants;
 
 public class ControlBoard extends IControlBoard{
     Joystick joy, wheel, buttonPad, cojoy;
+    double overrideSetpoint;
 
     public ControlBoard() {
         joy = new Joystick(0);
@@ -143,7 +144,26 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean panic() {
-        return buttonPad.getRawButtonPressed(ControlBindings.CoDriver.panic);
+        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.panic);
+    }
+
+    @Override
+    public boolean trackClockwise() {
+        if(cojoy.getPOV() > 0 && cojoy.getPOV() < 180) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean trackCounterClockwise() {
+        if(cojoy.getPOV() > 180) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }

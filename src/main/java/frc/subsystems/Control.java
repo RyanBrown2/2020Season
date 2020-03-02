@@ -45,6 +45,8 @@ public class Control {
 
     Vision vision;
 
+    boolean autoOverride = false;
+
     private Control() {
         feeder = Feeder.getInstance();
         flywheel = Flywheel.getInstance();
@@ -68,6 +70,10 @@ public class Control {
     public void setVelocity(double rpms) {
         RPM = rpms;
         flywheel.setVelocity(rpms);
+    }
+
+    public void autoOverride(boolean override) {
+        autoOverride = override;
     }
 
     public void run() {
@@ -137,7 +143,9 @@ public class Control {
                 }
             } else {
                 // Else statement serves as a reset for timers and state machine
-                flywheel.setVelocity(0);
+                if(!autoOverride) {
+                    flywheel.setVelocity(0);
+                }
                 state = States.tracking;
                 stateTimer.stop();
                 stateTimer.reset();

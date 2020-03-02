@@ -81,6 +81,7 @@ public class FiveThenFour extends AutoMode {
         runAction(waitForShooting);
         if(waitForShooting.isFinished()) {
            controller.setEnabled(false);
+           controller.setVelocity(0);
            transport.rollers(Transport.Rollers.off);
            mixer.rollers(Mixer.Rollers.off);
            feeder.deploy();
@@ -112,6 +113,7 @@ public class FiveThenFour extends AutoMode {
 
         if(waitForShootingAgain.isFinished()) {
            controller.setEnabled(false);
+           controller.setVelocity(0);
            feeder.rollers(Feeder.Rollers.off);
            transport.rollers(Transport.Rollers.off);
            mixer.rollers(Mixer.Rollers.off);

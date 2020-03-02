@@ -10,8 +10,6 @@ public class ControlBindings {
     public static class CoDriver {
         public static int rollers = 1;
         public static int feeder = 2;
-        public static int ramp = 3;
-        public static int panic = 20;
     }
 
     public static class ButtonPad {
@@ -22,6 +20,7 @@ public class ControlBindings {
         public static int climb = 15;
         public static int colorWheelActuate = 12; //TODO
         public static int colorWheelRoller = 16; //TODO
+        public static int panic = 10;
     }
 
 }
