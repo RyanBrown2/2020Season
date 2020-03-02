@@ -1,6 +1,7 @@
 package frc.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.util.Vision;
 import frc.utilPackage.Units;
 
@@ -16,6 +17,7 @@ public class Control {
     Timer stateTimer = new Timer();
 
     public enum States {
+        scanning,
         tracking,
         finalTracking,
         spooling,
@@ -78,6 +80,10 @@ public class Control {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
+                    case scanning:
+
+                        break;
+
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
                         dataLookUp = vision.dataLookUp(vision.getDistance());
@@ -165,6 +171,7 @@ public class Control {
     }
 
     public void display() {
+        SmartDashboard.putBoolean("Vision Detected", vision.cameraTracking());
         feeder.display();
         flywheel.display();
         hood.display();

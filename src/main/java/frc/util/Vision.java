@@ -136,6 +136,12 @@ public class Vision {
         return new double[]{xVel, yVel, 0};
     }
 
+    public double trackPoint(double[] trackPoint, double[] origin) {
+        double x = trackPoint[0] - origin[0];
+        double y = trackPoint[1] - origin[1];
+        return Math.atan2(y, x);
+    }
+
     /*
     Transform a point with linear algebra
      */
