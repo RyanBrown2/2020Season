@@ -2,6 +2,7 @@ package frc.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.util.Vision;
+import frc.utilPackage.Units;
 
 public class Control {
     private static Control instance = null;
@@ -147,13 +148,13 @@ public class Control {
     public enum Direction {left, right}
 
     public void turretScan(Direction direction) { // todo
-        while (!vision.cameraTracking()) {
+        if (!vision.cameraTracking()) {
             if (direction == Direction.left) {
-
+                turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), 5 * Units.Angle.degrees));
             }
 
             if (direction == Direction.right) {
-
+                turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), -5 * Units.Angle.degrees));
             }
         }
     }
