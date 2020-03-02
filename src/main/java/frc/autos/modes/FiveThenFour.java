@@ -15,7 +15,7 @@ import frc.utilPackage.Units;
 
 public class FiveThenFour extends AutoMode {
     DrivePath firstBalls, throughTunnel, reverse, lastBalls;
-    WaitAction waitForShooting, waitForShootingAgain, waitForFeeder;
+    WaitAction waitForShooting, waitForSomeBalls, waitForShootingAgain, waitForFeeder, waitForFeeding;
     PointTurn ninety;
 
     boolean shooting = false;
@@ -26,9 +26,11 @@ public class FiveThenFour extends AutoMode {
     Control controller = Control.getInstance();
 
     public FiveThenFour() {
-        waitForShooting = new WaitAction(5);
+        waitForShooting = new WaitAction(2.75);
+        waitForSomeBalls = new WaitAction(2);
         waitForShootingAgain = new WaitAction(5);
         waitForFeeder = new WaitAction(2);
+        waitForFeeding = new WaitAction(0.25);
 
         ninety = new PointTurn(new Heading(180* Units.Angle.degrees));
 
@@ -67,11 +69,14 @@ public class FiveThenFour extends AutoMode {
 
         runAction(firstBalls);
         if(firstBalls.isFinished()) {
-           feeder.retract();
            feeder.rollers(Feeder.Rollers.off);
            controller.setEnabled(true);
         }
 
+        runAction(waitForSomeBalls);
+        if(waitForSomeBalls.isFinished()) {
+            feeder.retract();
+        }
         runAction(waitForShooting);
         if(waitForShooting.isFinished()) {
            controller.setEnabled(false);
@@ -79,11 +84,18 @@ public class FiveThenFour extends AutoMode {
            mixer.rollers(Mixer.Rollers.off);
            feeder.deploy();
            feeder.rollers(Feeder.Rollers.maxIn);
+           mixer.rollers(Mixer.Rollers.slowIn);
+           transport.rollers(Transport.Rollers.onlyFront);
         }
 
         runAction(waitForFeeder);
 
         runAction(throughTunnel);
+        if(throughTunnel.isFinished()) {
+            feeder.rollers(Feeder.Rollers.off);
+            mixer.rollers(Mixer.Rollers.off);
+            transport.rollers(Transport.Rollers.off);
+        }
         runAction(reverse);
         runAction(ninety);
         if(ninety.isFinished()) {
@@ -92,8 +104,9 @@ public class FiveThenFour extends AutoMode {
         }
 
         runAction(lastBalls);
-
-        if(lastBalls.isFinished()) {
+        runAction(waitForFeeding);
+        if(waitForFeeding.isFinished()) {
+            feeder.rollers(Feeder.Rollers.off);
            feeder.retract();
            controller.setEnabled(true);
         }

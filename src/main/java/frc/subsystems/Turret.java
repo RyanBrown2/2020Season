@@ -5,7 +5,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
 import frc.utilPackage.Units;
@@ -61,7 +60,6 @@ public class Turret {
 
     public void run(boolean fieldOriented) {
         updateEncoder();
-        setPoint = Constants.pi/4;
         tempSetpoint = (setPoint) % (Constants.pi*2);
         tempSetpointFieldOriented = tempSetpoint - (getYaw() - Constants.pi);
         tempSetpointFieldOriented %= (2*Constants.pi);
