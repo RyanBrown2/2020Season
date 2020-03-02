@@ -144,6 +144,20 @@ public class Control {
         }
     }
 
+    public enum Direction {left, right}
+
+    public void turretScan(Direction direction) { // todo
+        while (!vision.cameraTracking()) {
+            if (direction == Direction.left) {
+
+            }
+
+            if (direction == Direction.right) {
+
+            }
+        }
+    }
+
     // Panic mode shuts down all intake-related subsystems
     public void panic(boolean isPanic) {
         panicMode = isPanic;

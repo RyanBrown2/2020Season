@@ -106,6 +106,15 @@ public class Vision {
         }
     }
 
+    public boolean cameraTracking() {
+        try {
+            visionServer.getData();
+            return true;
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
     // Get angle from vision
     public double getAngle() {
         return getTargetData()[1] * Units.Angle.degrees;
