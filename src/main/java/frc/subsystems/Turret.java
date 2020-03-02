@@ -61,7 +61,6 @@ public class Turret {
 
     public void run(boolean fieldOriented) {
         updateEncoder();
-        setPoint = Constants.pi/4;
         tempSetpoint = (setPoint) % (Constants.pi*2);
         tempSetpointFieldOriented = tempSetpoint - (getYaw() - Constants.pi);
         tempSetpointFieldOriented %= (2*Constants.pi);
@@ -73,7 +72,7 @@ public class Turret {
             turretPID.setOutputRange(0, 0);
             SmartDashboard.putNumber("OutputRange Turret", 0);
         } else {
-            turretPID.setOutputRange(-0.25, 0.25);
+            turretPID.setOutputRange(-1, 1);
             SmartDashboard.putNumber("OutputRange Turret", 0.25);
         }
 
