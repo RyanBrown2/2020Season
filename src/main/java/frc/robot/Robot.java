@@ -3,7 +3,6 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.FiveThenFour;
 import frc.controlBoard.ControlBoard;
@@ -126,7 +125,5 @@ public class Robot extends TimedRobot {
     positionTracker.display();
     teleopControls.display();
     controller.display();
-    SmartDashboard.putBoolean("Climb Limit State", Constants.Climber.climbLimit.get());
-    SmartDashboard.putNumber("Raw Turret Ticks", Constants.Turret.turretEnc.getSelectedSensorPosition());
   }
 }

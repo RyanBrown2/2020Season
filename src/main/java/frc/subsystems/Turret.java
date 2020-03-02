@@ -71,7 +71,7 @@ public class Turret {
             turretPID.setOutputRange(0, 0);
 //            SmartDashboard.putNumber("OutputRange Turret", 0);
         } else {
-            turretPID.setOutputRange(-0.25, 0.25);
+            turretPID.setOutputRange(-1, 1);
 //            SmartDashboard.putNumber("OutputRange Turret", 0.25);
         }
 
@@ -129,8 +129,16 @@ public class Turret {
     public void display() {
         updateEncoder();
         turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
+        turretDisplay.fieldOrientedAngle(getAngle(true)/Units.Angle.degrees);
         turretDisplay.setpoint(tempSetpoint/Units.Angle.degrees);
         turretDisplay.atSetpoint(atSetpoint(false));
+
+        if(turretDisplay.turretReset()) {
+            Constants.Turret.turretEnc.setSelectedSensorPosition(6936);
+            Constants.Drive.pigeon.setYaw(0);
+        }
+
+        turretDisplay.untoggleButtons();
 //        SmartDashboard.putNumber("Encoder Angle", getAngle(false));
 //        SmartDashboard.putNumber("TempSetFieldOriented", tempSetpointFieldOriented);
 //        SmartDashboard.putNumber("Yaw", getYaw());

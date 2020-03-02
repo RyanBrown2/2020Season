@@ -29,7 +29,7 @@ public class FiveThenFour extends AutoMode {
         waitForShooting = new WaitAction(2.75);
         waitForSomeBalls = new WaitAction(2);
         waitForShootingAgain = new WaitAction(5);
-        waitForFeeder = new WaitAction(2);
+        waitForFeeder = new WaitAction(0.5);
         waitForFeeding = new WaitAction(0.25);
 
         ninety = new PointTurn(new Heading(180* Units.Angle.degrees));
@@ -44,7 +44,7 @@ public class FiveThenFour extends AutoMode {
 
         throughTunnel = DrivePath.createFromFileOnRoboRio("FiveThenFour", "throughTunnel", constraints);
         throughTunnel.setReverse(false);
-        throughTunnel.setlookAhead(1.5*Units.Length.feet);
+        throughTunnel.setlookAhead(3*Units.Length.feet);
         throughTunnel.setHorizontalThresh(1*Units.Length.feet);
 
         reverse = DrivePath.createFromFileOnRoboRio("FiveThenFour", "reverse", revConstraints);
@@ -54,8 +54,8 @@ public class FiveThenFour extends AutoMode {
 
         lastBalls = DrivePath.createFromFileOnRoboRio("FiveThenFour", "lastBalls", constraints);
         lastBalls.setReverse(false);
-        lastBalls.setTurnCorrection(1);
-        lastBalls.setlookAhead(1.5*Units.Length.feet);
+        lastBalls.setTurnCorrection(0.6);
+        lastBalls.setlookAhead(2*Units.Length.feet);
         lastBalls.setHorizontalThresh(1*Units.Length.feet);
 
         setInitPos(0, 0);
@@ -64,6 +64,7 @@ public class FiveThenFour extends AutoMode {
     @Override
     public void auto() throws AutoEndedException {
         PositionTracker.getInstance().robotForward();
+        controller.setVelocity(3900);
        feeder.deploy();
        feeder.rollers(Feeder.Rollers.maxIn);
 
@@ -92,26 +93,23 @@ public class FiveThenFour extends AutoMode {
 
         runAction(throughTunnel);
         if(throughTunnel.isFinished()) {
+            controller.setVelocity(3900);
             feeder.rollers(Feeder.Rollers.off);
             mixer.rollers(Mixer.Rollers.off);
             transport.rollers(Transport.Rollers.off);
         }
         runAction(reverse);
-        runAction(ninety);
-        if(ninety.isFinished()) {
-           feeder.deploy();
-           feeder.rollers(Feeder.Rollers.maxIn);
+        if(reverse.isFinished()) {
+            feeder.retract();
         }
+        runAction(ninety);
 
         runAction(lastBalls);
-        runAction(waitForFeeding);
-        if(waitForFeeding.isFinished()) {
-            feeder.rollers(Feeder.Rollers.off);
-           feeder.retract();
-           controller.setEnabled(true);
+        if(lastBalls.isFinished()) {
+            controller.setEnabled(true);
         }
-
         runAction(waitForShootingAgain);
+
         if(waitForShootingAgain.isFinished()) {
            controller.setEnabled(false);
            feeder.rollers(Feeder.Rollers.off);

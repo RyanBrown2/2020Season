@@ -11,7 +11,6 @@ public class DriveDisplay {
     NetworkTableEntry encoderVel;
     NetworkTableEntry encoderLeft, encoderRight;
 
-
     public DriveDisplay() {
         tab = Shuffleboard.getTab("DriveBase");
 
