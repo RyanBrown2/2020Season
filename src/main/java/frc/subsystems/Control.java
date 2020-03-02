@@ -16,6 +16,7 @@ public class Control {
 
     public enum States {
         tracking,
+        finalTracking,
         spooling,
         transport,
         mixing,
@@ -83,7 +84,18 @@ public class Control {
                         setVelocity(dataLookUp[0]);
                         // Determines and moves the turret to track target
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
-                        state = States.spooling;
+                        if (turret.atSetpoint(true)) {
+                            state = States.finalTracking;
+                        }
+                        break;
+                    case finalTracking:
+                        dataLookUp = vision.dataLookUp(vision.getDistance());
+                        hood.setAngle(dataLookUp[1]);
+                        setVelocity(dataLookUp[0]);
+                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
+                        if (turret.atSetpoint(true)) {
+                            state = States.spooling;
+                        }
                         break;
                     case spooling:
                         flywheel.setVelocity(RPM);
