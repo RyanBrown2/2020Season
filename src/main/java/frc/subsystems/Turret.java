@@ -71,10 +71,10 @@ public class Turret {
 
         if(tempSetpointFieldOriented > (3*Constants.pi/2)){
             turretPID.setOutputRange(0, 0);
-            SmartDashboard.putNumber("OutputRange Turret", 0);
+//            SmartDashboard.putNumber("OutputRange Turret", 0);
         } else {
             turretPID.setOutputRange(-0.25, 0.25);
-            SmartDashboard.putNumber("OutputRange Turret", 0.25);
+//            SmartDashboard.putNumber("OutputRange Turret", 0.25);
         }
 
          if(fieldOriented) {
@@ -133,8 +133,8 @@ public class Turret {
         turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
         turretDisplay.setpoint(tempSetpoint/Units.Angle.degrees);
         turretDisplay.atSetpoint(atSetpoint(false));
-        SmartDashboard.putNumber("Encoder Angle", getAngle(false));
-        SmartDashboard.putNumber("TempSetFieldOriented", tempSetpointFieldOriented);
-        SmartDashboard.putNumber("Yaw", getYaw());
+//        SmartDashboard.putNumber("Encoder Angle", getAngle(false));
+//        SmartDashboard.putNumber("TempSetFieldOriented", tempSetpointFieldOriented);
+//        SmartDashboard.putNumber("Yaw", getYaw());
     }
 }
