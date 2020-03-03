@@ -18,6 +18,8 @@ public class TeleopControls {
 
     boolean ballState = false;
 
+    boolean isTracking = false;
+
     Timer ballTimer = new Timer();
 
     public TeleopControls() {
@@ -73,6 +75,10 @@ public class TeleopControls {
             colorWheel.roller(ColorWheel.Roller.clockWise);
         } if(cb.colorWheelRollerReleased()) {
             colorWheel.roller(ColorWheel.Roller.off);
+        } if(cb.trackClockwise()) {
+            controller.scanClockwise();
+        } if(cb.trackCounterClockwise()) {
+            controller.scanCounterClockwise();
         } if(cb.panic()) {
             controller.panic(true);
         }
