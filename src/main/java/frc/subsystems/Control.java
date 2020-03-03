@@ -48,6 +48,7 @@ public class Control {
     Vision vision;
 
     boolean autoOverride = false;
+    double initialSetpoint, prevSetpoint, nextSetpoint;
 
     private Control() {
         feeder = Feeder.getInstance();
@@ -76,6 +77,26 @@ public class Control {
 
     public void autoOverride(boolean override) {
         autoOverride = override;
+    }
+
+    public void scanClockwise() {
+        if(vision.getDistance() == 0) {
+            if(turret.atSetpoint(true)) {
+                prevSetpoint = turret.setPoint;
+                nextSetpoint = prevSetpoint - 10 * Units.Angle.degrees;
+                turret.toSetpoint(nextSetpoint);
+            }
+        }
+    }
+
+    public void scanCounterClockwise() {
+        if(vision.getDistance() == 0) {
+            if(turret.atSetpoint(true)) {
+                prevSetpoint = turret.setPoint;
+                nextSetpoint = prevSetpoint + 10 * Units.Angle.degrees;
+                turret.toSetpoint(nextSetpoint);
+            }
+        }
     }
 
     public void run() {

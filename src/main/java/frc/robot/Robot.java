@@ -4,7 +4,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.autos.modes.AutoMode;
-import frc.autos.modes.FiveThenFour;
+import frc.autos.modes.ThreeThenFive;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
 import frc.drive.Drive;
@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
 
     climber = Climber.getInstance();
 
-    auto = new FiveThenFour();
+    auto = new ThreeThenFive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();

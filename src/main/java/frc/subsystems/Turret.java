@@ -131,7 +131,7 @@ public class Turret {
         turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
         turretDisplay.fieldOrientedAngle(getAngle(true)/Units.Angle.degrees);
         turretDisplay.setpoint(tempSetpoint/Units.Angle.degrees);
-        turretDisplay.atSetpoint(atSetpoint(false));
+        turretDisplay.atSetpoint(atSetpoint(true));
 
         if(turretDisplay.turretReset()) {
             Constants.Turret.turretEnc.setSelectedSensorPosition(6936);
