@@ -17,7 +17,7 @@ public class ThreeThenFive extends AutoMode {
     DrivePath throughTunnel, reverse;
     WaitAction waitForShooting, waitForShootingAgain;
     PointTurn hardTurn;
-
+    
     Feeder feeder = Feeder.getInstance();
     Mixer mixer = Mixer.getInstance();
     Transport transport = Transport.getInstance();
