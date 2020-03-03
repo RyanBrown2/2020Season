@@ -21,6 +21,7 @@ public class TeleopControls {
     boolean isTracking = false;
 
     Timer ballTimer = new Timer();
+    Timer unjamTimer = new Timer();
 
     public TeleopControls() {
 
@@ -79,6 +80,23 @@ public class TeleopControls {
             controller.scanClockwise();
         } if(cb.trackCounterClockwise()) {
             controller.scanCounterClockwise();
+        } if(cb.unjam()) {
+            if (unjamTimer.get() == 0) {
+                unjamTimer.start();
+            }
+            feeder.rollers(Feeder.Rollers.maxOut);
+            if (unjamTimer.get() > 0.25) {
+                mixer.rollers(Mixer.Rollers.out);
+                transport.rollers(Transport.Rollers.out);
+            }
+        } if(cb.unjamReleased()) {
+            mixer.rollers(Mixer.Rollers.off);
+            feeder.rollers(Feeder.Rollers.off);
+            transport.rollers(Transport.Rollers.off);
+            unjamTimer.stop();
+            unjamTimer.reset();
+        } if(cb.visionTrackPressed()) {
+            controller.manualTrack();
         } if(cb.panic()) {
             controller.panic(true);
         }

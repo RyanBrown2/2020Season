@@ -97,6 +97,10 @@ public class Control {
         }
     }
 
+    public void manualTrack() {
+        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
+    }
+
     public void run() {
 //        hood.setAngle(33);
         hood.run();

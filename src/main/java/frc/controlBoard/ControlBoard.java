@@ -143,6 +143,16 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
+    public boolean unjam() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.unjam);
+    }
+
+    @Override
+    public boolean unjamReleased() {
+        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.unjam);
+    }
+
+    @Override
     public boolean panic() {
         return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.panic);
     }
@@ -164,6 +174,11 @@ public class ControlBoard extends IControlBoard{
         else {
             return false;
         }
+    }
+
+    @Override
+    public boolean visionTrackPressed() {
+        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.visionTrack);
     }
 
 }
