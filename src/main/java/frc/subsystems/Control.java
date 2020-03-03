@@ -36,6 +36,8 @@ public class Control {
 
     double[] dataLookUp;
 
+    double lastVision = 0;
+
     Feeder feeder;
     Flywheel flywheel;
     Hood hood;
@@ -87,16 +89,14 @@ public class Control {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case scanning:
-
                         break;
-
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
                         dataLookUp = vision.dataLookUp(vision.getDistance());
                         hood.setAngle(dataLookUp[1]);
                         setVelocity(dataLookUp[0]);
                         // Determines and moves the turret to track target
-                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
+                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()/3));
                         if (turret.atSetpoint(true)) {
                             state = States.finalTracking;
                         }
@@ -105,13 +105,15 @@ public class Control {
                         dataLookUp = vision.dataLookUp(vision.getDistance());
                         hood.setAngle(dataLookUp[1]);
                         setVelocity(dataLookUp[0]);
-                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
+//                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         if (turret.atSetpoint(true)) {
                             state = States.spooling;
                         }
                         break;
                     case spooling:
+//                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         flywheel.setVelocity(RPM);
+
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
                         if (Math.abs(flywheel.getVelocity() - RPM) < 400 && turret.atSetpoint(true)) {
 //                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
@@ -172,6 +174,8 @@ public class Control {
             }
         }
     }
+
+
 
     // Panic mode shuts down all intake-related subsystems
     public void panic(boolean isPanic) {
