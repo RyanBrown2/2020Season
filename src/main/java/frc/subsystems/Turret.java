@@ -22,9 +22,8 @@ public class Turret {
     CANPIDController turretPID;
     CANEncoder turretEncoder;
     public int smartMotionSlot;
-    double setPoint = Constants.pi/4;
+    double setPoint = Constants.pi/6;
     double tempSetpoint, tempSetpointFieldOriented;
-    boolean holdPos;
     // Yaw-Pitch-Roll (ypr) is used to store the gyro data
     double[] ypr = new double[3];
 
@@ -137,10 +136,6 @@ public class Turret {
             Constants.Turret.turretEnc.setSelectedSensorPosition(6936);
             Constants.Drive.pigeon.setYaw(0);
         }
-
         turretDisplay.untoggleButtons();
-//        SmartDashboard.putNumber("Encoder Angle", getAngle(false));
-//        SmartDashboard.putNumber("TempSetFieldOriented", tempSetpointFieldOriented);
-//        SmartDashboard.putNumber("Yaw", getYaw());
     }
 }

@@ -65,35 +65,6 @@ public class Flywheel {
         return flywheelEncoder.getVelocity();
     }
 
-    public void tbhControl() {
-        error = velocitySetpoint - getVelocity();
-        motorPower += gain * error;
-        motorPower = clamp(motorPower);
-
-        if (isPositive(lastError) != isPositive(error)) {
-            motorPower = 0.5 * (motorPower + tbh);
-            tbh = motorPower;
-
-            lastError = error;
-        }
-
-        flywheelMotor.setVoltage(motorPower*12);
-    }
-
-    public boolean isPositive(double input) {
-        return input > 0;
-    }
-
-    public double clamp(double input) {
-        if (input > 1) {
-            return 1;
-        }
-        if (input < -1) {
-            return -1;
-        }
-        return input;
-    }
-
     public void panic() {
     }
 

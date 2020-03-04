@@ -27,10 +27,10 @@ public class ThreeThenFive extends AutoMode {
         waitForShooting = new WaitAction(2.75);
         waitForShootingAgain = new WaitAction(5);
 
-        hardTurn = new PointTurn(new Heading(35 * Units.Angle.degrees));
+        hardTurn = new PointTurn(new Heading(35*Units.Angle.degrees));
 
-        TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 14 * Units.Length.feet, 9 * Units.Length.feet);
-        TrapezoidalMp.constraints revConstraints = new TrapezoidalMp.constraints(0, 14 * Units.Length.feet, 9 * Units.Length.feet);
+        TrapezoidalMp.constraints constraints = new TrapezoidalMp.constraints(0, 14*Units.Length.feet, 9*Units.Length.feet);
+        TrapezoidalMp.constraints revConstraints = new TrapezoidalMp.constraints(0, 14*Units.Length.feet, 9*Units.Length.feet);
 
         throughTunnel = DrivePath.createFromFileOnRoboRio("ThreeThenFive", "throughTunnel", constraints);
         throughTunnel.setReverse(false);

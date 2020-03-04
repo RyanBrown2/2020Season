@@ -51,7 +51,6 @@ public class Robot extends TimedRobot {
 
     climber = Climber.getInstance();
 
-    auto = new ThreeThenFive();
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
@@ -88,8 +87,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    auto = new ThreeThenFive();
     auto.start();
-
   }
 
   @Override

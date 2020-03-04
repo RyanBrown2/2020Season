@@ -95,7 +95,7 @@ public class TeleopControls {
             transport.rollers(Transport.Rollers.off);
             unjamTimer.stop();
             unjamTimer.reset();
-        } if(cb.visionTrack()) {
+        } if(cb.visionTrackPressed()) {
             controller.manualTrack();
         } if(cb.panic()) {
             controller.panic(true);
