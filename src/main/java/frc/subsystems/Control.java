@@ -116,8 +116,12 @@ public class Control {
                         dataLookUp = vision.dataLookUp(vision.getDistance());
                         hood.setAngle(dataLookUp[1]);
                         setVelocity(dataLookUp[0]);
+                        double visionAngle = vision.getAngle();
+                        if (visionAngle < 10) {
+                            visionAngle = visionAngle/2;
+                        }
                         // Determines and moves the turret to track target
-                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()/3));
+                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         if (turret.atSetpoint(true)) {
                             state = States.finalTracking;
                         }
