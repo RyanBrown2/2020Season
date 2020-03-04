@@ -28,6 +28,7 @@ public abstract class IControlBoard {
     public abstract boolean trackCounterClockwise();
     public abstract boolean unjam();
     public abstract boolean unjamReleased();
+    public abstract boolean visionTrack();
     public abstract boolean visionTrackPressed();
     public abstract boolean panic();
 

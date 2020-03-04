@@ -177,6 +177,11 @@ public class ControlBoard extends IControlBoard{
     }
 
     @Override
+    public boolean visionTrack() {
+        return buttonPad.getRawButton(ControlBindings.ButtonPad.visionTrack);
+    }
+
+    @Override
     public boolean visionTrackPressed() {
         return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.visionTrack);
     }
