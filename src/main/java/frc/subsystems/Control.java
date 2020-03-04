@@ -126,9 +126,7 @@ public class Control {
                         }
                         // Determines and moves the turret to track target
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
-                        if (turret.atSetpoint(true)) {
                             state = States.finalTracking;
-                        }
                         break;
                     case finalTracking:
                         dataLookUp = vision.dataLookUp(vision.getDistance());
@@ -136,7 +134,11 @@ public class Control {
                         setVelocity(dataLookUp[0]);
 //                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         if (turret.atSetpoint(true)) {
-                            state = States.spooling;
+                            if (vision.getAngle() > 10) {
+                                state = States.tracking;
+                            } else {
+                                state = States.spooling;
+                            }
                         }
                         break;
                     case spooling:
