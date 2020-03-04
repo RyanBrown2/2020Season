@@ -76,9 +76,10 @@ public class ThreeThenFive extends AutoMode {
         controller.setEnabled(true);
         runAction(waitForShootingAgain);
         // Stop all running subsystems
+        controller.setEnabled(false);
+        controller.autoOverride(false);
         mixer.rollers(Mixer.Rollers.off);
         transport.rollers(Transport.Rollers.off);
         feeder.rollers(Feeder.Rollers.off);
-        controller.autoOverride(false);
     }
 }

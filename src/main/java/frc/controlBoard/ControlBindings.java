@@ -14,13 +14,14 @@ public class ControlBindings {
 
     public static class ButtonPad {
         public static int shoot = 14;
-        public static int mixer = 13;
-        public static int reverseFeeder = 17;
+        public static int reverseFeeder = 20;
         public static int climbArms = 11;
         public static int climb = 15;
-        public static int colorWheelActuate = 12; //TODO
+        public static int colorWheelActuate = 12;
         public static int colorWheelRoller = 16; //TODO
-        public static int panic = 10;
+        public static int unjam = 23;
+        public static int visionTrack = 13; //TODO
+        public static int panic = 5;
     }
 
 }

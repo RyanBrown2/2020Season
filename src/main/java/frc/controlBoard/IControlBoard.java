@@ -24,9 +24,14 @@ public abstract class IControlBoard {
     public abstract boolean colorWheelActuate();
     public abstract boolean colorWheelRoller();
     public abstract boolean colorWheelRollerReleased();
-    public abstract boolean panic();
     public abstract boolean trackClockwise();
     public abstract boolean trackCounterClockwise();
+    public abstract boolean unjam();
+    public abstract boolean unjamReleased();
+    public abstract boolean visionTrack();
+    public abstract boolean visionTrackPressed();
+    public abstract boolean panic();
+
 
     // Both
     public abstract boolean shoot();
