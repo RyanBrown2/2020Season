@@ -120,25 +120,23 @@ public class Control {
                         hood.setAngle(dataLookUp[1]);
 
                         visionAngle = vision.getAngle();
-
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), visionAngle));
                         state = States.tracking;
                         break;
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
-                        if (turret.atSetpoint(true) && Math.abs(turret.getVelocity()) > 20 * Units.Angle.degrees) {
-                            state = States.finalTracking;
+                        if (turret.atSetpoint(true) && Math.abs(turret.getVelocity()) < 20 * Units.Angle.degrees) {
+                            setVelocity(vision.dataLookUp(vision.getDistance())[0]);
+                            state = States.spooling;
                         }
                         break;
                     case finalTracking:
-                        if(Math.abs(vision.getAngle()) > 1 * Units.Angle.degrees) {
+                        if(Math.abs(vision.getAngle()) < 4 * Units.Angle.degrees) {
                             dataLookUp = vision.dataLookUp(vision.getDistance());
                             hood.setAngle(dataLookUp[1]);
-                            if (!autoOverride) {
-                                setVelocity(dataLookUp[0]);
-                            }
+                             setVelocity(dataLookUp[0]);
                             if (turret.atSetpoint(true)) {
-                                if (Math.abs(vision.getAngle()) > 1) {
+                                if (Math.abs(vision.getAngle()) > 4 * Units.Angle.degrees) {
                                     state = States.scanning;
                                 } else {
                                     state = States.spooling;
@@ -219,6 +217,7 @@ public class Control {
     }
 
     public void display() {
+        SmartDashboard.putString("Controller State", state.toString());
         SmartDashboard.putNumber("Vision Angle", vision.getAngle());
         feeder.display();
         flywheel.display();
