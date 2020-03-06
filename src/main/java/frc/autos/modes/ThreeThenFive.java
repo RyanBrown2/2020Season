@@ -3,6 +3,7 @@ package frc.autos.modes;
 import frc.autos.AutoEndedException;
 import frc.autos.actions.DrivePath;
 import frc.autos.actions.PointTurn;
+import frc.autos.actions.Shoot;
 import frc.autos.actions.WaitAction;
 import frc.coordinates.Heading;
 import frc.drive.PositionTracker;
@@ -17,15 +18,18 @@ public class ThreeThenFive extends AutoMode {
     DrivePath throughTunnel, reverse;
     WaitAction waitForShooting, waitForShootingAgain;
     PointTurn hardTurn;
-    
+    Shoot shooting;
+
     Feeder feeder = Feeder.getInstance();
     Mixer mixer = Mixer.getInstance();
     Transport transport = Transport.getInstance();
     Control controller = Control.getInstance();
 
     public ThreeThenFive() {
-        waitForShooting = new WaitAction(2.75);
+        waitForShooting = new WaitAction(4.25);  // 2.75
         waitForShootingAgain = new WaitAction(5);
+
+        shooting = new Shoot();
 
         hardTurn = new PointTurn(new Heading(35*Units.Angle.degrees));
 

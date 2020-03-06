@@ -125,6 +125,10 @@ public class Turret {
         }
     }
 
+    public double getVelocity() {
+        return turretEncoder.getVelocity() / Constants.Turret.ticksPerRev;
+    }
+
     public void display() {
         updateEncoder();
         turretDisplay.angle(getAngle(false)/Units.Angle.degrees);

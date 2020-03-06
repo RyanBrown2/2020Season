@@ -34,6 +34,8 @@ public class Control {
     boolean enabled = false;
     double RPM = 0;
 
+    double visionAngle;
+
     double[] dataLookUp;
 
     double lastVision = 0;
@@ -114,40 +116,43 @@ public class Control {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case scanning:
+                        dataLookUp = vision.dataLookUp(vision.getDistance());
+                        hood.setAngle(dataLookUp[1]);
+
+                        visionAngle = vision.getAngle();
+
+                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), visionAngle));
+                        state = States.tracking;
                         break;
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
-                        dataLookUp = vision.dataLookUp(vision.getDistance());
-                        hood.setAngle(dataLookUp[1]);
-                        setVelocity(dataLookUp[0]);
-                        double visionAngle = vision.getAngle();
-                        if (visionAngle < 10) {
-                            visionAngle = visionAngle/2;
-                        }
-                        // Determines and moves the turret to track target
-                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
+                        if (turret.atSetpoint(true) && Math.abs(turret.getVelocity()) > 20 * Units.Angle.degrees) {
                             state = States.finalTracking;
+                        }
                         break;
                     case finalTracking:
-                        dataLookUp = vision.dataLookUp(vision.getDistance());
-                        hood.setAngle(dataLookUp[1]);
-                        setVelocity(dataLookUp[0]);
-//                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
-                        if (turret.atSetpoint(true)) {
-                            if (vision.getAngle() > 10) {
-                                state = States.tracking;
-                            } else {
-                                state = States.spooling;
+                        if(Math.abs(vision.getAngle()) > 1 * Units.Angle.degrees) {
+                            dataLookUp = vision.dataLookUp(vision.getDistance());
+                            hood.setAngle(dataLookUp[1]);
+                            if (!autoOverride) {
+                                setVelocity(dataLookUp[0]);
                             }
+                            if (turret.atSetpoint(true)) {
+                                if (Math.abs(vision.getAngle()) > 1) {
+                                    state = States.scanning;
+                                } else {
+                                    state = States.spooling;
+                                }
+                            }
+                        } else {
+                            state = States.scanning;
                         }
                         break;
                     case spooling:
-//                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         flywheel.setVelocity(RPM);
 
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
                         if (Math.abs(flywheel.getVelocity() - RPM) < 400 && turret.atSetpoint(true)) {
-//                            turret.toSetpoint(vision.offsetAngle(turret.getAngle(false), vision.getAngle()));
                             state = States.transport;
                         }
                         break;
@@ -179,7 +184,7 @@ public class Control {
                 if(!autoOverride) {
                     flywheel.setVelocity(0);
                 }
-                state = States.tracking;
+                state = States.scanning;
                 stateTimer.stop();
                 stateTimer.reset();
             }
@@ -214,7 +219,7 @@ public class Control {
     }
 
     public void display() {
-        SmartDashboard.putBoolean("Vision Detected", vision.cameraTracking());
+        SmartDashboard.putNumber("Vision Angle", vision.getAngle());
         feeder.display();
         flywheel.display();
         hood.display();

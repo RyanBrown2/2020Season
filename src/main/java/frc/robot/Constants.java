@@ -99,7 +99,7 @@ public class Constants {
         public static double ticksPerRev = 18745/(2*pi);
 
         //PID Constants
-        public static double kP = 1;
+        public static double kP = 3;
         public static double kI = 0;
         public static double kD = 0;
         public static double kIz = 0;
@@ -108,8 +108,8 @@ public class Constants {
         public static double kMinOutput = -1;
 
         //Smart Motion Coefficients
-        public static double maxVel = 100; // rpm
-        public static double maxAcc = 50;
+        public static double maxVel = 120; // rpm
+        public static double maxAcc = 60;
 
         public static double allowedErr = 0;
         public static double minVel;
