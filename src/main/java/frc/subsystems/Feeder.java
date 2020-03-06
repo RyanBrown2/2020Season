@@ -2,6 +2,7 @@ package frc.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
 
 public class Feeder {
@@ -13,12 +14,16 @@ public class Feeder {
         return instance;
     }
 
+    Timer timer;
+
     DoubleSolenoid feederPiston = Constants.Feeder.solenoid;
     public enum Rollers {off, in, out, maxIn, maxOut}
 
     boolean isOut = false;
 
-    private Feeder() {}
+    private Feeder() {
+        timer = new Timer();
+    }
 
     public void rollers(Rollers rollers) {
         if (rollers == Rollers.off) {
@@ -56,6 +61,22 @@ public class Feeder {
     public void deploy() {
         feederPiston.set(DoubleSolenoid.Value.kForward);
         isOut = true;
+    }
+
+    private boolean hasStarted = false;
+    public void startup() {
+        if (!hasStarted) {
+            if (timer.get() == 0) {
+                timer.start();
+            }
+            feederPiston.set(DoubleSolenoid.Value.kForward);
+            if (timer.get() > 4) {
+                feederPiston.set(DoubleSolenoid.Value.kReverse);
+                hasStarted = true;
+            }
+        } else {
+            timer.stop();
+        }
     }
 
     public void panic() {

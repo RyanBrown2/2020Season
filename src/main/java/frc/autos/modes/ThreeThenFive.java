@@ -16,7 +16,7 @@ import frc.utilPackage.Units;
 
 public class ThreeThenFive extends AutoMode {
     DrivePath throughTunnel, reverse;
-    WaitAction waitForShooting, waitForShootingAgain;
+    WaitAction waitForFeeder, waitForShooting, waitForShootingAgain;
     PointTurn hardTurn;
     Shoot shooting;
 
@@ -28,6 +28,7 @@ public class ThreeThenFive extends AutoMode {
     public ThreeThenFive() {
         waitForShooting = new WaitAction(4.25);  // 2.75
         waitForShootingAgain = new WaitAction(5);
+        waitForFeeder = new WaitAction(0.75); // 0.75
 
         shooting = new Shoot();
 
@@ -52,6 +53,8 @@ public class ThreeThenFive extends AutoMode {
     @Override
     public void auto() throws AutoEndedException {
         PositionTracker.getInstance().robotForward();
+        // Put feeder out then back in
+        runAction(waitForFeeder);
         // Immediately start shooting
         controller.setEnabled(true);
         // Wait for shooting to finish

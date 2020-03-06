@@ -193,6 +193,7 @@ public class Control {
             transport.rollers(Transport.Rollers.off);
             feeder.rollers(Feeder.Rollers.off);
         }
+        feeder.startup();
     }
 
     public enum Direction {left, right}
