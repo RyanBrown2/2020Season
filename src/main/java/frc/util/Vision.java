@@ -1,6 +1,7 @@
 package frc.util;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.wpilibj.RobotState;
 import frc.utilPackage.Units;
 
 import java.io.IOException;
@@ -78,7 +79,28 @@ public class Vision {
             new double[]{21, 4100, 33}
     };
 
+    private double[][] teleopOffsets = {
+            new double[]{11, 12},
+            new double[]{11.7, 13},
+            new double[]{12.4, 14},
+            new double[]{13.5, 15},
+            new double[]{14.5, 16},
+            new double[]{15.3, 17},
+            new double[]{16.4, 18},
+            new double[]{17.2, 19},
+            new double[]{17.6, 20},
+            new double[]{18.4, 20.3},
+            new double[]{18.7, 21},
+            new double[]{19.2, 22},
+            new double[]{20.1, 23},
+            new double[]{21, 24},
+            new double[]{21.8, 25}
+    };
+
     public double[] dataLookUp(double distance) {
+        if (RobotState.isOperatorControl()) {
+            distance = offsetLookUp(distance);
+        }
         double minError = 30;
         int selectedIndex = 0;
         for (int i = 0; i < data.length; i++) {
@@ -88,8 +110,20 @@ public class Vision {
                 selectedIndex = i;
             }
         }
-
         return new double[]{data[selectedIndex][1], data[selectedIndex][2]};
+    }
+
+    public double offsetLookUp(double distance) {
+        double minError = 30;
+        int selectedIndex = 0;
+        for (int i = 0; i < teleopOffsets.length; i++) {
+            double error = Math.abs(distance - teleopOffsets[i][0]);
+            if (error < minError) {
+                minError = error;
+                selectedIndex = i;
+            }
+        }
+        return teleopOffsets[selectedIndex][1];
     }
 
     /*
