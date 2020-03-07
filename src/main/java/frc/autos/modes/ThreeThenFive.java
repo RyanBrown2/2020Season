@@ -63,6 +63,7 @@ public class ThreeThenFive extends AutoMode {
         controller.setEnabled(false);
         // Slow subsystems to pull a single ball in, and run feeder
         mixer.rollers(Mixer.Rollers.slowIn);
+        transport.rollers(Transport.Rollers.off);
         transport.rollers(Transport.Rollers.onlyFront);
         feeder.deploy();
         feeder.rollers(Feeder.Rollers.maxIn);

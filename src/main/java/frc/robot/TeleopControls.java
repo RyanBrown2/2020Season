@@ -81,6 +81,7 @@ public class TeleopControls {
         } if(cb.trackCounterClockwise()) {
             controller.scanCounterClockwise();
         } if(cb.unjam()) {
+            controller.setEnabled(false);
             if (unjamTimer.get() == 0) {
                 unjamTimer.start();
             }
@@ -89,10 +90,14 @@ public class TeleopControls {
                 mixer.rollers(Mixer.Rollers.out);
                 transport.rollers(Transport.Rollers.out);
             }
+            if (unjamTimer.get() > 0.5) {
+                controller.unJamFlywheel(true);
+            }
         } if(cb.unjamReleased()) {
             mixer.rollers(Mixer.Rollers.off);
             feeder.rollers(Feeder.Rollers.off);
             transport.rollers(Transport.Rollers.off);
+            controller.unJamFlywheel(false);
             unjamTimer.stop();
             unjamTimer.reset();
         } if(cb.visionTrackPressed()) {

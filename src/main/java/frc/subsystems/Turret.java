@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.utilPackage.Units;
 
 public class Turret {
@@ -68,9 +69,11 @@ public class Turret {
 
         if(tempSetpointFieldOriented > (3*Constants.pi/2)){
             turretPID.setOutputRange(0, 0);
+            Robot.driverDisplay.setInDeadZone(true);
 //            SmartDashboard.putNumber("OutputRange Turret", 0);
         } else {
             turretPID.setOutputRange(-1, 1);
+            Robot.driverDisplay.setInDeadZone(false);
 //            SmartDashboard.putNumber("OutputRange Turret", 0.25);
         }
 

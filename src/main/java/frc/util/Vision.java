@@ -2,6 +2,7 @@ package frc.util;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utilPackage.Units;
 
 import java.io.IOException;
@@ -53,18 +54,18 @@ public class Vision {
             new double[]{11, 3900, 80},
             new double[]{11.3, 3900, 80},
             new double[]{11.6, 3900, 68},
-            new double[]{12, 4500, 30},
-            new double[]{12.3, 4500, 30},
-            new double[]{12.6, 4500, 30},
-            new double[]{13, 4500, 30},
-            new double[]{13.3, 4500, 30},
-            new double[]{12.6, 4500, 30},
-            new double[]{13, 4500, 30},
-            new double[]{13.3, 4500, 30},
-            new double[]{13.6, 4500, 30},
-            new double[]{14, 4500, 40},
-            new double[]{14.5, 4500, 30},
-            new double[]{15, 4500, 30},
+            new double[]{12, 4200, 30},
+            new double[]{12.3, 4200, 30},
+            new double[]{12.6, 4200, 30},
+            new double[]{13, 4200, 30},
+            new double[]{13.3, 4200, 30},
+            new double[]{12.6, 4200, 30},
+            new double[]{13, 4200, 30},
+            new double[]{13.3, 4200, 30},
+            new double[]{13.6, 4200, 30},
+            new double[]{14, 4200, 30},
+            new double[]{14.5, 4200, 30},
+            new double[]{15, 4200, 30},
             new double[]{15.5, 4000, 30},
             new double[]{16, 4000, 30},
             new double[]{16.5, 4000, 30},
@@ -98,9 +99,7 @@ public class Vision {
     };
 
     public double[] dataLookUp(double distance) {
-        if (RobotState.isOperatorControl()) {
-            distance = offsetLookUp(distance);
-        }
+        distance = offsetLookUp(distance);
         double minError = 30;
         int selectedIndex = 0;
         for (int i = 0; i < data.length; i++) {
@@ -113,17 +112,21 @@ public class Vision {
         return new double[]{data[selectedIndex][1], data[selectedIndex][2]};
     }
 
+//    public double offsetLookUp(double distance) {
+//        double minError = 30;
+//        int selectedIndex = 0;
+//        for (int i = 0; i < teleopOffsets.length; i++) {
+//            double error = Math.abs(distance - teleopOffsets[i][0]);
+//            if (error < minError) {
+//                minError = error;
+//                selectedIndex = i;
+//            }
+//        }
+//        return teleopOffsets[selectedIndex][1];
+//    }
+
     public double offsetLookUp(double distance) {
-        double minError = 30;
-        int selectedIndex = 0;
-        for (int i = 0; i < teleopOffsets.length; i++) {
-            double error = Math.abs(distance - teleopOffsets[i][0]);
-            if (error < minError) {
-                minError = error;
-                selectedIndex = i;
-            }
-        }
-        return teleopOffsets[selectedIndex][1];
+        return (1.186218*distance) - 1.055414;
     }
 
     /*
@@ -197,8 +200,8 @@ public class Vision {
         };
     }
 
-    // DO NOT RUN THIS IN AN INFINITE LOOP
     public void display() {
-
+        SmartDashboard.putNumber("Vision Distance Raw", getDistance());
+        SmartDashboard.putNumber("Vision Distance Adjusted",offsetLookUp(getDistance()));
     }
 }

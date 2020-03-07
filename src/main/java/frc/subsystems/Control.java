@@ -50,6 +50,8 @@ public class Control {
 
     Vision vision;
 
+    Timer shootWait;
+
     boolean autoOverride = false;
     double initialSetpoint, prevSetpoint, nextSetpoint;
 
@@ -63,7 +65,9 @@ public class Control {
 
         vision = Vision.getInstance();
 
-        state = States.tracking;
+        shootWait = new Timer();
+
+        state = States.scanning;
 
         hood.setAngle(60);
     }
@@ -151,7 +155,7 @@ public class Control {
                         flywheel.setVelocity(RPM);
 
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
-                        if (Math.abs(flywheel.getVelocity() - RPM) < 400 && turret.atSetpoint(true)) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 50 && turret.atSetpoint(true)) {
                             state = States.transport;
                         }
                         break;
@@ -211,7 +215,13 @@ public class Control {
         }
     }
 
-
+    public void unJamFlywheel(boolean on) {
+        if (on) {
+            flywheel.jam = true;
+        } else {
+            flywheel.jam = false;
+        }
+    }
 
     // Panic mode shuts down all intake-related subsystems
     public void panic(boolean isPanic) {
@@ -219,6 +229,7 @@ public class Control {
     }
 
     public void display() {
+        vision.display();
         SmartDashboard.putString("Controller State", state.toString());
         SmartDashboard.putNumber("Vision Angle", vision.getAngle());
         feeder.display();

@@ -52,9 +52,15 @@ public class Flywheel {
         flywheelPID.setOutputRange(Constants.Flywheel.kMinOutput, Constants.Flywheel.kMaxOutput);
     }
 
+    public boolean jam = false;
+
     public void run() {
-        // Update the PID velocity setpoint constantly
-        flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
+        if (!jam) {
+            // Update the PID velocity setpoint constantly
+            flywheelPID.setReference(velocitySetpoint, ControlType.kVelocity);
+        } else {
+            flywheelMotor.setVoltage(-4);
+        }
     }
 
     public void setVelocity(double vel) {

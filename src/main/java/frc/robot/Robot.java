@@ -2,11 +2,13 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.autos.modes.AutoMode;
 import frc.autos.modes.ThreeThenFive;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
+import frc.display.DriverDisplay;
 import frc.drive.Drive;
 import frc.drive.DriveController;
 import frc.drive.DriveOutput;
@@ -24,6 +26,8 @@ public class Robot extends TimedRobot {
   }
 
   public static ScaledDrive scaledDrive = new ScaledDrive();
+
+  public static DriverDisplay driverDisplay = new DriverDisplay();
 
   TeleopControls teleopControls;
 
@@ -82,6 +86,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    driverDisplay.setMatchTime(DriverStation.getInstance().getMatchTime());
     display();
   }
 

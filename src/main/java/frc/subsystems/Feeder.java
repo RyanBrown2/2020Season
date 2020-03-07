@@ -70,7 +70,7 @@ public class Feeder {
                 timer.start();
             }
             feederPiston.set(DoubleSolenoid.Value.kForward);
-            if (timer.get() > 4) {
+            if (timer.get() > 1.5) {
                 feederPiston.set(DoubleSolenoid.Value.kReverse);
                 hasStarted = true;
             }
