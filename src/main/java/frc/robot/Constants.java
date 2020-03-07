@@ -57,11 +57,17 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0.005; //0.001
-        public static double kI = 0.08; //0.0000125
-        public static double kD = 0.01; //0.01 , 0.02
-        public static double kIz = 0.5; //0.25
-        public static double kFF = 0.00015; // 0.000178, 0.00015
+        public static double kP = 0.001; //0.001
+        public static double kI = 0.0006; //0.0000125
+        public static double kD = 0.02; //0.01 , 0.02
+        public static double kIz = 0.2; //0.25
+        public static double kFF = 0.000181; // 0.000178, 0.00015
+
+        public static double kPSpooling = 0.012;
+        public static double kISpooling = 0;
+        public static double kDSpooling = 0;
+        public static double kIzSpooling = 0;
+        public static double kFFSpooling = 0;
 
         public static double kMaxOutput = 1;
         public static double kMinOutput = 0; //0.5

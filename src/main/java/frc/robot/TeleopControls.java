@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controlBoard.IControlBoard;
 import frc.subsystems.*;
 
@@ -24,7 +25,6 @@ public class TeleopControls {
     Timer unjamTimer = new Timer();
 
     public TeleopControls() {
-
     }
 
     public void run() {

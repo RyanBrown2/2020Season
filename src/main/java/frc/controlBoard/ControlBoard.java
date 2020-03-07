@@ -81,7 +81,7 @@ public class ControlBoard extends IControlBoard{
 
     @Override
     public boolean shoot() {
-        return (joy.getRawButton(ControlBindings.Driver.shoot) || buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
+        return (joy.getRawButtonPressed(ControlBindings.Driver.shoot) || buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
     }
 
     @Override

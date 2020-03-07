@@ -22,6 +22,7 @@ public class Control {
         tracking,
         finalTracking,
         spooling,
+        shooting,
         transport,
         mixing,
         feeder,
@@ -131,7 +132,8 @@ public class Control {
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
                         if (turret.atSetpoint(true) && Math.abs(turret.getVelocity()) < 20 * Units.Angle.degrees) {
-                            setVelocity(vision.dataLookUp(vision.getDistance())[0]);
+//                            setVelocity(vision.dataLookUp(vision.getDistance())[0]); // todo
+                            setVelocity(4500);
                             state = States.spooling;
                         }
                         break;
@@ -139,7 +141,8 @@ public class Control {
                         if(Math.abs(vision.getAngle()) < 4 * Units.Angle.degrees) {
                             dataLookUp = vision.dataLookUp(vision.getDistance());
                             hood.setAngle(dataLookUp[1]);
-                             setVelocity(dataLookUp[0]);
+//                             setVelocity(dataLookUp[0]); // todo
+                            setVelocity(4500);
                             if (turret.atSetpoint(true)) {
                                 if (Math.abs(vision.getAngle()) > 4 * Units.Angle.degrees) {
                                     state = States.scanning;
@@ -155,7 +158,7 @@ public class Control {
                         flywheel.setVelocity(RPM);
 
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
-                        if (Math.abs(flywheel.getVelocity() - RPM) < 50 && turret.atSetpoint(true)) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(true)) {
                             state = States.transport;
                         }
                         break;

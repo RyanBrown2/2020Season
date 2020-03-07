@@ -54,18 +54,18 @@ public class Vision {
             new double[]{11, 3900, 80},
             new double[]{11.3, 3900, 80},
             new double[]{11.6, 3900, 68},
-            new double[]{12, 4200, 30},
-            new double[]{12.3, 4200, 30},
-            new double[]{12.6, 4200, 30},
-            new double[]{13, 4200, 30},
-            new double[]{13.3, 4200, 30},
-            new double[]{12.6, 4200, 30},
-            new double[]{13, 4200, 30},
-            new double[]{13.3, 4200, 30},
-            new double[]{13.6, 4200, 30},
-            new double[]{14, 4200, 30},
-            new double[]{14.5, 4200, 30},
-            new double[]{15, 4200, 30},
+            new double[]{12, 4500, 30},
+            new double[]{12.3, 4500, 30},
+            new double[]{12.6, 4500, 30},
+            new double[]{13, 4500, 30},
+            new double[]{13.3, 4500, 30},
+            new double[]{12.6, 4500, 30},
+            new double[]{13, 4500, 30},
+            new double[]{13.3, 4500, 30},
+            new double[]{13.6, 4500, 30},
+            new double[]{14, 4500, 40},
+            new double[]{14.5, 4500, 30},
+            new double[]{15, 4500, 30},
             new double[]{15.5, 4000, 30},
             new double[]{16, 4000, 30},
             new double[]{16.5, 4000, 30},
@@ -99,7 +99,7 @@ public class Vision {
     };
 
     public double[] dataLookUp(double distance) {
-        distance = offsetLookUp(distance);
+//        distance = offsetLookUp(distance);
         double minError = 30;
         int selectedIndex = 0;
         for (int i = 0; i < data.length; i++) {

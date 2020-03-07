@@ -73,8 +73,8 @@ public class ThreeThenFive extends AutoMode {
         mixer.rollers(Mixer.Rollers.off);
         transport.rollers(Transport.Rollers.off);
         // Rev up the flywheel in preparation for the next shot
-        controller.autoOverride(true);
-        controller.setVelocity(3900);
+//        controller.autoOverride(true);
+//        controller.setVelocity(3900);
         // Retract and stop the feeder in preparation to shoot
         feeder.rollers(Feeder.Rollers.off);
         feeder.retract();
