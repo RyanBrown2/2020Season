@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.autos.modes.AutoMode;
+import frc.autos.modes.SmallAuto;
 import frc.autos.modes.ThreeThenFive;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
@@ -26,48 +27,46 @@ public class Robot extends TimedRobot {
     return cb;
   }
 
-//  public static ScaledDrive scaledDrive = new ScaledDrive();
+  public static ScaledDrive scaledDrive = new ScaledDrive();
 
   public static DriverDisplay driverDisplay = new DriverDisplay();
 
   TeleopControls teleopControls;
 
-//  AutoMode auto;
+  AutoMode auto;
 
-  Flywheel flywheel; // todo
 
   Compressor compressor;
 
-//  Drive driveAuto;
-//  DriveController driveController;
-//  DriveOutput driveOutput;
-//  PositionTracker positionTracker;
+  Drive driveAuto;
+  DriveController driveController;
+  DriveOutput driveOutput;
+  PositionTracker positionTracker;
 
   Control controller;
-//  Climber climber;
+  Climber climber;
 
-//  Turret turret = Turret.getInstance(); // todo
+  Turret turret = Turret.getInstance(); // todo
 
 //  FunctionTest functionTest;
 
   @Override
   public void robotInit() {
-    flywheel = Flywheel.getInstance();
 
     teleopControls = new TeleopControls();
 
     Constants.Drive.pigeon.setYaw(0);
 
-//    climber = Climber.getInstance();
+    climber = Climber.getInstance();
 
-//    driveAuto = Drive.getInstance();
-//    driveController = DriveController.getInstance();
-//    driveOutput = DriveOutput.getInstance();
-//    driveOutput.start();
+    driveAuto = Drive.getInstance();
+    driveController = DriveController.getInstance();
+    driveOutput = DriveOutput.getInstance();
+    driveOutput.start();
 
-//    positionTracker = PositionTracker.getInstance();
+    positionTracker = PositionTracker.getInstance();
 
-//    scaledDrive.enabled(true);
+    scaledDrive.enabled(true);
 
     compressor = new Compressor(0);
     compressor.setClosedLoopControl(true);
@@ -77,33 +76,33 @@ public class Robot extends TimedRobot {
     controller = Control.getInstance();
 
     // Set drivebase motor idle modes to brake
-//    Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-//    Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-//    Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
-//    Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-//
-//    Constants.Drive.left1.setSmartCurrentLimit(45);
-//    Constants.Drive.left2.setSmartCurrentLimit(45);
-//    Constants.Drive.right1.setSmartCurrentLimit(45);
-//    Constants.Drive.right2.setSmartCurrentLimit(45);
+    Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+    Constants.Drive.left1.setSmartCurrentLimit(45);
+    Constants.Drive.left2.setSmartCurrentLimit(45);
+    Constants.Drive.right1.setSmartCurrentLimit(45);
+    Constants.Drive.right2.setSmartCurrentLimit(45);
 
   }
 
   @Override
   public void robotPeriodic() {
-//    driverDisplay.setMatchTime(DriverStation.getInstance().getMatchTime());
+    driverDisplay.setMatchTime(DriverStation.getInstance().getMatchTime());
     display();
   }
 
   @Override
   public void autonomousInit() {
-//    auto = new ThreeThenFive();
-//    auto.start();
+    auto = new SmallAuto();
+    auto.start();
   }
 
   @Override
   public void autonomousPeriodic() {
-//    controller.run();
+    controller.run();
   }
 
   @Override
@@ -114,8 +113,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     controller.run();
     teleopControls.run();
-//    scaledDrive.run();
-//    climber.run();
+    scaledDrive.run();
+    climber.run();
   }
 
   @Override
@@ -128,10 +127,10 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
   }
 
-  public void display() {
+    public void display() {
 //    flywheel.display();
-//    Drive.getInstance().display();
-//    positionTracker.display();
+    Drive.getInstance().display();
+    positionTracker.display();
     teleopControls.display();
     controller.display();
   }
