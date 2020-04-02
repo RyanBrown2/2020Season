@@ -133,7 +133,7 @@ public class Control {
                     case tracking:
                         if (turret.atSetpoint(true) && Math.abs(turret.getVelocity()) < 20 * Units.Angle.degrees) {
 //                            setVelocity(vision.dataLookUp(vision.getDistance())[0]); // todo
-                            setVelocity(4500);
+                            setVelocity(4000);
                             state = States.spooling;
                         }
                         break;
@@ -142,7 +142,7 @@ public class Control {
                             dataLookUp = vision.dataLookUp(vision.getDistance());
                             hood.setAngle(dataLookUp[1]);
 //                             setVelocity(dataLookUp[0]); // todo
-                            setVelocity(4500);
+                            setVelocity(4000);
                             if (turret.atSetpoint(true)) {
                                 if (Math.abs(vision.getAngle()) > 4 * Units.Angle.degrees) {
                                     state = States.scanning;
