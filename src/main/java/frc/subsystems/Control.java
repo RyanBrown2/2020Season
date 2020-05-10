@@ -113,52 +113,50 @@ public class Control {
 
     public void run() {
 //        hood.setAngle(33);
-        hood.run();
+//        hood.run();
         flywheel.run();
-        turret.run(true);
+//        turret.run(true);
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case scanning:
-                        dataLookUp = vision.dataLookUp(vision.getDistance());
-                        hood.setAngle(dataLookUp[1]);
-
-                        visionAngle = vision.getAngle();
-                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), visionAngle));
+//                        dataLookUp = vision.dataLookUp(vision.getDistance());
+//                        hood.setAngle(dataLookUp[1]);
+//
+//                        visionAngle = vision.getAngle();
+//                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), visionAngle));
                         state = States.tracking;
                         break;
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
-                        if (turret.atSetpoint(true) && Math.abs(turret.getVelocity()) < 20 * Units.Angle.degrees) {
-//                            setVelocity(vision.dataLookUp(vision.getDistance())[0]); // todo
-                            setVelocity(4000);
-                            state = States.spooling;
-                        }
+                        setVelocity(5000);
+                        state = States.finalTracking;
                         break;
                     case finalTracking:
-                        if(Math.abs(vision.getAngle()) < 4 * Units.Angle.degrees) {
-                            dataLookUp = vision.dataLookUp(vision.getDistance());
-                            hood.setAngle(dataLookUp[1]);
+//                        if(Math.abs(vision.getAngle()) < 4 * Units.Angle.degrees) {
+//                            dataLookUp = vision.dataLookUp(vision.getDistance());
+//                            hood.setAngle(dataLookUp[1]);
 //                             setVelocity(dataLookUp[0]); // todo
-                            setVelocity(4000);
-                            if (turret.atSetpoint(true)) {
-                                if (Math.abs(vision.getAngle()) > 4 * Units.Angle.degrees) {
-                                    state = States.scanning;
-                                } else {
-                                    state = States.spooling;
-                                }
-                            }
-                        } else {
-                            state = States.scanning;
-                        }
+//                            setVelocity(5000);
+//                            if (turret.atSetpoint(true)) {
+//                                if (Math.abs(vision.getAngle()) > 4 * Units.Angle.degrees) {
+//                                    state = States.scanning;
+//                                } else {
+//                                    state = States.spooling;
+//                                }
+//                            }
+//                        } else {
+//                            state = States.scanning;
+//                        }
+                        state = States.spooling;
                         break;
                     case spooling:
                         flywheel.setVelocity(RPM);
 
                         // Don't go on to the next state unless the flywheel is +- 200 of its setpoint and turret at setpoint
-                        if (Math.abs(flywheel.getVelocity() - RPM) < 200 && turret.atSetpoint(true)) {
+                        if (Math.abs(flywheel.getVelocity() - RPM) < 200) {
                             state = States.transport;
                         }
                         break;

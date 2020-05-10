@@ -77,32 +77,24 @@ public class Flywheel {
 //            flywheelMotor.setVoltage(-4);
 //        }
 //        flywheelMotor.set(10);
-        error = velocitySetpoint - getVelocity();
+        holdVoltage = velocitySetpoint/473;
+        rampVoltage = holdVoltage + 3;
 
-        motorPower += gain * error;
-        if (motorPower > 1) {
-            motorPower = 1;
-        } else if (motorPower < -1) {
-            motorPower = -1;
+        if(velocitySetpoint == 0) {
+            flywheelMotor.setVoltage(0);
+        } else if (flywheelEncoder.getVelocity() >= velocitySetpoint) {
+            if(holdVoltage != 0 ) {
+                flywheelMotor.setVoltage(holdVoltage);
+            }
+        } else if (flywheelEncoder.getVelocity() < velocitySetpoint ) {
+            flywheelMotor.setVoltage(rampVoltage);
+        } else {
+            flywheelMotor.setVoltage(0);
         }
-
-        if ((lastError > 0) != (error > 0)) {
-            motorPower = 0.5 * (motorPower + tbh);
-            tbh = motorPower;
-            lastError = error;
-        }
-
-        flywheelMotor.set(motorPower);
 
     }
 
     public void setVelocity(double vel) {
-        if (velocitySetpoint < vel) {
-            lastError = 1;
-        } else if (velocitySetpoint > vel) {
-            lastError = -1;
-        }
-        tbh = (2*(vel/Constants.Flywheel.maxRPM)) -1;
         velocitySetpoint = vel;
     }
 
