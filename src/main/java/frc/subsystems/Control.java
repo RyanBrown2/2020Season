@@ -80,9 +80,7 @@ public class Control {
                 switch (state) {
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
-                        dataLookUp = vision.dataLookUp(vision.getDistance());
-                        hood.setAngle(dataLookUp[1]);
-                        setVelocity(dataLookUp[0]);
+                        setVelocity(3800);
                         // Determines and moves the turret to track target
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         if (turret.atSetpoint(true)) {
@@ -90,9 +88,6 @@ public class Control {
                         }
                         break;
                     case finalTracking:
-                        dataLookUp = vision.dataLookUp(vision.getDistance());
-                        hood.setAngle(dataLookUp[1]);
-                        setVelocity(dataLookUp[0]);
                         turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), vision.getAngle()));
                         if (turret.atSetpoint(true)) {
                             state = States.spooling;
