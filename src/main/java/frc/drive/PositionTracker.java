@@ -9,7 +9,7 @@ import frc.robot.Constants;
 import frc.utilPackage.Units;
 import frc.utilPackage.Util;
 
-public class PositionTracker extends Thread implements IPositionTracker{
+public class PositionTracker implements Runnable {
     private static PositionTracker instance = null;
     public static PositionTracker getInstance(){
         if(instance == null)
@@ -30,7 +30,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
         positionTrackerDisplay = new PositionTrackerDisplay();
         pigeon = new PigeonIMU(Constants.Drive.gyro);
         pigeon.setFusedHeading(0.0);
-        this.start();
     }
 
     public void setInitPos(Coordinate pos){
@@ -53,7 +52,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
         offset = getRawAngle() + 180;
     }
 
-    @Override
     public void run() {
 
         double last = Timer.getFPGATimestamp();
@@ -95,18 +93,11 @@ public class PositionTracker extends Thread implements IPositionTracker{
             Pos2D nextPos = new Pos2D(position, tempHeading);
             position = nextPos.getEndPos();
 
-            if(visionData != null){
-                Coordinate newPos = new Coordinate();
-                final double visionSetting = 0.3;
-                newPos = position.multC(1-visionSetting).addC(visionData.multC(visionSetting));
-                fullPos.setPos(newPos);
-            }else{
-                fullPos.setPos(position);
-            }
 
+            fullPos.setPos(position);
             fullPos.setHeading(heading);
 
-            Timer.delay(0.005);
+//            Timer.delay(0.005);
         }
     }
 
@@ -125,7 +116,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
         return (drive.getLeftPosition() - drive.getRightPosition())/(Constants.robotWidth);
     }
 
-    @Override
     public synchronized Pos2D getPosition() {
         return fullPos;
     }
@@ -136,7 +126,6 @@ public class PositionTracker extends Thread implements IPositionTracker{
         return output;
     }
 
-    @Override
     public Heading getVelocity() {
         return new Heading(heading);
     }
