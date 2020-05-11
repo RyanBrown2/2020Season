@@ -22,7 +22,6 @@ import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
-
   public static IControlBoard getControlBoard(){
     return cb;
   }
@@ -34,7 +33,6 @@ public class Robot extends TimedRobot {
   TeleopControls teleopControls;
 
   AutoMode auto;
-
 
   Compressor compressor;
 
