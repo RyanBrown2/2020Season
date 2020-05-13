@@ -122,34 +122,33 @@ public class Control {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case scanning:
-//                        dataLookUp = vision.dataLookUp(vision.getDistance());
-//                        hood.setAngle(dataLookUp[1]);
-//
-//                        visionAngle = vision.getAngle();
-//                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), visionAngle));
+                        // Scan For Target
+
+                        // Get target data
+
+                        // todo
+
+                        // If target found
                         state = States.tracking;
                         break;
-                    // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
-                        setVelocity(5000);
+                        // Move To Target
+
+                        // todo
+
+                        // If at turret at setpoint
                         state = States.finalTracking;
                         break;
                     case finalTracking:
-//                        if(Math.abs(vision.getAngle()) < 4 * Units.Angle.degrees) {
-//                            dataLookUp = vision.dataLookUp(vision.getDistance());
-//                            hood.setAngle(dataLookUp[1]);
-//                             setVelocity(dataLookUp[0]); // todo
-//                            setVelocity(5000);
-//                            if (turret.atSetpoint(true)) {
-//                                if (Math.abs(vision.getAngle()) > 4 * Units.Angle.degrees) {
-//                                    state = States.scanning;
-//                                } else {
-//                                    state = States.spooling;
-//                                }
-//                            }
-//                        } else {
-//                            state = States.scanning;
-//                        }
+                        // Final Checks
+
+                        // Scan for target
+
+                        // Check Target Angle
+
+                        // todo
+
+                        // If all checks passed
                         state = States.spooling;
                         break;
                     case spooling:

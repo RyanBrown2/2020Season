@@ -126,7 +126,6 @@ public class Robot extends TimedRobot {
   }
 
     public void display() {
-//    flywheel.display();
     Drive.getInstance().display();
     positionTracker.display();
     teleopControls.display();
