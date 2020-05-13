@@ -86,7 +86,31 @@ public class Util {
 	public static double slope(Coordinate pt1, Coordinate pt2){
 		return (pt2.getY() - pt1.getY())/(pt2.getX() - pt1.getX());
 	}
-	
+
+	public static double getMagnitude(double[] coord) {
+		double mag = Math.sqrt(Math.pow(coord[0], 2) + Math.pow(coord[1], 2));
+		return mag;
+	}
+
+	public static double map(double x, double x1, double x2, double y1, double y2) {
+		double slope = (y2 - y1) / (x2 - x1);
+
+		return slope * (x - x1) + y1;
+	}
+
+	public static double limit(double v, double maxMagnitude) {
+		return limit(v, -maxMagnitude, maxMagnitude);
+	}
+
+	public static double limit(double v, double min, double max) {
+		return Math.min(max, Math.max(min, v));
+	}
+
+	public static double interpolate(double a, double b, double x) {
+		x = limit(x, 0.0, 1.0);
+		return a + (b - a) * x;
+	}
+
 //	public static void main(String[] args) {
 //		for(double time = 0; time <= 5; time+=0.5){
 //			double out = sinWaveOccilation(time, 45, 20, 5);

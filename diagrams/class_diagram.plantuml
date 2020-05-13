@@ -11,19 +11,6 @@ abstract class "Action" {
 
 class "Angle"
 
-class "AutoDisplay" {
-  tab : ShuffleboardTab
-  eta : NetworkTableEntry
-  purePursuitCurvature : NetworkTableEntry
-  inVel : NetworkTableEntry
-  outVel : NetworkTableEntry
-  followerHeading : NetworkTableEntry
-  followerHeadingFull : NetworkTableEntry
-  followerMessage : NetworkTableEntry
-  goalPos : NetworkTableEntry
-  distanceToGoal : NetworkTableEntry
-}
-
 class "AutoEndedException"
 
 abstract class "AutoMode" {
@@ -145,8 +132,8 @@ class "Coordinate" {
   inverseC() : Coordinate
   mult(double) : Coordinate
   mult(double, double) : Coordinate
-  multC(double) : Coordinate
   multC(double, double) : Coordinate
+  multC(double) : Coordinate
   normalize() : Coordinate
   normalizeC() : Coordinate
   outputData() : String
@@ -159,8 +146,6 @@ class "Coordinate" {
   sub(Coordinate) : Coordinate
   subC(Coordinate) : Coordinate
 }
-
-class "Coprocessor"
 
 class "CubicSpline" {
   start : Pos2D
@@ -226,18 +211,6 @@ class "DriveControllerCheezy" {
   output() : Coordinate
 }
 
-class "DriveDisplay" {
-  tab : ShuffleboardTab
-  encoderPos : NetworkTableEntry
-  encoderVel : NetworkTableEntry
-  encoderLeft : NetworkTableEntry
-  encoderRight : NetworkTableEntry
-  left(double)
-  position(double)
-  right(double)
-  velocity(double)
-}
-
 class "DriveFollower" {
   mode : Modes
   lookAhead : double
@@ -295,16 +268,6 @@ class "DriveSubsystem" {
 
 class "Driver"
 
-class "DriverDisplay" {
-  tab : ShuffleboardTab
-  inDeadZone : NetworkTableEntry
-  visionAngle : NetworkTableEntry
-  visionDistance : NetworkTableEntry
-  ballInRamp : NetworkTableEntry
-  flywheelRPM : NetworkTableEntry
-  matchTime : NetworkTableEntry
-}
-
 class "Feeder"
 
 class "FiveThenFour" {
@@ -328,18 +291,9 @@ class "FiveThenFour" {
 
 class "Flywheel"
 
-class "FlywheelDisplay" {
-  tab : ShuffleboardTab
-  velocity : NetworkTableEntry
-  setpoint : NetworkTableEntry
-  current : NetworkTableEntry
-  current(double)
-  velocity(double)
-}
-
 class "Heading" {
-  inverseC() : Heading
   inverseC() : Coordinate
+  inverseC() : Heading
   perpendicularCCw() : Heading
   perpendicularCCwC() : Heading
   perpendicularCw() : Heading
@@ -347,13 +301,6 @@ class "Heading" {
 }
 
 class "Hood"
-
-class "HoodDisplay" {
-  tab : ShuffleboardTab
-  hoodSetpoint : NetworkTableEntry
-  hoodAngle : NetworkTableEntry
-  angle(double)
-}
 
 abstract class "IControlBoard" {
   climb() : boolean
@@ -468,10 +415,10 @@ class "Pos2D" {
   copy() : Pos2D
   inverseC() : Pos2D
   multC(double) : Coordinate
-  outputData() : String
   outputData(String) : String
-  setHeading(double, double) : Pos2D
+  outputData() : String
   setHeading(Heading) : Pos2D
+  setHeading(double, double) : Pos2D
   setPos(double, double)
   transformByC(Pos2D) : Pos2D
 }
@@ -491,24 +438,6 @@ class "PositionTracker" {
   robotForward()
   run()
   setInitPosFeet(double, double)
-}
-
-class "PositionTrackerDisplay" {
-  tab : ShuffleboardTab
-  xPos : NetworkTableEntry
-  yPos : NetworkTableEntry
-  angle : NetworkTableEntry
-  xResetPos : NetworkTableEntry
-  yResetPos : NetworkTableEntry
-  resetLocation : NetworkTableEntry
-  resetHeading : NetworkTableEntry
-  headingReset() : boolean
-  locationReset() : boolean
-  untoggleButtons()
-  xPosition(double)
-  xReset(double)
-  yPosition(double)
-  yReset(double)
 }
 
 class "ProfileHolder" {
@@ -598,15 +527,6 @@ class "Shoot" {
   done()
   start()
   update()
-}
-
-class "ShooterDisplay" {
-  tab : ShuffleboardTab
-  state : NetworkTableEntry
-  angle : NetworkTableEntry
-  distance : NetworkTableEntry
-  angle(double)
-  distance(double)
 }
 
 class "SmallAuto" {
@@ -742,20 +662,6 @@ class "TrapezoidalMp" {
 
 class "Turret"
 
-class "TurretDisplay" {
-  tab : ShuffleboardTab
-  turretAngle : NetworkTableEntry
-  turretAngleFieldOriented : NetworkTableEntry
-  turretSetpoint : NetworkTableEntry
-  atSetpoint : NetworkTableEntry
-  resetTurret : NetworkTableEntry
-  angle(double)
-  atSetpoint(boolean)
-  fieldOrientedAngle(double)
-  turretReset() : boolean
-  untoggleButtons()
-}
-
 class "Units"
 
 class "Util"
@@ -830,8 +736,6 @@ class "udpServer" {
   run()
 }
 
-class "util"
-
 abstract class "vector" {
   position : double
   velocity : double
@@ -864,8 +768,8 @@ abstract class "vector" {
 "Control" --> "Transport" : transport
 "Control" --> "Turret" : turret
 "Control" --> "Vision" : vision
-"Coordinate" --> "Heading" : use
 "Coordinate" <-> "Heading"
+"Coordinate" --> "Heading" : use
 "CubicSpline" --> "Coordinate" : a/b/c/d
 "CubicSpline" --> "Pos2D" : start/end
 "DirectPursuit" --> "Coordinate" : setpoint/distToVelpt1/distToVelpt2
@@ -904,7 +808,6 @@ abstract class "vector" {
 "PositionTracker" --> "Coordinate" : position
 "PositionTracker" --> "Heading" : heading
 "PositionTracker" --> "Pos2D" : fullPos/visionData
-"PositionTracker" --> "PositionTrackerDisplay" : positionTrackerDisplay
 "ProfileHolder" --> "TrapezoidalMp" : mp
 "QuinticSpline" --> "Coordinate" : use
 "QuinticSpline" --> "Pos2D" : start/end

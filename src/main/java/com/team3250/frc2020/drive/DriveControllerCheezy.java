@@ -1,7 +1,7 @@
 package com.team3250.frc2020.drive;
 
 import com.team3250.frc2020.coordinates.Coordinate;
-import com.team3250.frc2020.util.util;
+import com.team3250.frc2020.utilPackage.Util;
 
 /**
  * Gotta get more wheel
@@ -95,7 +95,7 @@ public class DriveControllerCheezy {
         if (quickTurn) {
             if (linearPower < quickStopDeadband) {
                 double alpha = quickStopWeight;
-                quickStopAccumlator = (1 - alpha) * quickStopAccumlator + alpha * util.limit(wheel, 1.0) * quickStopFactor;
+                quickStopAccumlator = (1 - alpha) * quickStopAccumlator + alpha * Util.limit(wheel, 1.0) * quickStopFactor;
             }
             overPower = 1.0;
             angularPower = wheel;

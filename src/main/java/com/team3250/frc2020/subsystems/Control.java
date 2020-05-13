@@ -2,7 +2,7 @@ package com.team3250.frc2020.subsystems;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.team3250.frc2020.util.Vision;
+import com.team3250.frc2020.utilPackage.Vision;
 import com.team3250.frc2020.utilPackage.Units;
 
 public class Control {
