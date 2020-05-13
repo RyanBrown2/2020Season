@@ -61,4 +61,15 @@ public class SerialReader{
     public String readLine(){
         return readUntilChar('\n');
     }
+
+    // todo Need to test
+    public double[] getData() {
+        String data = readUntilChar('\n');
+        String[] dataArr = data.split(", ",2);
+        double[] dataFinal = new double[0];
+        for (int i=0; i < dataArr.length; i++) {
+            dataFinal[i] = Double.parseDouble(dataArr[i]);
+        }
+        return dataFinal;
+    }
 }

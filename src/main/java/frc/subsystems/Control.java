@@ -3,6 +3,7 @@ package frc.subsystems;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.util.SerialReader;
 import frc.util.Vision;
 import frc.utilPackage.Units;
 
@@ -50,8 +51,10 @@ public class Control {
     Turret turret;
 
     Vision vision;
+    SerialReader serialVision;
 
     Timer shootWait;
+
 
     boolean autoOverride = false;
     double initialSetpoint, prevSetpoint, nextSetpoint;
@@ -64,7 +67,9 @@ public class Control {
         transport = Transport.getInstance();
         turret = Turret.getInstance();
 
+        // todo Switch over to serial
         vision = Vision.getInstance();
+        serialVision = new SerialReader(0);
 
         shootWait = new Timer();
 
