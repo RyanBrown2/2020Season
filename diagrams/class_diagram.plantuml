@@ -1,0 +1,961 @@
+@startuml
+
+abstract class "Action" {
+  state : TeleopRunState
+  done()
+  resetTeleop()
+  runTeleop()
+  start()
+  update()
+}
+
+class "Angle"
+
+class "AutoDisplay" {
+  tab : ShuffleboardTab
+  eta : NetworkTableEntry
+  purePursuitCurvature : NetworkTableEntry
+  inVel : NetworkTableEntry
+  outVel : NetworkTableEntry
+  followerHeading : NetworkTableEntry
+  followerHeadingFull : NetworkTableEntry
+  followerMessage : NetworkTableEntry
+  goalPos : NetworkTableEntry
+  distanceToGoal : NetworkTableEntry
+}
+
+class "AutoEndedException"
+
+abstract class "AutoMode" {
+  initPos : Coordinate
+  autoTime : Timer
+  isActive : boolean
+  auto()
+  display()
+  end()
+  run()
+  runAction(Action)
+}
+
+class "ButtonPad"
+
+class "CalculationData" {
+  Q1 : double
+  Q2 : double
+  a1 : double
+  a2 : double
+  epsilon : double
+  thetaFront : double
+  thetaBack : double
+  robotPos : Coordinate
+  correspondingCoordinate : Coordinate
+  calculate(Trajectory, Coordinate)
+}
+
+class "Camera"
+
+class "Climber"
+
+class "CoDriver"
+
+class "ColorWheel"
+
+class "Constants"
+
+class "Control" {
+  stateTimer : Timer
+  state : States
+  panicMode : boolean
+  enabled : boolean
+  RPM : double
+  visionAngle : double
+  dataLookUp : double[]
+  lastVision : double
+  feeder : Feeder
+  flywheel : Flywheel
+  hood : Hood
+  mixer : Mixer
+  transport : Transport
+  turret : Turret
+  vision : Vision
+  shootWait : Timer
+  autoOverride : boolean
+  initialSetpoint : double
+  prevSetpoint : double
+  nextSetpoint : double
+  autoOverride(boolean)
+  display()
+  manualTrack()
+  panic(boolean)
+  run()
+  scanClockwise()
+  scanCounterClockwise()
+  turretScan(Direction)
+  unJamFlywheel(boolean)
+}
+
+class "ControlBindings"
+
+class "ControlBoard" {
+  joy : Joystick
+  wheel : Joystick
+  buttonPad : Joystick
+  cojoy : Joystick
+  overrideSetpoint : double
+  climb() : boolean
+  climbArms() : boolean
+  climbArmsPressed() : boolean
+  climbArmsReleased() : boolean
+  climbPressed() : boolean
+  climbReleased() : boolean
+  colorWheelActuate() : boolean
+  colorWheelRoller() : boolean
+  colorWheelRollerReleased() : boolean
+  feederActuatePressed() : boolean
+  feederActuateReleased() : boolean
+  panic() : boolean
+  reverseFeeder() : boolean
+  reverseFeederPressed() : boolean
+  reverseFeederReleased() : boolean
+  rollers() : boolean
+  rollersPressed() : boolean
+  rollersReleased() : boolean
+  shoot() : boolean
+  shootPressed() : boolean
+  shootReleased() : boolean
+  trackClockwise() : boolean
+  trackCounterClockwise() : boolean
+  unjam() : boolean
+  unjamReleased() : boolean
+  visionTrack() : boolean
+  visionTrackPressed() : boolean
+}
+
+class "Coordinate" {
+  x : double
+  y : double
+  add(Coordinate) : Coordinate
+  addC(Coordinate) : Coordinate
+  changeBasis(Coordinate, Coordinate) : Coordinate
+  changeBasisC(Coordinate, Coordinate) : Coordinate
+  copy() : Coordinate
+  display(String) : String
+  display() : String
+  heading() : Heading
+  inverseC() : Coordinate
+  mult(double) : Coordinate
+  mult(double, double) : Coordinate
+  multC(double) : Coordinate
+  multC(double, double) : Coordinate
+  normalize() : Coordinate
+  normalizeC() : Coordinate
+  outputData() : String
+  reverseC() : Coordinate
+  rotateByC(Heading) : Coordinate
+  setMagnitude(double) : Coordinate
+  setXMaintainMag(double, boolean)
+  setXY(double, double)
+  setYMaintainMag(double, boolean)
+  sub(Coordinate) : Coordinate
+  subC(Coordinate) : Coordinate
+}
+
+class "Coprocessor"
+
+class "CubicSpline" {
+  start : Pos2D
+  end : Pos2D
+  a : Coordinate
+  b : Coordinate
+  c : Coordinate
+  d : Coordinate
+  calculatePosition(double) : Coordinate
+  calculateVelocity(double) : Coordinate
+  display() : String
+  setPoints(Pos2D, Pos2D)
+}
+
+class "Derivative" {
+  pVal : double
+  val : double
+  output : double
+  pTime : double
+  Calculate(double, double) : double
+  reset(double, double)
+}
+
+class "DirectPursuit" {
+  setpoint : Coordinate
+  distToVelpt1 : Coordinate
+  distToVelpt2 : Coordinate
+  finishRange : double
+  dist : double
+  done()
+  start()
+  update()
+}
+
+enum "Direction" {
+  left
+  right
+}
+
+class "Drive"
+
+class "DriveController" {
+  goalLeft : double
+  goalRight : double
+  dGoalLeft : double
+  dGoalRight : double
+  errorLeft : double
+  errorRight : double
+  feedForward : Coordinate
+  feedBack : Coordinate
+  output : Coordinate
+  run(Coordinate) : Coordinate
+}
+
+class "DriveControllerCheezy" {
+  oldWheel : double
+  quickStopAccumlator : double
+  wheelAccumlator : double
+  leftPwm : double
+  rightPwm : double
+  drive(double, double, boolean)
+  handleDeadband(double, double) : double
+  output() : Coordinate
+}
+
+class "DriveDisplay" {
+  tab : ShuffleboardTab
+  encoderPos : NetworkTableEntry
+  encoderVel : NetworkTableEntry
+  encoderLeft : NetworkTableEntry
+  encoderRight : NetworkTableEntry
+  left(double)
+  position(double)
+  right(double)
+  velocity(double)
+}
+
+class "DriveFollower" {
+  mode : Modes
+  lookAhead : double
+  turnCorrection : double
+  update(TrajectoryList, double)
+}
+
+class "DriveOutput" {
+  rightSet : double
+  leftSet : double
+  mode : Modes
+  vController : DriveController
+  mDrive : Drive
+  display()
+  run()
+  set(double, double)
+  set(Modes, double, double)
+  setKin(double, double)
+  setNoVelocity()
+  setNoVoltage()
+  setTransformation(double, double)
+}
+
+class "DrivePath" {
+  segment : TrajectoryList
+  follower : DriveFollower
+  isDone : boolean
+  parallelTrackThresh : double
+  crossTrackThresh : double
+  mp : TrapezoidalMp
+  constraints : constraints
+  pHolder : ProfileHolder
+  reverse : boolean
+  done()
+  start()
+  update()
+}
+
+class "DriveSubsystem" {
+  m_drive : DifferentialDrive
+  m_odometry : DifferentialDriveOdometry
+  m_kinematics : DifferentialDriveKinematics
+  ramseteController : RamseteController
+  timer : Timer
+  ypr : double[]
+  config : TrajectoryConfig
+  exampleTrajectory : Trajectory
+  arcadeDrive(double, double)
+  resetEncoders()
+  resetOdometry(Pose2d)
+  run()
+  tankDriveVolts(double, double)
+  zeroHeading()
+}
+
+class "Driver"
+
+class "DriverDisplay" {
+  tab : ShuffleboardTab
+  inDeadZone : NetworkTableEntry
+  visionAngle : NetworkTableEntry
+  visionDistance : NetworkTableEntry
+  ballInRamp : NetworkTableEntry
+  flywheelRPM : NetworkTableEntry
+  matchTime : NetworkTableEntry
+}
+
+class "Feeder"
+
+class "FiveThenFour" {
+  firstBalls : DrivePath
+  throughTunnel : DrivePath
+  reverse : DrivePath
+  lastBalls : DrivePath
+  waitForShooting : WaitAction
+  waitForSomeBalls : WaitAction
+  waitForShootingAgain : WaitAction
+  waitForFeeder : WaitAction
+  waitForFeeding : WaitAction
+  ninety : PointTurn
+  shooting : boolean
+  feeder : Feeder
+  mixer : Mixer
+  transport : Transport
+  controller : Control
+  auto()
+}
+
+class "Flywheel"
+
+class "FlywheelDisplay" {
+  tab : ShuffleboardTab
+  velocity : NetworkTableEntry
+  setpoint : NetworkTableEntry
+  current : NetworkTableEntry
+  current(double)
+  velocity(double)
+}
+
+class "Heading" {
+  inverseC() : Heading
+  inverseC() : Coordinate
+  perpendicularCCw() : Heading
+  perpendicularCCwC() : Heading
+  perpendicularCw() : Heading
+  perpendicularCwC() : Heading
+}
+
+class "Hood"
+
+class "HoodDisplay" {
+  tab : ShuffleboardTab
+  hoodSetpoint : NetworkTableEntry
+  hoodAngle : NetworkTableEntry
+  angle(double)
+}
+
+abstract class "IControlBoard" {
+  climb() : boolean
+  climbArms() : boolean
+  climbArmsPressed() : boolean
+  climbArmsReleased() : boolean
+  climbPressed() : boolean
+  climbReleased() : boolean
+  colorWheelActuate() : boolean
+  colorWheelRoller() : boolean
+  colorWheelRollerReleased() : boolean
+  feederActuatePressed() : boolean
+  feederActuateReleased() : boolean
+  panic() : boolean
+  reverseFeeder() : boolean
+  reverseFeederPressed() : boolean
+  reverseFeederReleased() : boolean
+  rollers() : boolean
+  rollersPressed() : boolean
+  rollersReleased() : boolean
+  shoot() : boolean
+  shootPressed() : boolean
+  shootReleased() : boolean
+  trackClockwise() : boolean
+  trackCounterClockwise() : boolean
+  unjam() : boolean
+  unjamReleased() : boolean
+  visionTrack() : boolean
+  visionTrackPressed() : boolean
+}
+
+interface "ILooper" {
+  register(Loop)
+}
+
+interface "IPositionTracker"
+
+class "Image"
+
+class "Length"
+
+interface "Loop" {
+  onLoop(double)
+  onStart(double)
+  onStop(double)
+}
+
+class "Looper" {
+  kPeriod : double
+  running : boolean
+  pRunning : boolean
+  loops : List<Loop>
+  register(Loop)
+  run()
+  start()
+  stop()
+}
+
+class "LowPassFilter" {
+  oldValue : double
+  a : double
+  update(double) : double
+}
+
+class "Main"
+
+class "Mass"
+
+class "Mixer" {
+  rollers(Rollers)
+}
+
+enum "Modes" {
+  Voltage
+  Velocity
+}
+
+class "ParallelAction" {
+  actions : List<Action>
+  done()
+  start()
+  update()
+}
+
+class "PathTest" {
+  underPanel : DrivePath
+  reverseToShoot : DrivePath
+  toFirstBall : DrivePath
+  waitForFeeder : WaitAction
+  waitForShooting : WaitAction
+  hard90 : PointTurn
+  timer : Timer
+  auto()
+}
+
+class "PointTurn" {
+  setpoint : Heading
+  kP : double
+  kD : double
+  dError : Derivative
+  drive : DriveOutput
+  startTime : double
+  calcError() : double
+  done()
+  start()
+  update()
+}
+
+class "Pos2D" {
+  position : Coordinate
+  heading : Heading
+  copy() : Pos2D
+  inverseC() : Pos2D
+  multC(double) : Coordinate
+  outputData() : String
+  outputData(String) : String
+  setHeading(double, double) : Pos2D
+  setHeading(Heading) : Pos2D
+  setPos(double, double)
+  transformByC(Pos2D) : Pos2D
+}
+
+class "PositionTracker" {
+  pigeon : PigeonIMU
+  ypr : double[]
+  position : Coordinate
+  heading : Heading
+  fullPos : Pos2D
+  visionData : Pos2D
+  offset : double
+  positionTrackerDisplay : PositionTrackerDisplay
+  display()
+  resetHeading()
+  robotBackward()
+  robotForward()
+  run()
+  setInitPosFeet(double, double)
+}
+
+class "PositionTrackerDisplay" {
+  tab : ShuffleboardTab
+  xPos : NetworkTableEntry
+  yPos : NetworkTableEntry
+  angle : NetworkTableEntry
+  xResetPos : NetworkTableEntry
+  yResetPos : NetworkTableEntry
+  resetLocation : NetworkTableEntry
+  resetHeading : NetworkTableEntry
+  headingReset() : boolean
+  locationReset() : boolean
+  untoggleButtons()
+  xPosition(double)
+  xReset(double)
+  yPosition(double)
+  yReset(double)
+}
+
+class "ProfileHolder" {
+  distanceSeg : double
+  totalSegs : int
+  timeSeg : double
+  totalDist : double
+  mp : TrapezoidalMp
+  minimumVel : double
+  holder : double[]
+  calculateVel(double) : double
+  generate()
+}
+
+class "QuinticSpline" {
+  start : Pos2D
+  end : Pos2D
+  calculatePosition(double) : Coordinate
+  setPoints(Pos2D, Pos2D)
+}
+
+class "Robot" {
+  teleopControls : TeleopControls
+  auto : AutoMode
+  compressor : Compressor
+  driveAuto : Drive
+  driveController : DriveController
+  driveOutput : DriveOutput
+  positionTracker : PositionTracker
+  controller : Control
+  climber : Climber
+  turret : Turret
+  autonomousInit()
+  autonomousPeriodic()
+  disabledInit()
+  display()
+  robotInit()
+  robotPeriodic()
+  teleopInit()
+  teleopPeriodic()
+  testPeriodic()
+}
+
+enum "Roller" {
+  clockWise
+  antiClockWise
+  off
+}
+
+enum "Rollers" {
+  off
+  in
+  out
+  maxIn
+  maxOut
+}
+
+class "ScaledDrive" {
+  drive : DriveOutput
+  wheelScalar : double
+  throttleScalar : double
+  kWheelNonLinearity : double
+  enabled : boolean
+  enabled(boolean)
+  run()
+}
+
+class "SerialReader" {
+  comPort : SerialPort
+  buffer : BufferedReader
+  close()
+  readLine() : String
+  readUntilChar(char) : String
+  sendMessage(String)
+}
+
+class "SeriesAction" {
+  cAction : Action
+  remainingActions : ArrayList<Action>
+  done()
+  start()
+  update()
+}
+
+class "Shoot" {
+  controller : Control
+  done()
+  start()
+  update()
+}
+
+class "ShooterDisplay" {
+  tab : ShuffleboardTab
+  state : NetworkTableEntry
+  angle : NetworkTableEntry
+  distance : NetworkTableEntry
+  angle(double)
+  distance(double)
+}
+
+class "SmallAuto" {
+  grabLast : DrivePath
+  waitForShooting : WaitAction
+  waitForTurret : WaitAction
+  turret : Turret
+  feeder : Feeder
+  mixer : Mixer
+  transport : Transport
+  controller : Control
+  auto()
+}
+
+interface "Spline" {
+  calculatePosition(double) : Coordinate
+  setPoints(Pos2D, Pos2D)
+}
+
+class "SplineSegmentFiller" {
+  splineMode : Splines
+  cSpline : Spline
+  pointsPerSpline : int
+  points : ArrayList<Pos2D>
+  segment : TrajectoryList
+  generate() : TrajectoryList
+}
+
+enum "Splines" {
+  CubicSpline
+  QuinticSpline
+}
+
+enum "States" {
+  scanning
+  tracking
+  finalTracking
+  spooling
+  shooting
+  transport
+  mixing
+  feeder
+  end
+}
+
+class "Tcp"
+
+class "TeleopControls" {
+  controller : Control
+  transport : Transport
+  mixer : Mixer
+  feeder : Feeder
+  colorWheel : ColorWheel
+  ballSensor : DigitalInput
+  ballState : boolean
+  isTracking : boolean
+  ballTimer : Timer
+  unjamTimer : Timer
+  display()
+  run()
+}
+
+class "ThreeThenFive" {
+  throughTunnel : DrivePath
+  reverse : DrivePath
+  waitForFeeder : WaitAction
+  waitForShooting : WaitAction
+  waitForShootingAgain : WaitAction
+  hardTurn : PointTurn
+  shooting : Shoot
+  feeder : Feeder
+  mixer : Mixer
+  transport : Transport
+  controller : Control
+  auto()
+}
+
+class "Time"
+
+class "Toggle" {
+  toggle : boolean
+  pInput : boolean
+  toggleVar(boolean) : boolean
+}
+
+class "Trajectory" {
+  next : Trajectory
+  prev : Trajectory
+  id : int
+  begin : Coordinate
+  end : Coordinate
+  pathVect : Pos2D
+  beginDist : double
+  relevantSettings : RelevantSettings
+  data : CalculationData
+  calculateGoalPoint(Coordinate, double) : Coordinate
+  display() : String
+  displayCalculationData() : String
+  isRelevant(Coordinate) : boolean
+}
+
+class "TrajectoryList" {
+  root : Trajectory
+  last : Trajectory
+  current : Trajectory
+  filledRoot : boolean
+  add(Coordinate)
+  display() : String
+  findGoalPos(Coordinate, double) : Coordinate
+  findRelevant(Coordinate) : Trajectory
+  getTrajectory(int) : Trajectory
+  isDone(Coordinate, double, double) : boolean
+  onLastSegment() : boolean
+}
+
+class "Transport"
+
+class "TrapezoidalMp" {
+  maxAccel : double
+  maxVel : double
+  setpoint : double
+  startSetpoint : double
+  endAccel : double
+  endConstSpeed : double
+  endDeccel : double
+  setpointSign : int
+  mConstraints : constraints
+  initial : vector
+  currentPhase : phase
+  Calculate(double) : double[]
+  updateConstraints(double, constraints)
+}
+
+class "Turret"
+
+class "TurretDisplay" {
+  tab : ShuffleboardTab
+  turretAngle : NetworkTableEntry
+  turretAngleFieldOriented : NetworkTableEntry
+  turretSetpoint : NetworkTableEntry
+  atSetpoint : NetworkTableEntry
+  resetTurret : NetworkTableEntry
+  angle(double)
+  atSetpoint(boolean)
+  fieldOrientedAngle(double)
+  turretReset() : boolean
+  untoggleButtons()
+}
+
+class "Units"
+
+class "Util"
+
+class "Velocity"
+
+class "Vision" {
+  pigeon : PigeonIMU
+  angleDiff : double
+  visionAngle : double
+  currentAngle : double
+  visionServer : udpServer
+  map : Map<Double, double[]>
+  data : double[][]
+  teleopOffsets : double[][]
+  angleToMatrix(double) : double[][]
+  cameraTracking() : boolean
+  dataLookUp(double) : double[]
+  display()
+  offsetAngle(double, double) : double
+  offsetLookUp(double) : double
+  robotVelocity(double, double) : double[]
+  trackPoint(double[], double[]) : double
+  translate(double[], double[][]) : double[]
+}
+
+class "WaitAction" {
+  time : double
+  startTime : double
+  endTime : double
+  done()
+  start()
+  update()
+}
+
+class "WaitUntilX" {
+  tracker : PositionTracker
+  x : double
+  reverse : boolean
+  done()
+  start()
+  update()
+}
+
+class "WaitUntilY" {
+  tracker : PositionTracker
+  y : double
+  reverse : boolean
+  done()
+  start()
+  update()
+}
+
+class "constraints" {
+  maxAccel : double
+  maxVel : double
+  setpoint : double
+}
+
+enum "phase" {
+  accel
+  constSpeed
+  deccel
+  done
+}
+
+class "udpServer" {
+  udpSocket : DatagramSocket
+  port : int
+  data : double[]
+  lock : Semaphore
+  run()
+}
+
+class "util"
+
+abstract class "vector" {
+  position : double
+  velocity : double
+  this$0 : TrapezoidalMp
+}
+
+"Action" <|-- "DirectPursuit"
+"Action" <|-- "DrivePath"
+"Action" "*" <-> "ParallelAction" : /actions
+"Action" <|-- "PointTurn"
+"Action" "*" <-> "SeriesAction" : /cAction/remainingActions
+"Action" <|-- "Shoot"
+"Action" <|-- "WaitAction"
+"Action" <|-- "WaitUntilX"
+"Action" <|-- "WaitUntilY"
+"AutoMode" --> "Action" : use
+"AutoMode" --> "Coordinate" : initPos
+"AutoMode" <|-- "FiveThenFour"
+"AutoMode" <|-- "PathTest"
+"AutoMode" <|-- "SmallAuto"
+"AutoMode" <|-- "ThreeThenFive"
+"CalculationData" --> "Coordinate" : robotPos/correspondingCoordinate
+"CalculationData" <-> "Trajectory" : use/data
+"Control" --> "Direction" : use
+"Control" --> "Feeder" : feeder
+"Control" --> "Flywheel" : flywheel
+"Control" --> "Hood" : hood
+"Control" --> "Mixer" : mixer
+"Control" --> "States" : state
+"Control" --> "Transport" : transport
+"Control" --> "Turret" : turret
+"Control" --> "Vision" : vision
+"Coordinate" --> "Heading" : use
+"Coordinate" <-> "Heading"
+"CubicSpline" --> "Coordinate" : a/b/c/d
+"CubicSpline" --> "Pos2D" : start/end
+"DirectPursuit" --> "Coordinate" : setpoint/distToVelpt1/distToVelpt2
+"DriveControllerCheezy" --> "Coordinate" : use
+"DriveController" --> "Coordinate" : feedForward/feedBack/output
+"DriveFollower" --> "TrajectoryList" : use
+"DriveOutput" --> "Drive" : mDrive
+"DriveOutput" --> "DriveController" : vController
+"DriveOutput" --> "Modes" : mode
+"DrivePath" --> "DriveFollower" : follower
+"DrivePath" --> "ProfileHolder" : pHolder
+"DrivePath" --> "TrajectoryList" : segment
+"DrivePath" --> "TrapezoidalMp" : mp
+"DrivePath" --> "constraints" : constraints
+"FiveThenFour" --> "Control" : controller
+"FiveThenFour" --> "DrivePath" : firstBalls/throughTunnel/reverse/lastBalls
+"FiveThenFour" --> "Feeder" : feeder
+"FiveThenFour" --> "Mixer" : mixer
+"FiveThenFour" --> "PointTurn" : ninety
+"FiveThenFour" --> "Transport" : transport
+"FiveThenFour" --> "WaitAction" : waitForShooting/waitForSomeBalls/waitForShootingAgain/waitForFeeder/waitForFeeding
+"IControlBoard" <|-- "ControlBoard"
+"ILooper" --> "Loop" : use
+"ILooper" <|-- "Looper"
+"IPositionTracker" <|-- "PositionTracker"
+"Looper" --> "*" "Loop" : loops
+"Mixer" --> "Rollers" : use
+"PathTest" --> "DrivePath" : underPanel/reverseToShoot/toFirstBall
+"PathTest" --> "PointTurn" : hard90
+"PathTest" --> "WaitAction" : waitForFeeder/waitForShooting
+"PointTurn" --> "Derivative" : dError
+"PointTurn" --> "DriveOutput" : drive
+"PointTurn" --> "Heading" : setpoint
+"Pos2D" --> "Coordinate" : position
+"Pos2D" --> "Heading" : heading
+"PositionTracker" --> "Coordinate" : position
+"PositionTracker" --> "Heading" : heading
+"PositionTracker" --> "Pos2D" : fullPos/visionData
+"PositionTracker" --> "PositionTrackerDisplay" : positionTrackerDisplay
+"ProfileHolder" --> "TrapezoidalMp" : mp
+"QuinticSpline" --> "Coordinate" : use
+"QuinticSpline" --> "Pos2D" : start/end
+"Robot" --> "AutoMode" : auto
+"Robot" --> "Climber" : climber
+"Robot" --> "Control" : controller
+"Robot" --> "Drive" : driveAuto
+"Robot" --> "DriveController" : driveController
+"Robot" --> "DriveOutput" : driveOutput
+"Robot" --> "PositionTracker" : positionTracker
+"Robot" --> "TeleopControls" : teleopControls
+"Robot" --> "Turret" : turret
+"ScaledDrive" --> "DriveOutput" : drive
+"Shoot" --> "Control" : controller
+"SmallAuto" --> "Control" : controller
+"SmallAuto" --> "DrivePath" : grabLast
+"SmallAuto" --> "Feeder" : feeder
+"SmallAuto" --> "Mixer" : mixer
+"SmallAuto" --> "Transport" : transport
+"SmallAuto" --> "Turret" : turret
+"SmallAuto" --> "WaitAction" : waitForShooting/waitForTurret
+"Spline" --> "Coordinate" : use
+"Spline" <|-- "CubicSpline"
+"Spline" --> "Pos2D" : use
+"Spline" <|-- "QuinticSpline"
+"SplineSegmentFiller" --> "*" "Pos2D" : points
+"SplineSegmentFiller" --> "Spline" : cSpline
+"SplineSegmentFiller" --> "Splines" : splineMode
+"SplineSegmentFiller" --> "TrajectoryList" : segment
+"TeleopControls" --> "ColorWheel" : colorWheel
+"TeleopControls" --> "Control" : controller
+"TeleopControls" --> "Feeder" : feeder
+"TeleopControls" --> "Mixer" : mixer
+"TeleopControls" --> "Transport" : transport
+"ThreeThenFive" --> "Control" : controller
+"ThreeThenFive" --> "DrivePath" : throughTunnel/reverse
+"ThreeThenFive" --> "Feeder" : feeder
+"ThreeThenFive" --> "Mixer" : mixer
+"ThreeThenFive" --> "PointTurn" : hardTurn
+"ThreeThenFive" --> "Shoot" : shooting
+"ThreeThenFive" --> "Transport" : transport
+"ThreeThenFive" --> "WaitAction" : waitForFeeder/waitForShooting/waitForShootingAgain
+"Trajectory" --> "Coordinate" : begin/end
+"TrajectoryList" --> "Coordinate" : use
+"TrajectoryList" --> "Trajectory" : root/last/current
+"Trajectory" --> "Pos2D" : pathVect
+"TrapezoidalMp" --> "constraints" : mConstraints
+"TrapezoidalMp" --> "phase" : currentPhase
+"TrapezoidalMp" <-> "vector" : initial/this$0
+"Vision" --> "udpServer" : visionServer
+"WaitUntilX" --> "PositionTracker" : tracker
+"WaitUntilY" --> "PositionTracker" : tracker
+
+@enduml

@@ -2,6 +2,7 @@ plugins {
     id "idea"
     id "java"
     id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "com.github.roroche.plantuml" version "1.0.2"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -36,6 +37,18 @@ deploy {
             directory = '/home/lvuser/deploy'
         }
     }
+}
+
+classDiagram {
+    packageName = "com.team3250.frc2020"
+    outputFile = project.file('diagrams/class_diagram.plantuml')
+    // outputFile = new File("${projectDir}/diagrams/class_diagram.plantuml")
+//    ignoredClasses = [
+//                       "com.github.roroche.plantuml.diagrams.Diagram\$Simple",
+//                       "com.github.roroche.plantuml.diagrams.Diagram\$Wrap",
+//                       "com.github.roroche.plantuml.classes.Classes\$Simple",
+//                       "com.github.roroche.plantuml.classes.Classes\$Wrap"
+//    ]
 }
 
 // Set this to true to enable desktop support.
