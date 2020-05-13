@@ -1,6 +1,6 @@
 package frc.utilPackage;
 
-public class linearTransform {
+public class LinearTransform {
 
     // Translate a point w/ linear algebra
     public static double[] translate(double[] inputMatrix, double[][] translationMatrix) {
