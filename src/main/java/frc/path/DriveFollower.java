@@ -1,6 +1,7 @@
 package frc.path;
 
 import frc.coordinates.*;
+import frc.display.PurePursuitDisplay;
 import frc.drive.*;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utilPackage.Units;
@@ -16,6 +17,7 @@ public class DriveFollower{
     //For 15fps, 3ft look ahead
 
     private double turnCorrection = 0.15;
+    PurePursuitDisplay display = new PurePursuitDisplay();
 
     public void setLookAhead(double lookAhead){
         this.lookAhead = lookAhead;
@@ -42,6 +44,10 @@ public class DriveFollower{
         if(reverse){
             outVel *= -1;
         }
+        display.setEta(eta);
+        display.setPurePursuitCurvature(curvature);
+        display.setInputVel(velocity);
+        display.setOutputVel(outVel);
 //        SmartDashboard.putNumber("Eta", eta);
 //        SmartDashboard.putNumber("Pure Pursuit Curvature", curvature);
 //        SmartDashboard.putNumber("Input Vel", velocity);
