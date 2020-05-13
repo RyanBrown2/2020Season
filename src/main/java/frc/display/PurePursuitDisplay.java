@@ -10,6 +10,7 @@ public class PurePursuitDisplay {
 
     NetworkTableEntry eta, purePursuitCurvature, inputVel, outputVel;
     NetworkTableEntry followerHeading, followerHeadingFull;
+    NetworkTableEntry goalPos;
 
     public PurePursuitDisplay() {
         tab = Shuffleboard.getTab("Pure Pursuit");
@@ -39,6 +40,11 @@ public class PurePursuitDisplay {
                 tab.add("Follower Heading", 0)
                 .withPosition(0,2)
                 .getEntry();
+
+        goalPos =
+                tab.add("Goal Pos", 0)
+                .withPosition(1,2)
+                .getEntry();
     }
 
     public void setEta(double eta) {
@@ -60,4 +66,9 @@ public class PurePursuitDisplay {
     public void setFollowerHeading(double head) {
         followerHeading.setDouble(head);
     }
+
+    public void setGoalPos(String pos) {
+        goalPos.setString(pos);
+    }
+
 }

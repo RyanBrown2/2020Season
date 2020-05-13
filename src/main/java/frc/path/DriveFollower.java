@@ -65,7 +65,8 @@ public class DriveFollower{
             velocity = Math.abs(velocity);
         }else
             robotPos = new Pos2D(PositionTracker.getInstance().getPosition());
-        
+
+        display.setFollowerHeading(robotPos.getHeading().getAngle());
 //        SmartDashboard.putNumber("Follower Heading", robotPos.getHeading().getAngle());
 //        SmartDashboard.putString("Follower Heading Full", robotPos.getHeading().display());
         Coordinate goalPosition = path.findGoalPos(robotPos.getPos(), lookAhead);
@@ -75,6 +76,7 @@ public class DriveFollower{
 //            System.out.println(robotPos.getPos().multC(1/Units.Length.feet).display("Last Known Robot Pos"));
 //            SmartDashboard.putString("Follower Message", "Goal Pos is null (HELP)");
         }
+        display.setGoalPos(goalPosition.multC(1/Units.Length.feet).display());
 //        SmartDashboard.putString("Goal Pos", goalPosition.multC(1/Units.Length.feet).display());
         double distToGoalPos = Coordinate.DistanceBetween(robotPos.getPos(), goalPosition);
 //        SmartDashboard.putNumber("Dist To Goal Pos", Units.convertUnits(distToGoalPos, Units.Length.feet));
