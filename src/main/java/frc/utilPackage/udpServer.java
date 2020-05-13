@@ -1,4 +1,4 @@
-package frc.util;
+package frc.utilPackage;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpiutil.math.Num;
