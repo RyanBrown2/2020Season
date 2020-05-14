@@ -41,10 +41,10 @@ public class Drive {
 		driveDisplay.left(getLeftPosition());
 		driveDisplay.right(getRightPosition());
 	}
-	
+
     /**
      * Output puts a voltage to the drive
-     * @param  : right voltage, left voltage
+     * @param : right voltage, left voltage
      */
     public void outputToDrive(double rightVoltage, double leftVoltage){
 		if (Constants.Drive.headingInvert) {

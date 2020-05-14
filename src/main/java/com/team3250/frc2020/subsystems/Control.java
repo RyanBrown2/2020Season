@@ -1,5 +1,7 @@
 package com.team3250.frc2020.subsystems;
 
+import com.team3250.frc2020.utilPackage.SerialReader;
+import com.team3250.frc2020.utilPackage.SerialVision;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team3250.frc2020.utilPackage.Vision;
@@ -49,6 +51,7 @@ public class Control {
     Turret turret;
 
     Vision vision;
+    SerialVision serialVision;
 
     Timer shootWait;
 
@@ -64,6 +67,7 @@ public class Control {
         turret = Turret.getInstance();
 
         vision = Vision.getInstance();
+        serialVision = new SerialVision(1);
 
         shootWait = new Timer();
 
@@ -113,25 +117,35 @@ public class Control {
     public void run() {
 //        hood.setAngle(33);
 //        hood.run();
-        flywheel.run();
-//        turret.run(true);
+//        flywheel.run();
+        turret.run(true);
         // Don't run anything if the robot is set to panic mode
         if(!panicMode) {
             if (enabled) {
                 // State machine handles timing between all subsystems while shooting
                 switch (state) {
                     case scanning:
+                        // Scan For Target
+
+                        if (serialVision.targetFound()) {
+                            turret.toSetpoint(serialVision.getTargetAngle());
+                            state = States.tracking;
+                        }
+
 //                        dataLookUp = vision.dataLookUp(vision.getDistance());
 //                        hood.setAngle(dataLookUp[1]);
 //
 //                        visionAngle = vision.getAngle();
 //                        turret.toSetpoint(vision.offsetAngle(turret.getAngle(true), visionAngle));
-                        state = States.tracking;
                         break;
                     // Get tracking data from vision and set turret setpoint, then switch to spooling state
                     case tracking:
-                        setVelocity(5000);
-                        state = States.finalTracking;
+                        // Move to target
+
+
+
+//                        setVelocity(5000);
+//                        state = States.finalTracking;
                         break;
                     case finalTracking:
 //                        if(Math.abs(vision.getAngle()) < 4 * Units.Angle.degrees) {

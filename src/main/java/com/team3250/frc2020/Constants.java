@@ -141,6 +141,11 @@ public class Constants {
     public static class Camera{
         public static double horizontalFov = 60*Units.Angle.degrees;
         public static double verticalFov = 45*Units.Angle.degrees;
+        public static double cameraMountHeight = 2*Units.Length.feet;
+        public static double cameraMountAngle = 20*Units.Angle.degrees;
+
+        // Target is at 2.49555 m
+        public static double heightDiff = 1.88595;
     }
 
     public static class Tcp {
