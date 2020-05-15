@@ -1,165 +1,85 @@
 package com.team3250.frc2020;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import com.team3250.frc2020.utilPackage.Units;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.FileReader;
-
 public class Constants {
+    public static final double kLooperDt = 0.01;
 
-    public static double degreesToRadians = 3.14159/180;
+    // wheels
+    // Tuned 3/26/19 - 254
+    public static final double kDriveWheelTrackWidthInches = 25.42;
+    public static final double kDriveWheelDiameterInches = 3.938;
+    public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
+    public static final double kDriveWheelTrackRadiusWidthMeters = kDriveWheelTrackWidthInches / 2.0 * 0.0254;
+    public static final double kTrackScrubFactor = 1.0469745223;
 
-    public static double pi = Math.PI;
+    // tuned dynamics
+    public static final double kDriveLinearVIntercept = 0.1801; // V
+    public static final double kDriveLinearKv = 0.0919; // V per rad/s
+    public static final double kDriveLinearKa = 0.03344; // V per rad/s^2
+    public static final double kDriveAngularKa = 0.02897 * 2.0; // V per rad/s^2
+    public static final double kRobotLinearInertia = 63.9565; // kg
+    public static final double kRobotAngularInertia = kDriveAngularKa / kDriveLinearKa *
+            kDriveWheelTrackRadiusWidthMeters * kDriveWheelTrackRadiusWidthMeters * kRobotLinearInertia;  // kg m^2
+    public static final double kRobotAngularDrag = 0.0; // N*m / (rad/sec)
 
-    public static double robotWidth = 26*Units.Length.inches;
+    public static final int kCANTimeoutMs = 10; // use for important on the fly updates
+    public static final int kLongCANTimeoutMs = 100; // use for constructors
 
-    public static int pigeonTalonID = 15;
+    public static final double kBumperHeight = 6.6 + 2.0; // inches to ground + 2 in buffer
 
-    public static boolean isCompBot = true;
+    // Do not change anything after this line unless you rewire the robot and
+    // update the spreadsheet!
+    // Port assignments should match up with the spreadsheet here:
+    // https://docs.google.com/spreadsheets/d/1w9V3_tqQ0npdc9U8WPD-6zJkKouunKzHvPXLbHEWwxk/edit#gid=0
 
-    public static class Drive {
-        public static TalonSRX gyro = new TalonSRX(pigeonTalonID);
-		public static TalonSRX rightEncoder = new TalonSRX(16);
-        public static TalonSRX leftEncoder = new TalonSRX(19);
+    // drive
+    public static final int kLeftDriveMasterId = 11;
+    public static final int kLeftDriveSlave1Id = 12;
+    public static final int kRightDriveMasterId = 13;
+    public static final int kRightDriveSlaveId = 14;
 
-        public static PigeonIMU pigeon = new PigeonIMU(gyro);
+    public static final int kLeftDriveEncoderA = 0;
+    public static final int kLeftDriveEncoderB = 1;
+    public static final int kRightDriveEncoderA = 2;
+    public static final int kRightDriveEncoderB = 3;
 
-        public static double wheelDiameter = 5.5, // inches
-				wheelCircumference = wheelDiameter * Math.PI, // inches
-                robotDiameter = 29; // inches (for estimating angle without a gyro)
-        
-        public static int[] leftDriveMotors = {11, 12};
-        public static int[] rightDriveMotors = {13, 14};
+    public static final double kDriveEncoderPPR = 1000.0;
 
-        public static CANSparkMax left1 = new CANSparkMax(leftDriveMotors[0], MotorType.kBrushless);
-        public static CANSparkMax left2 = new CANSparkMax(leftDriveMotors[1], MotorType.kBrushless);
-        public static CANSparkMax right1 = new CANSparkMax(rightDriveMotors[0], MotorType.kBrushless);
-        public static CANSparkMax right2 = new CANSparkMax(rightDriveMotors[1], MotorType.kBrushless);
+    public static final double kMinLookAhead = 12.0; // inches
+    public static final double kMinLookAheadSpeed = 12.0; // inches per second
+    public static final double kMaxLookAhead = 48.0; // inches
+    public static final double kMaxLookAheadSpeed = 120.0; // inches per second
+    public static final double kDeltaLookAhead = kMaxLookAhead - kMinLookAhead;
+    public static final double kDeltaLookAheadSpeed = kMaxLookAheadSpeed - kMinLookAheadSpeed;
 
-        public static Boolean headingInvert = false;
-    }
+    public static final double kInertiaSteeringGain = 0.0; // angular velocity command is multiplied by this gain *
+    // our speed
+    // in inches per sec
+    public static final double kPathFollowingMaxAccel = 80.0;  // inches per second ^ 2
+    public static final double kPathFollowingMaxVel = 120.0; // inches per second
+    public static final double kPathFollowingProfileKp = 0.3 / 12.0;  // % throttle per inch of error
+    public static final double kPathFollowingProfileKi = 0.0;
+    public static final double kPathFollowingProfileKv = 0.01 / 12.0;  // % throttle per inch/s of error
+    public static final double kPathFollowingProfileKffv = 0.003889;  // % throttle per inch/s
+    public static final double kPathFollowingProfileKffa = 0.001415;  // % throttle per inch/s^2
+    public static final double kPathFollowingProfileKs = 0.1801 / 12.0;  // % throttle
+    public static final double kPathFollowingGoalPosTolerance = 3.0;
+    public static final double kPathFollowingGoalVelTolerance = 12.0;
+    public static final double kPathStopSteeringDistance = 12.0;
+    public static final double kDriveVoltageRampRate = 0.0;
+    public static final int kDriveCurrentThrottledLimit = 30; // amps
+    public static final int kDriveCurrentUnThrottledLimit = 80; // amps
 
-    public static class Feeder {
-        public static DoubleSolenoid solenoid = new DoubleSolenoid(2, 6); // todo
+    public static final double kFollowTargetSamplingDistance = 1.0;
+    public static final double kFollowTargetLookahead = 30.0;
+    public static final double kFollowTargetTolerance = 0.1;
+    public static final double kFollowTargetSteeringScale = 0.05 * 24;
+    public static final double kFollowTargetMaxThrottle = 0.8;
+    public static final double kFollowTargetExtraWaypointDistance = 30.0;
+    public static final double kPathKX = 4.0; // units/s per unit of error
+    public static final double kPathLookaheadTime = 0.4; // seconds to look ahead along the path for steering
+    public static final double kPathMinLookaheadDistance = 24.0; // inches
 
-        public static TalonSRX rollerMotor = new TalonSRX(pigeonTalonID);
-    }
-
-    public static class Flywheel {
-        public static CANSparkMax flywheelMotor = new CANSparkMax(23, MotorType.kBrushless);
-        public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
-
-        // Flywheel PID Constants
-        public static double kP = 0.001; //0.001
-        public static double kI = 0.0006; //0.0000125
-        public static double kD = 0.02; //0.01 , 0.02
-        public static double kIz = 0.2; //0.25
-        public static double kFF = 0.000181; // 0.000178, 0.00015
-
-        public static double kPSpooling = 0.012;
-        public static double kISpooling = 0;
-        public static double kDSpooling = 0;
-        public static double kIzSpooling = 0;
-        public static double kFFSpooling = 0;
-
-        public static double kMaxOutput = 1;
-        public static double kMinOutput = 0; //0.5
-        public static double maxRPM = 5500;
-
-        // Smart Motion Coefficients
-        //TODO
-
-        public static double allowedErr = 50;
-        public static double minVel = 0;
-    }
-
-    public static class Hood {
-        public static int hoodServo = 0;
-        public static double angleOffset = 0;
-        public static double[] range = {30 * Units.Angle.degrees, 180 * Units.Angle.degrees};
-    }
-
-    public static class Transport {
-        public static TalonSRX rampFront = new TalonSRX(20);
-        public static TalonSRX rampBack = new TalonSRX(17);
-        public static TalonSRX mixer = new TalonSRX(14);
-
-        public static DigitalInput ballSensor = new DigitalInput(9);
-    }
-
-    public static class Turret {
-        public static double acceptedError = 0.044;
-
-        public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
-        public static TalonSRX turretEnc = Transport.rampBack;
-
-        public static double encoderOffset = pi;
-//        public static double ticksPerRev = (2048*(140/30))/3.14159;
-        public static double ticksPerRev = 18745/(2*pi);
-
-        //PID Constants
-        public static double kP = 3;
-        public static double kI = 0;
-        public static double kD = 0;
-        public static double kIz = 0;
-        public static double kFF = 0;
-        public static double kMaxOutput = 1;
-        public static double kMinOutput = -1;
-
-        //Smart Motion Coefficients
-        public static double maxVel = 120; // rpm
-        public static double maxAcc = 60;
-
-        public static double allowedErr = 0;
-        public static double minVel;
-    }
-
-    public static class Climber {
-        public static TalonSRX climbArms = new TalonSRX(13);
-        public static TalonSRX climbGearbox = Drive.rightEncoder; // TODO
-
-        public static DigitalInput climbLimit = new DigitalInput(8);
-    }
-
-    public static class ColorWheel {
-        public static TalonSRX wheelRoller = new TalonSRX(102); // TODO
-        public static DoubleSolenoid wheelPiston = new DoubleSolenoid(1, 5);
-    }
-
-    public static class Image{
-        public static int imageWidth = 320;
-        public static int imageHeight = 240;
-    }
-
-    public static class Camera{
-        public static double horizontalFov = 60*Units.Angle.degrees;
-        public static double verticalFov = 45*Units.Angle.degrees;
-        public static double cameraMountHeight = 2*Units.Length.feet;
-        public static double cameraMountAngle = 20*Units.Angle.degrees;
-
-        // Target is at 2.49555 m
-        public static double heightDiff = 1.88595;
-    }
-
-    public static class Tcp {
-        public static int port = 5800;
-    }
-
-    public static void readRobotData() throws Exception{
-        JSONParser parser = com.team3250.frc2020.utilPackage.Util.getParser();
-        Object tempObj = parser.parse(new FileReader("/home/lvuser/deploy/robot.json"));
-        JSONObject fileObj = (JSONObject) tempObj;
-
-        Drive.headingInvert = (boolean)fileObj.get("headingInvert");
-
-        isCompBot = (boolean)fileObj.get("isCompBot");
-    }
+    // pigeon imu
+    public static final int kPigeonIMUId = 15;
 
 }
