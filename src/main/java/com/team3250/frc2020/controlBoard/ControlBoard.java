@@ -28,11 +28,7 @@ public class ControlBoard extends IControlBoard{
         if (Math.abs(wheel.getX()) < 0.05) {
             return 0;
         } else {
-            if (Constants.Drive.headingInvert) {
-                return -wheel.getX();
-            } else {
-                return wheel.getX();
-            }
+            return wheel.getX();
         }
     }
 
