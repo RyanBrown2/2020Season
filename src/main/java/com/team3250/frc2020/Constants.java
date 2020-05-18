@@ -1,12 +1,14 @@
 package com.team3250.frc2020;
 
+import com.team3250.frc2020.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
+
 public class Constants {
     public static final double kLooperDt = 0.01;
 
     // wheels
     // Tuned 3/26/19 - 254
     public static final double kDriveWheelTrackWidthInches = 25.42;
-    public static final double kDriveWheelDiameterInches = 3.938;
+    public static final double kDriveWheelDiameterInches = 5.5;
     public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
     public static final double kDriveWheelTrackRadiusWidthMeters = kDriveWheelTrackWidthInches / 2.0 * 0.0254;
     public static final double kTrackScrubFactor = 1.0469745223;
@@ -32,12 +34,15 @@ public class Constants {
     public static final int kRightDriveMasterId = 13;
     public static final int kRightDriveSlaveId = 14;
 
+    public static final int kLeftDriveEncoder = 19;
+    public static final int kRightDriveEncoder = 16;
+
     public static final int kLeftDriveEncoderA = 0;
     public static final int kLeftDriveEncoderB = 1;
     public static final int kRightDriveEncoderA = 2;
     public static final int kRightDriveEncoderB = 3;
 
-    public static final double kDriveEncoderPPR = 1000.0;
+    public static final double kDriveEncoderPPR = 4096.0;
 
     public static final double kMinLookAhead = 12.0; // inches
     public static final double kMinLookAheadSpeed = 12.0; // inches per second
@@ -99,4 +104,46 @@ public class Constants {
     public static final double kPortTargetHeight = 39.125;
     public static final double kHatchTargetHeight = 31.5;
 
+    public static final ServoMotorSubsystemConstants kTurretConstants = new ServoMotorSubsystemConstants();
+    static {
+        kTurretConstants.kName = "Turret";
+
+        kTurretConstants.kMasterConstants.id = 21;
+        kTurretConstants.kMasterConstants.invert_motor = false;
+        kTurretConstants.kMasterConstants.invert_sensor_phase = true;
+
+        // Unit == Degrees
+        kTurretConstants.kHomePosition = 0.0;  // CCW degrees from forward
+        kTurretConstants.kTicksPerUnitDistance = 4096.0 * 72.0 / 18.0 * 54.0 / 16.0 / 360.0;
+        kTurretConstants.kKp = 2.0;
+        kTurretConstants.kKi = 0;
+        kTurretConstants.kKd = 10.0;
+        kTurretConstants.kKf = 0.08;
+        kTurretConstants.kKa = 0.0;
+        kTurretConstants.kMaxIntegralAccumulator = 0;
+        kTurretConstants.kIZone = 0; // Ticks
+        kTurretConstants.kDeadband = 0; // Ticks
+
+        kTurretConstants.kPositionKp = 0.35;
+        kTurretConstants.kPositionKi = 0.0;
+        kTurretConstants.kPositionKd = 0.0;
+        kTurretConstants.kPositionKf = 0.0;
+        kTurretConstants.kPositionMaxIntegralAccumulator = 0;
+        kTurretConstants.kPositionIZone = 0; // Ticks
+        kTurretConstants.kPositionDeadband = 0; // Ticks
+
+        kTurretConstants.kMinUnitsLimit = -135.0;
+        kTurretConstants.kMaxUnitsLimit = 315.0;
+
+        kTurretConstants.kCruiseVelocity = 5000; // Ticks / 100ms
+        kTurretConstants.kAcceleration = 16000; // Ticks / 100ms / s
+        kTurretConstants.kRampRate = 0.0; // s
+        kTurretConstants.kContinuousCurrentLimit = 20; // amps
+        kTurretConstants.kPeakCurrentLimit = 30; // amps
+        kTurretConstants.kPeakCurrentDuration = 10; // milliseconds
+        kTurretConstants.kMaxVoltage = 12.0;
+
+        kTurretConstants.kStatusFrame8UpdateRate = 50;
+        kTurretConstants.kRecoverPositionOnReset = true;
+    }
 }

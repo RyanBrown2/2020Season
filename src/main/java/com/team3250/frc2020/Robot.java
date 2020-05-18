@@ -15,6 +15,8 @@ public class Robot extends TimedRobot {
   private final Looper mEnabledLooper = new Looper();
   private final Looper mDisabledLooper = new Looper();
 
+  private final IControlBoard mControlBoard = ControlBoard.getInstance();
+
   private final SubsystemManager mSubsystemManager = SubsystemManager.getInstance();
 
   // Subsystems
@@ -38,9 +40,13 @@ public class Robot extends TimedRobot {
               mDrive
       );
 
+      mSubsystemManager.registerEnabledLoops(mEnabledLooper);
+      mSubsystemManager.registerDisabledLoops(mDisabledLooper);
+
       // Robot starts forwards
       mRobotState.reset(Timer.getFPGATimestamp(), Pose2d.identity(), Rotation2d.identity());
       mDrive.setHeading(Rotation2d.identity());
+      mDrive.resetEncoders();
 
     } catch (Throwable t) {
       CrashTracker.logThrowableCrash(t);
@@ -98,6 +104,27 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void testInit() {
+    try {
+      CrashTracker.logTestInit();
+      System.out.println("Starting check systems.");
+
+      mDisabledLooper.stop();
+      mEnabledLooper.stop();
+
+      if (mSubsystemManager.checkSubsystems()) {
+        System.out.println("ALL SYSTEMS PASSED");
+      } else {
+        System.out.println("CHECK ABOVE OUTPUT SOME SYSTEMS FAILED!!!");
+      }
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+      throw t;
+
+    }
+  }
+
+  @Override
   public void robotPeriodic() {
     try {
       mSubsystemManager.outputToSmartDashboard();
@@ -119,12 +146,28 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
+    try {
+      telopControls();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+      throw t;
+    }
   }
 
   @Override
   public void testPeriodic() {
 
+  }
+
+  public void telopControls() {
+    double timestamp = Timer.getFPGATimestamp();
+    double throttle = mControlBoard.getThrottle();
+
+    boolean driving = true;
+
+    if (driving) {
+        mDrive.setCheesyishDrive(throttle, mControlBoard.getWheel(), mControlBoard.quickTurn());
+    }
   }
 
 }

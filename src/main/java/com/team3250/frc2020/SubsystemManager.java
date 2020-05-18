@@ -5,6 +5,7 @@ import com.team3250.frc2020.loops.Loop;
 import com.team3250.frc2020.loops.Looper;
 import com.team3250.frc2020.subsystems.Subsystem;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,10 +26,9 @@ public class SubsystemManager implements ILooper {
             mInstance = new SubsystemManager();
         }
 
-        return  mInstance;
+        return mInstance;
     }
 
-    //todo switch to shuffleboard
     public void outputToSmartDashboard() {
         mAllSubsystems.forEach(Subsystem::outputTelemetry);
     }
@@ -39,6 +39,7 @@ public class SubsystemManager implements ILooper {
         for (Subsystem s : mAllSubsystems) {
             ret_val &= s.checkSystem();
         }
+
         return ret_val;
     }
 
@@ -79,7 +80,7 @@ public class SubsystemManager implements ILooper {
 
         @Override
         public void onLoop(double timestamp) {
-            mAllSubsystems.forEach(Subsystem::stop);
+            mAllSubsystems.forEach(Subsystem::readPeriodicInputs);
         }
 
         @Override

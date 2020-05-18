@@ -4,6 +4,15 @@ import edu.wpi.first.wpilibj.Joystick;
 import com.team3250.frc2020.Constants;
 
 public class ControlBoard extends IControlBoard{
+    private static ControlBoard mInstance = null;
+
+    public static ControlBoard getInstance() {
+        if (mInstance == null) {
+            mInstance = new ControlBoard();
+        }
+        return mInstance;
+    }
+
     Joystick joy, wheel, buttonPad, cojoy;
     double overrideSetpoint;
 
@@ -19,17 +28,22 @@ public class ControlBoard extends IControlBoard{
         if (Math.abs(joy.getY()) < 0.025) {
             return 0;
         } else {
-            return joy.getY();
+            return -joy.getY();
         }
 	}
 
     @Override
     public double getWheel() {
-        if (Math.abs(wheel.getX()) < 0.05) {
+        if (Math.abs(joy.getX()) < 0.05) {
             return 0;
         } else {
-            return wheel.getX();
+            return -joy.getX();
         }
+    }
+
+    @Override
+    public boolean quickTurn() {
+        return joy.getRawButtonPressed(ControlBindings.Driver.quickTurn);
     }
 
     @Override

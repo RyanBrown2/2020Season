@@ -1,58 +1,93 @@
 package com.team3250.frc2020.loops;
 
+import com.team3250.frc2020.Constants;
+import com.team254.lib.util.CrashTrackingRunnable;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This code runs all of the robot's loops. Loop objects are stored in a List object. They are started when the robot
  * powers up and stopped after the match.
  */
-public class Looper implements ILooper{
+public class Looper implements ILooper {
+    public final double kPeriod = Constants.kLooperDt;
 
-    private final double kPeriod = 0.05;
+    private boolean mRunning;
 
-    private boolean running, pRunning;
+    private final Notifier mNotifier;
+    private final List<Loop> mLoops;
+    private final Object mTaskRunningLock = new Object();
+    private double mTimestamp = 0;
+    private double mDT = 0;
 
-    private final List<Loop> loops;
+    private final CrashTrackingRunnable runnable_ = new CrashTrackingRunnable() {
+        @Override
+        public void runCrashTracked() {
+            synchronized (mTaskRunningLock) {
+                if (mRunning) {
+                    double now = Timer.getFPGATimestamp();
 
-    public Looper(){
-        running = true;
-        pRunning = false;
-        loops = new ArrayList<>();
+                    for (Loop loop : mLoops) {
+                        loop.onLoop(now);
+                    }
+
+                    mDT = now - mTimestamp;
+                    mTimestamp = now;
+                }
+            }
+        }
+    };
+
+    public Looper() {
+        mNotifier = new Notifier(runnable_);
+        mRunning = false;
+        mLoops = new ArrayList<>();
     }
 
     @Override
     public synchronized void register(Loop loop) {
-        loops.add(loop);
+        synchronized (mTaskRunningLock) {
+            mLoops.add(loop);
+        }
     }
 
-    public synchronized void run(){
-        double timestamp = Timer.getFPGATimestamp();
-        if(running){
-            for(Loop loop : loops){
-                if(!pRunning){
-                    loop.onStart(timestamp);
+    public synchronized void start() {
+        if (!mRunning) {
+            System.out.println("Starting loops");
+
+            synchronized (mTaskRunningLock) {
+                mTimestamp = Timer.getFPGATimestamp();
+                for (Loop loop : mLoops) {
+                    loop.onStart(mTimestamp);
                 }
-                loop.onLoop(timestamp);
+                mRunning = true;
             }
-        }else {
-            if(pRunning){
-                for(Loop loop : loops){
-                    loop.onStop(timestamp);
+
+            mNotifier.startPeriodic(kPeriod);
+        }
+    }
+
+    public synchronized void stop() {
+        if (mRunning) {
+            System.out.println("Stopping loops");
+            mNotifier.stop();
+
+            synchronized (mTaskRunningLock) {
+                mRunning = false;
+                mTimestamp = Timer.getFPGATimestamp();
+                for (Loop loop : mLoops) {
+                    System.out.println("Stopping " + loop);
+                    loop.onStop(mTimestamp);
                 }
             }
         }
-        pRunning = running;
     }
 
-    public synchronized void start(){
-        running = true;
-        pRunning = false;
-    }
-
-    public synchronized void stop(){
-        running = false;
+    public void outputToSmartDashboard() {
+        SmartDashboard.putNumber("looper_dt", mDT);
     }
 }

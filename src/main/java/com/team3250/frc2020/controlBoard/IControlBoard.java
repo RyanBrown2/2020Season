@@ -4,6 +4,7 @@ public abstract class IControlBoard {
     // Driver
     public abstract double getThrottle();
     public abstract double getWheel();
+    public abstract boolean quickTurn();
     public abstract boolean rollers();
     public abstract boolean rollersPressed();
     public abstract boolean rollersReleased();

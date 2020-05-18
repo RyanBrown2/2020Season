@@ -1,5 +1,6 @@
 package com.team3250.frc2020.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.revrobotics.CANSparkMax;
@@ -39,9 +40,11 @@ public class Drive extends Subsystem {
 
     // Speed Controllers
     private final LazySparkMax mLeftMaster, mRightMaster, mLeftSlave, mRightSlave;
-    // Encoders
-    private final Encoder mLeftEncoder, mRightEncoder;
+    // Encoders Talons
+    private final TalonSRX mLeftEncoder, mRightEncoder;
+
     // Gyro
+    private TalonSRX mPigeonTalon;
     private PigeonIMU mPigeon;
     private Rotation2d mGyroOffset = Rotation2d.identity();
 
@@ -94,10 +97,14 @@ public class Drive extends Subsystem {
         // mRightMaster.burnFlash();
         // mRightSlave.burnFlash();
 
-        mLeftEncoder = new Encoder(Constants.kLeftDriveEncoderA, Constants.kLeftDriveEncoderB, false);
-        mRightEncoder = new Encoder(Constants.kRightDriveEncoderA, Constants.kRightDriveEncoderB, true);
+        mLeftEncoder = new TalonSRX(Constants.kLeftDriveEncoder);
+        mLeftEncoder.setSensorPhase(true);
+        mRightEncoder = new TalonSRX(Constants.kRightDriveEncoder);
+//        mLeftEncoder = new Encoder(Constants.kLeftDriveEncoderA, Constants.kLeftDriveEncoderB, false);
+//        mRightEncoder = new Encoder(Constants.kRightDriveEncoderA, Constants.kRightDriveEncoderB, true);
 
-        mPigeon = new PigeonIMU(Constants.kPigeonIMUId);
+        mPigeonTalon = new TalonSRX(Constants.kPigeonIMUId);
+        mPigeon = new PigeonIMU(mPigeonTalon);
         mPigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, 10);
 
         setOpenLoop(DriveSignal.NEUTRAL);
@@ -144,8 +151,8 @@ public class Drive extends Subsystem {
         mPeriodicIO.left_voltage = mLeftMaster.getAppliedOutput() * mLeftMaster.getBusVoltage();
         mPeriodicIO.right_voltage = mRightMaster.getAppliedOutput() * mRightMaster.getBusVoltage();
 
-        mPeriodicIO.left_position_ticks = mLeftEncoder.get();
-        mPeriodicIO.right_position_ticks = mRightEncoder.get();
+        mPeriodicIO.left_position_ticks = mLeftEncoder.getSelectedSensorPosition();
+        mPeriodicIO.right_position_ticks = mRightEncoder.getSelectedSensorPosition();
         mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(mPigeon.getFusedHeading()).rotateBy(mGyroOffset);
 
         double deltaLeftTicks = ((mPeriodicIO.left_position_ticks - prevLeftTicks) / Constants.kDriveEncoderPPR) * Math.PI;
@@ -154,8 +161,10 @@ public class Drive extends Subsystem {
         double deltaRightTicks = ((mPeriodicIO.right_position_ticks - prevRightTicks) / Constants.kDriveEncoderPPR) * Math.PI;
         mPeriodicIO.right_distance += deltaRightTicks * Constants.kDriveWheelDiameterInches;
 
-        mPeriodicIO.left_velocity_ticks_per_100ms = (int) (mLeftEncoder.getRate() / (10 * mLeftEncoder.getDistancePerPulse()));
-        mPeriodicIO.right_velocity_ticks_per_100ms = (int) (mRightEncoder.getRate() / (10 * mRightEncoder.getDistancePerPulse()));
+        mPeriodicIO.left_velocity_ticks_per_100ms = (int) mLeftEncoder.getSelectedSensorVelocity();
+        mPeriodicIO.right_velocity_ticks_per_100ms = (int) mRightEncoder.getSelectedSensorVelocity();
+//        mPeriodicIO.left_velocity_ticks_per_100ms = (int) (mLeftEncoder.getRate() / (10 * mLeftEncoder.getDistancePerPulse()));
+//        mPeriodicIO.right_velocity_ticks_per_100ms = (int) (mRightEncoder.getRate() / (10 * mRightEncoder.getDistancePerPulse()));
 
         if (mCSVWriter != null) {
             mCSVWriter.add(mPeriodicIO);
@@ -365,8 +374,10 @@ public class Drive extends Subsystem {
     }
 
     public synchronized void resetEncoders() {
-        mLeftEncoder.reset();
-        mRightEncoder.reset();
+        mLeftEncoder.setSelectedSensorPosition(0);
+        mRightEncoder.setSelectedSensorPosition(0);
+//        mLeftEncoder.reset();
+//        mRightEncoder.reset();
         mPeriodicIO = new PeriodicIO();
     }
 
@@ -553,7 +564,8 @@ public class Drive extends Subsystem {
                         mRPMFloor = 90;
                         mCurrentEpsilon = 2.0;
                         mRPMEpsilon = 200;
-                        mRPMSupplier = mLeftEncoder::getRate;
+//                        mRPMSupplier = mLeftEncoder::getRate;
+                        mRPMSupplier = mLeftEncoder::getSelectedSensorVelocity;
                     }
                 });
         boolean rightSide = SparkMaxChecker.checkMotors(this,
@@ -570,7 +582,8 @@ public class Drive extends Subsystem {
                         mRPMFloor = 90;
                         mCurrentEpsilon = 2.0;
                         mRPMEpsilon = 20;
-                        mRPMSupplier = mRightEncoder::getRate;
+//                        mRPMSupplier = mRightEncoder::getRate;
+                        mRPMSupplier = mRightEncoder::getSelectedSensorVelocity;
                     }
                 });
 

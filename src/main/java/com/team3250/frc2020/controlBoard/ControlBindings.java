@@ -5,6 +5,7 @@ public class ControlBindings {
     public static class Driver {
         public static int rollers = 1;
         public static int shoot = 6;
+        public static int quickTurn = 2;
     }
 
     public static class CoDriver {
