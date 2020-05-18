@@ -26,11 +26,6 @@ public class Constants {
 
     public static final double kBumperHeight = 6.6 + 2.0; // inches to ground + 2 in buffer
 
-    // Do not change anything after this line unless you rewire the robot and
-    // update the spreadsheet!
-    // Port assignments should match up with the spreadsheet here:
-    // https://docs.google.com/spreadsheets/d/1w9V3_tqQ0npdc9U8WPD-6zJkKouunKzHvPXLbHEWwxk/edit#gid=0
-
     // drive
     public static final int kLeftDriveMasterId = 11;
     public static final int kLeftDriveSlave1Id = 12;

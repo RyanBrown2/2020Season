@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
               mDrive
       );
 
+      // Robot starts forwards
       mRobotState.reset(Timer.getFPGATimestamp(), Pose2d.identity(), Rotation2d.identity());
       mDrive.setHeading(Rotation2d.identity());
 
@@ -62,22 +63,57 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void robotPeriodic() {
-
-  }
-
-  @Override
   public void autonomousInit() {
+    try {
+      CrashTracker.logAutoInit();
+      mDisabledLooper.stop();
 
-  }
+      // Robot starts forwards
+      mRobotState.reset(Timer.getFPGATimestamp(), Pose2d.identity(), Rotation2d.identity());
+      mDrive.setHeading(Rotation2d.identity());
 
-  @Override
-  public void autonomousPeriodic() {
+      mEnabledLooper.start();
 
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+      throw t;
+    }
   }
 
   @Override
   public void teleopInit() {
+    try {
+      CrashTracker.logTeleopInit();
+      mDisabledLooper.stop();
+
+      mHasBeenEnabled = true;
+
+      mEnabledLooper.start();
+
+      mOffsetOverride = -2.0;
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+      throw t;
+    }
+  }
+
+  @Override
+  public void robotPeriodic() {
+    try {
+      mSubsystemManager.outputToSmartDashboard();
+      mRobotState.outputToSmartDashboard();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+      throw t;
+    }
+  }
+
+  @Override
+  public void disabledPeriodic() {
+  }
+
+  @Override
+  public void autonomousPeriodic() {
 
   }
 
