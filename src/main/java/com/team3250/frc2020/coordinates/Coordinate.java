@@ -1,6 +1,6 @@
 package com.team3250.frc2020.coordinates;
 
-import com.team3250.frc2020.utilPackage.Util;
+import com.team3250.lib.util.Util;
 
 public class Coordinate {
 	protected double x;

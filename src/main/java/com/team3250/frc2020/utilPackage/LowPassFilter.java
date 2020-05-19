@@ -1,5 +1,7 @@
 package com.team3250.frc2020.utilPackage;
 
+import com.team3250.lib.util.Util;
+
 public class LowPassFilter {
     double oldValue = 0;
     double a = .9;

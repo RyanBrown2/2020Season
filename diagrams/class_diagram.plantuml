@@ -179,7 +179,15 @@ enum "DriveCurrentLimitState" {
   THROTTLED
 }
 
-class "DrivePath"
+class "DrivePathAction" {
+  mPathContainer : PathContainer
+  mPath : Path
+  mDrive : Drive
+  mStopWhenDone : boolean
+  done()
+  start()
+  update()
+}
 
 class "Driver"
 
@@ -478,6 +486,10 @@ class "TalonSRXConstants" {
 
 class "TestMode"
 
+class "TestPath" {
+  buildPath() : Path
+}
+
 class "Time"
 
 class "Toggle" {
@@ -578,6 +590,7 @@ abstract class "vector" {
   this$0 : TrapezoidalMp
 }
 
+"Action" <|-- "DrivePathAction"
 "Action" <|-- "NoopAction"
 "Action" "*" <-> "ParallelAction" : /mActions
 "Action" <|-- "RunOnceAction"
@@ -588,17 +601,20 @@ abstract class "vector" {
 "AutoModeBase" <|-- "TestMode"
 "AutoModeExecutor" --> "AutoModeBase" : mAutoMode
 "AutoModeSelector" --> "AutoModeBase" : mAutoMode
-"Coordinate" --> "Heading" : use
 "Coordinate" <-> "Heading"
+"Coordinate" --> "Heading" : use
 "Drive" --> "DriveControlState" : mDriveControlState
 "Drive" --> "DriveCurrentLimitState" : mDriveCurrentLimitState
 "Drive" --> "ILooper" : use
+"DrivePathAction" --> "Drive" : mDrive
+"DrivePathAction" --> "PathContainer" : mPathContainer
 "Drive" --> "PeriodicIO" : mCSVWriter/mPeriodicIO
 "IControlBoard" <|-- "ControlBoard"
 "ILooper" --> "Loop" : use
 "ILooper" <|-- "Looper"
 "ILooper" <|-- "SubsystemManager"
 "Looper" --> "*" "Loop" : mLoops
+"PathContainer" <|-- "TestPath"
 "Pos2D" --> "Coordinate" : position
 "Pos2D" --> "Heading" : heading
 "Robot" --> "Drive" : mDrive

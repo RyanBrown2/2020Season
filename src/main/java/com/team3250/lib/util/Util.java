@@ -1,4 +1,4 @@
-package com.team3250.frc2020.utilPackage;
+package com.team3250.lib.util;
 
 import com.team3250.frc2020.coordinates.Coordinate;
 

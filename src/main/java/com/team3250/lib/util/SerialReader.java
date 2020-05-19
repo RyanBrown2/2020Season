@@ -1,4 +1,4 @@
-package com.team3250.frc2020.utilPackage;
+package com.team3250.lib.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,4 +61,10 @@ public class SerialReader{
     public String readLine(){
         return readUntilChar('\n');
     }
+
+    public String[] separateValues(String split) {
+        String data = readLine();
+        return data.split(split);
+    }
+
 }

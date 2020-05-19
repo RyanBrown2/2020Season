@@ -1,6 +1,12 @@
-package com.team3250.frc2020.utilPackage;
+package com.team3250.lib.util;
 
 public class Units {
+
+	/**
+	 *  Example: Convert feet to meters
+	 *  <value in feet> * Units.Length.feet
+	 */
+
 	public static class Length{
 		//Everything is converted to Meters
 		public final static double meters = 1;
@@ -30,8 +36,8 @@ public class Units {
 	
 	public static class Time{
 		//Everything converts to seconds
-		public final static double milliseconds = 0.001; 
-		public final static double seconds = 1; 
+		public final static double milliseconds = 0.001;
+		public final static double seconds = 1;
 		public final static double minutes = 60; 
 		public final static double hours = 3600;
 		public final static double days = 86400;
