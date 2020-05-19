@@ -1,7 +1,5 @@
 package com.team3250.frc2020;
 
-import com.team3250.frc2020.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
-
 public class Constants {
     public static final double kLooperDt = 0.01;
 
@@ -104,7 +102,7 @@ public class Constants {
     public static final double kPortTargetHeight = 39.125;
     public static final double kHatchTargetHeight = 31.5;
 
-    public static final ServoMotorSubsystemConstants kTurretConstants = new ServoMotorSubsystemConstants();
+    public static final TalonServoMotorSubsystemConstants kTurretConstants = new TalonServoMotorSubsystemConstants();
     static {
         kTurretConstants.kName = "Turret";
 

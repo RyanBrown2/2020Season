@@ -35,7 +35,6 @@ public class Jevois extends Subsystem {
     private PeriodIO mPeriodIO = new PeriodIO();
     private boolean mOutputsHaveChanged = true;
 
-
     @Override
     public synchronized void readPeriodicInputs() {
         mPeriodIO.xVal = Double.parseDouble(mSerialReader.separateValues(",")[0]);

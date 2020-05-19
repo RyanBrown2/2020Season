@@ -2,6 +2,9 @@ package com.team3250.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team3250.frc2020.Constants;
+import com.team3250.frc2020.loops.ILooper;
+import com.team3250.frc2020.loops.Loop;
 import com.team254.lib.drivers.TalonSRXFactory;
 import com.team254.lib.drivers.TalonSRXUtil;
 import com.team254.lib.motion.MotionProfileConstraints;
@@ -11,14 +14,15 @@ import com.team254.lib.motion.SetpointGenerator;
 import com.team254.lib.motion.SetpointGenerator.Setpoint;
 import com.team254.lib.util.ReflectingCSVWriter;
 import com.team254.lib.util.Util;
-import com.team3250.frc2020.Constants;
-import com.team3250.frc2020.loops.ILooper;
-import com.team3250.frc2020.loops.Loop;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ServoMotorSubsystem extends Subsystem {
+/**
+ * Abstract base class for a subsystem with a single sensored servo-mechanism.
+ */
+public abstract class ServoMotorSubsystem extends Subsystem {
     private static final int kMotionProfileSlot = 0;
     private static final int kPositionPIDSlot = 1;
 
@@ -529,11 +533,6 @@ public class ServoMotorSubsystem extends Subsystem {
     @Override
     public void stop() {
         setOpenLoop(0.0);
-    }
-
-    @Override
-    public boolean checkSystem() {
-        return false;
     }
 
     public int estimateSensorPositionFromAbsolute() {
