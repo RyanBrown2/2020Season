@@ -3,13 +3,19 @@ package com.team3250.frc2020;
 import com.team254.lib.geometry.Pose2d;
 import com.team254.lib.geometry.Rotation2d;
 import com.team254.lib.util.CrashTracker;
+import com.team254.lib.util.LatchedBoolean;
 import com.team254.lib.wpilib.TimedRobot;
+import com.team3250.frc2020.auto.AutoModeExecutor;
+import com.team3250.frc2020.auto.modes.AutoModeBase;
 import com.team3250.frc2020.controlBoard.ControlBoard;
 import com.team3250.frc2020.controlBoard.IControlBoard;
 import com.team3250.frc2020.loops.Loop;
 import com.team3250.frc2020.loops.Looper;
 import com.team3250.frc2020.subsystems.Drive;
+import com.team3250.lib.vision.AimingParameters;
 import edu.wpi.first.wpilibj.Timer;
+
+import java.util.Optional;
 
 public class Robot extends TimedRobot {
   private final Looper mEnabledLooper = new Looper();
@@ -26,6 +32,11 @@ public class Robot extends TimedRobot {
 
   private boolean mHasBeenEnabled = false;
   private double mOffsetOverride = -1.0;
+
+  private LatchedBoolean mAutoSteerPressed = new LatchedBoolean();
+
+  private AutoModeSelector mAutoModeSelector = new AutoModeSelector();
+  private AutoModeExecutor mAutoModeExecutor;
 
   Robot() {
     CrashTracker.logRobotConstruction();
@@ -46,8 +57,9 @@ public class Robot extends TimedRobot {
       // Robot starts forwards
       mRobotState.reset(Timer.getFPGATimestamp(), Pose2d.identity(), Rotation2d.identity());
       mDrive.setHeading(Rotation2d.identity());
-      mDrive.resetEncoders();
+//      mDrive.resetEncoders();
 
+      mAutoModeSelector.updateModeCreator();
     } catch (Throwable t) {
       CrashTracker.logThrowableCrash(t);
       throw t;
@@ -60,6 +72,10 @@ public class Robot extends TimedRobot {
       CrashTracker.logDisabledInit();
       mEnabledLooper.stop();
       mDisabledLooper.start();
+
+      mAutoModeSelector.reset();
+      mAutoModeSelector.updateModeCreator();
+      mAutoModeExecutor = new AutoModeExecutor();
 
       mDrive.setBrakeMode(false);
     } catch (Throwable t) {
@@ -91,6 +107,10 @@ public class Robot extends TimedRobot {
     try {
       CrashTracker.logTeleopInit();
       mDisabledLooper.stop();
+
+      if (mAutoModeExecutor != null) {
+        mAutoModeExecutor.stop();
+      }
 
       mHasBeenEnabled = true;
 
@@ -128,6 +148,7 @@ public class Robot extends TimedRobot {
     try {
       mSubsystemManager.outputToSmartDashboard();
       mRobotState.outputToSmartDashboard();
+      mAutoModeSelector.outputToSmartDashboard();
     } catch (Throwable t) {
       CrashTracker.logThrowableCrash(t);
       throw t;
@@ -136,6 +157,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    try {
+      // Update auto modes
+      mAutoModeSelector.updateModeCreator();
+
+      Optional<AutoModeBase> autoMode = mAutoModeSelector.getAutoMode();
+      if (autoMode.isPresent() && autoMode.get() != mAutoModeExecutor.getAutoMode()) {
+        System.out.println("Set auto mode to: " + autoMode.get().getClass().toString());
+        mAutoModeExecutor.setAutoMode(autoMode.get());
+      }
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+      throw t;
+    }
   }
 
   @Override
@@ -153,20 +187,24 @@ public class Robot extends TimedRobot {
     }
   }
 
-  @Override
-  public void testPeriodic() {
-
-  }
-
   public void telopControls() {
     double timestamp = Timer.getFPGATimestamp();
     double throttle = mControlBoard.getThrottle();
 
+//    Optional<AimingParameters> turret_aim_params =
+
+    // commands
+//    boolean
+
     boolean driving = true;
 
     if (driving) {
-        mDrive.setCheesyishDrive(throttle, mControlBoard.getWheel(), mControlBoard.quickTurn());
+        mDrive.setCheesyishDrive(throttle, mControlBoard.getWheel(), mControlBoard.getQuickTurn());
     }
+  }
+
+  @Override
+  public void testPeriodic() {
   }
 
 }

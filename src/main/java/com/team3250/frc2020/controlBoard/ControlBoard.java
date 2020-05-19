@@ -3,7 +3,7 @@ package com.team3250.frc2020.controlBoard;
 import edu.wpi.first.wpilibj.Joystick;
 import com.team3250.frc2020.Constants;
 
-public class ControlBoard extends IControlBoard{
+public class ControlBoard implements IControlBoard{
     private static ControlBoard mInstance = null;
 
     public static ControlBoard getInstance() {
@@ -13,187 +13,41 @@ public class ControlBoard extends IControlBoard{
         return mInstance;
     }
 
-    Joystick joy, wheel, buttonPad, cojoy;
-    double overrideSetpoint;
+    private final IDriverControlBoard mDriveControlBoard;
+    private final ICoDriverControlBoard mCoDriveControlBoard;
 
-    public ControlBoard() {
-        joy = new Joystick(0);
-        wheel = new Joystick(1);
-        cojoy = new Joystick(2);
-        buttonPad = new Joystick(3);
+    private ControlBoard() {
+        mDriveControlBoard = DriverControlBoard.getInstance();
+        mCoDriveControlBoard = CoDriverControlBoard.getInstance();
     }
 
-	@Override
-	public double getThrottle() {
-        if (Math.abs(joy.getY()) < 0.025) {
-            return 0;
-        } else {
-            return -joy.getY();
-        }
-	}
+    @Override
+    public boolean getFeeder() {
+        return mCoDriveControlBoard.getFeeder();
+    }
+
+    @Override
+    public double getThrottle() {
+        return mDriveControlBoard.getThrottle();
+    }
 
     @Override
     public double getWheel() {
-        if (Math.abs(joy.getX()) < 0.05) {
-            return 0;
-        } else {
-            return -joy.getX();
-        }
+        return mDriveControlBoard.getWheel();
     }
 
     @Override
-    public boolean quickTurn() {
-        return joy.getRawButtonPressed(ControlBindings.Driver.quickTurn);
+    public boolean getQuickTurn() {
+        return mDriveControlBoard.getQuickTurn();
     }
 
     @Override
-    public boolean feederActuatePressed() {
-        return cojoy.getRawButtonPressed(ControlBindings.CoDriver.feeder);
+    public boolean getShoot() {
+        return mDriveControlBoard.getShoot() || mCoDriveControlBoard.getShoot();
     }
 
     @Override
-    public boolean feederActuateReleased() {
-        return cojoy.getRawButtonReleased(ControlBindings.CoDriver.feeder);
+    public boolean getRollers() {
+        return mDriveControlBoard.getRollers() || mCoDriveControlBoard.getRollers();
     }
-
-    @Override
-    public boolean rollers() {
-        return (joy.getRawButton(ControlBindings.Driver.rollers) || cojoy.getRawButton(ControlBindings.CoDriver.rollers));
-    }
-
-    @Override
-    public boolean rollersPressed() {
-        return (joy.getRawButtonPressed(ControlBindings.Driver.rollers) || cojoy.getRawButtonPressed(ControlBindings.CoDriver.rollers));
-    }
-
-    @Override
-    public boolean rollersReleased() {
-        return ((joy.getRawButtonReleased(ControlBindings.Driver.rollers) ||
-                cojoy.getRawButtonReleased(ControlBindings.CoDriver.rollers)) &&
-                !joy.getRawButton(ControlBindings.Driver.rollers) &&
-                !cojoy.getRawButton(ControlBindings.CoDriver.rollers));
-    }
-
-    @Override
-    public boolean reverseFeeder() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.reverseFeeder);
-    }
-
-    @Override
-    public boolean reverseFeederPressed() {
-        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.reverseFeeder);
-    }
-
-    @Override
-    public boolean reverseFeederReleased() {
-        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.reverseFeeder);
-    }
-
-    @Override
-    public boolean shoot() {
-        return (joy.getRawButtonPressed(ControlBindings.Driver.shoot) || buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
-    }
-
-    @Override
-    public boolean shootPressed() {
-        return (joy.getRawButtonPressed(ControlBindings.Driver.shoot) || buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.shoot));
-    }
-
-    @Override
-    public boolean shootReleased() {
-        return ((joy.getRawButtonReleased(ControlBindings.Driver.shoot) ||
-                buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.shoot)) &&
-                !joy.getRawButton(ControlBindings.Driver.shoot) &&
-                !buttonPad.getRawButton(ControlBindings.ButtonPad.shoot));
-    }
-
-    @Override
-    public boolean climbArms() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.climbArms);
-    }
-
-    @Override
-    public boolean climbArmsPressed() {
-        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.climbArms);
-    }
-
-    @Override
-    public boolean climbArmsReleased() {
-        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.climbArms);
-    }
-
-    @Override
-    public boolean climb() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.climb);
-    }
-
-    @Override
-    public boolean climbPressed() {
-        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.climb);
-    }
-
-    @Override
-    public boolean climbReleased() {
-        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.climb);
-    }
-
-    @Override
-    public boolean colorWheelActuate() {
-        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.colorWheelActuate);
-    }
-
-    @Override
-    public boolean colorWheelRoller() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.colorWheelRoller);
-    }
-
-    @Override
-    public boolean colorWheelRollerReleased() {
-        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.colorWheelRoller);
-    }
-
-    @Override
-    public boolean unjam() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.unjam);
-    }
-
-    @Override
-    public boolean unjamReleased() {
-        return buttonPad.getRawButtonReleased(ControlBindings.ButtonPad.unjam);
-    }
-
-    @Override
-    public boolean panic() {
-        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.panic);
-    }
-
-    @Override
-    public boolean trackClockwise() {
-        if(cojoy.getPOV() > 0 && cojoy.getPOV() < 180) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean trackCounterClockwise() {
-        if(cojoy.getPOV() > 180) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean visionTrack() {
-        return buttonPad.getRawButton(ControlBindings.ButtonPad.visionTrack);
-    }
-
-    @Override
-    public boolean visionTrackPressed() {
-        return buttonPad.getRawButtonPressed(ControlBindings.ButtonPad.visionTrack);
-    }
-
 }

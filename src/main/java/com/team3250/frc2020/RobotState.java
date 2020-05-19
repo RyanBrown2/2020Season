@@ -75,6 +75,8 @@ public class RobotState {
     private MovingAverageTwist2d vehicle_velocity_measured_filtered_;
     private double distance_driven_;
 
+    private GoalTracker vision_target = new GoalTracker();
+
     private RobotState() {
         reset(0.0, Pose2d.identity(), Rotation2d.identity());
     }
@@ -174,13 +176,10 @@ public class RobotState {
         return vehicle_velocity_measured_filtered_.getAverage();
     }
 
-    // todo need to add vision stuff
 
-    // use known field target orientations to compensate for inaccuracy, assumes robot starts pointing directly away
-    // from and perpendicular to alliance wall
-    private final double[] kPossibleTargetNormals = {0.0, 90.0, 180.0, 270.0, 30.0, 150.0, 210.0, 330.0};
-
-
+//    public synchronized Optional<AimingParameters> getAimingParameters(int prev_track_id, double max_track_age) {
+//        GoalTracker tracker = vi
+//    }
 
     public Pose2d getRobot() {
         return new Pose2d();

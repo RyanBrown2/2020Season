@@ -66,5 +66,18 @@ public class AutoModeSelector {
         return Optional.empty();
     }
 
+    public void reset() {
+        mAutoMode = Optional.empty();
+        mCachedDesiredMode = null;
+    }
+
+    public void outputToSmartDashboard() {
+        SmartDashboard.putString("AutoModeSelected", mCachedDesiredMode.name());
+        SmartDashboard.putString("StartingPositionSelected", mCachedStartingPosition.name());
+    }
+
+    public Optional<AutoModeBase> getAutoMode() {
+        return mAutoMode;
+    }
 
 }
