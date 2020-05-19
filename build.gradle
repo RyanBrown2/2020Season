@@ -43,16 +43,16 @@ classDiagram {
     packageName = "com.team3250.frc2020"
     outputFile = project.file('diagrams/class_diagram.plantuml')
     // outputFile = new File("${projectDir}/diagrams/class_diagram.plantuml")
-    ignoredClasses = [
-                       "com.team3250.frc2020.display.AutoDisplay",
-                       "com.team3250.frc2020.display.DriveDisplay",
-                       "com.team3250.frc2020.display.DriverDisplay",
-                       "com.team3250.frc2020.display.FlywheelDisplay",
-                       "com.team3250.frc2020.display.HoodDisplay",
-                       "com.team3250.frc2020.display.PositionTrackerDisplay",
-                       "com.team3250.frc2020.display.ShooterDisplay",
-                       "com.team3250.frc2020.display.TurretDisplay"
-    ]
+//    ignoredClasses = [
+//                       "com.team3250.frc2020.display.AutoDisplay",
+//                       "com.team3250.frc2020.display.DriveDisplay",
+//                       "com.team3250.frc2020.display.DriverDisplay",
+//                       "com.team3250.frc2020.display.FlywheelDisplay",
+//                       "com.team3250.frc2020.display.HoodDisplay",
+//                       "com.team3250.frc2020.display.PositionTrackerDisplay",
+//                       "com.team3250.frc2020.display.ShooterDisplay",
+//                       "com.team3250.frc2020.display.TurretDisplay"
+//    ]
 }
 
 // Set this to true to enable desktop support.
