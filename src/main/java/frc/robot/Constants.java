@@ -1,32 +1,22 @@
 package frc.robot;
 
-import java.io.FileReader;
-
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import org.json.simple.JSONArray;
+import frc.utilPackage.Units;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import frc.util.util;
-
-import frc.utilPackage.Units;
+import java.io.FileReader;
 
 public class Constants {
 
     public static double degreesToRadians = 3.14159/180;
+
+    public static double pi = Math.PI;
 
     public static double robotWidth = 26*Units.Length.inches;
 
@@ -57,8 +47,7 @@ public class Constants {
     }
 
     public static class Feeder {
-        public static DoubleSolenoid leftSolenoid = new DoubleSolenoid(1, 2); // todo
-        public static DoubleSolenoid rightSolenoid = new DoubleSolenoid(3,4); // todo
+        public static DoubleSolenoid solenoid = new DoubleSolenoid(2, 6); // todo
 
         public static TalonSRX rollerMotor = new TalonSRX(pigeonTalonID);
     }
@@ -68,15 +57,21 @@ public class Constants {
         public static CANSparkMax flywheelMotorI = new CANSparkMax(22, MotorType.kBrushless);
 
         // Flywheel PID Constants
-        public static double kP = 0.0732;
-        public static double kI = 0;
-        public static double kD = 0;
-        public static double kIz = 0;
-        public static double kFF = 0.000015;
+        public static double kP = 0.001; //0.001
+        public static double kI = 0.0006; //0.0000125
+        public static double kD = 0.02; //0.01 , 0.02
+        public static double kIz = 0.2; //0.25
+        public static double kFF = 0.000181; // 0.000178, 0.00015
+
+        public static double kPSpooling = 0.012;
+        public static double kISpooling = 0;
+        public static double kDSpooling = 0;
+        public static double kIzSpooling = 0;
+        public static double kFFSpooling = 0;
 
         public static double kMaxOutput = 1;
-        public static double kMinOutput = -1;
-        public static double maxRPM = 2500;
+        public static double kMinOutput = 0; //0.5
+        public static double maxRPM = 5500;
 
         // Smart Motion Coefficients
         //TODO
@@ -87,27 +82,30 @@ public class Constants {
 
     public static class Hood {
         public static int hoodServo = 0;
-        public static double angleOffset = 30;
+        public static double angleOffset = 0;
         public static double[] range = {30 * Units.Angle.degrees, 180 * Units.Angle.degrees};
     }
 
     public static class Transport {
-        public static TalonSRX rampLeft = new TalonSRX(20);
-        public static TalonSRX rampRight = new TalonSRX(31);
+        public static TalonSRX rampFront = new TalonSRX(20);
+        public static TalonSRX rampBack = new TalonSRX(17);
+        public static TalonSRX mixer = new TalonSRX(14);
+
+        public static DigitalInput ballSensor = new DigitalInput(9);
     }
 
     public static class Turret {
-        public static boolean fieldOriented = true;
+        public static double acceptedError = 0.044;
 
         public static CANSparkMax turret = new CANSparkMax(21, MotorType.kBrushless);
-        public static TalonSRX turretEnc = new TalonSRX(20);
+        public static TalonSRX turretEnc = Transport.rampBack;
 
-        public static double encoderOffset = 0;
+        public static double encoderOffset = pi;
 //        public static double ticksPerRev = (2048*(140/30))/3.14159;
-        public static double ticksPerRev = 18745/(2*3.14159);
+        public static double ticksPerRev = 18745/(2*pi);
 
         //PID Constants
-        public static double kP = 1;
+        public static double kP = 3;
         public static double kI = 0;
         public static double kD = 0;
         public static double kIz = 0;
@@ -116,11 +114,23 @@ public class Constants {
         public static double kMinOutput = -1;
 
         //Smart Motion Coefficients
-        public static double maxVel = 100; // rpm
-        public static double maxAcc = 50;
+        public static double maxVel = 120; // rpm
+        public static double maxAcc = 60;
 
         public static double allowedErr = 0;
         public static double minVel;
+    }
+
+    public static class Climber {
+        public static TalonSRX climbArms = new TalonSRX(13);
+        public static TalonSRX climbGearbox = Drive.rightEncoder; // TODO
+
+        public static DigitalInput climbLimit = new DigitalInput(8);
+    }
+
+    public static class ColorWheel {
+        public static TalonSRX wheelRoller = new TalonSRX(102); // TODO
+        public static DoubleSolenoid wheelPiston = new DoubleSolenoid(1, 5);
     }
 
     public static class Image{

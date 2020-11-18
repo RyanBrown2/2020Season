@@ -59,7 +59,7 @@ public abstract class AutoMode extends Thread{
         if(!RobotState.isAutonomous())
             return;
 
-        SmartDashboard.putString("Current Action", action.getClass().getName());
+        SmartDashboard.putString("Current Action", action.getClass().getName()); //todo Transfer to shuffleboard
 
         isActiveWithThrow();
         action.start();

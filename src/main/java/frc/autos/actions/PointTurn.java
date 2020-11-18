@@ -13,8 +13,8 @@ import frc.utilPackage.Util;
 public class PointTurn extends Action{
 
     Heading setpoint;
-    final double kP = 3.25;
-    final double kD = 1.25;
+    final double kP = 4; //3.25
+    final double kD = 0.75; //1.25
     Derivative dError;
     DriveOutput drive;
     double startTime;

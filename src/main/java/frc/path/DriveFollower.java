@@ -2,7 +2,7 @@ package frc.path;
 
 import frc.coordinates.*;
 import frc.drive.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utilPackage.Units;
 import frc.utilPackage.Util;
 
@@ -42,10 +42,10 @@ public class DriveFollower{
         if(reverse){
             outVel *= -1;
         }
-        SmartDashboard.putNumber("Eta", eta);
-        SmartDashboard.putNumber("Pure Pursuit Curvature", curvature);
-        SmartDashboard.putNumber("Input Vel", velocity);
-        SmartDashboard.putNumber("Output Vel", outVel);
+//        SmartDashboard.putNumber("Eta", eta);
+//        SmartDashboard.putNumber("Pure Pursuit Curvature", curvature);
+//        SmartDashboard.putNumber("Input Vel", velocity);
+//        SmartDashboard.putNumber("Output Vel", outVel);
         DriveOutput.getInstance().setKin(curvature, outVel);
     }
 
@@ -60,18 +60,18 @@ public class DriveFollower{
         }else
             robotPos = new Pos2D(PositionTracker.getInstance().getPosition());
         
-        SmartDashboard.putNumber("Follower Heading", robotPos.getHeading().getAngle());
-        SmartDashboard.putString("Follower Heading Full", robotPos.getHeading().display());
+//        SmartDashboard.putNumber("Follower Heading", robotPos.getHeading().getAngle());
+//        SmartDashboard.putString("Follower Heading Full", robotPos.getHeading().display());
         Coordinate goalPosition = path.findGoalPos(robotPos.getPos(), lookAhead);
         // System.out.println(goalPosition.display("Goal Pos"));
         // System.out.println(goalPosition == null);
         if(goalPosition == null || goalPosition.getX() == Double.NaN || goalPosition.getY() == Double.NaN){
-            System.out.println(robotPos.getPos().multC(1/Units.Length.feet).display("Last Known Robot Pos"));
-            SmartDashboard.putString("Follower Message", "Goal Pos is null (HELP)");
+//            System.out.println(robotPos.getPos().multC(1/Units.Length.feet).display("Last Known Robot Pos"));
+//            SmartDashboard.putString("Follower Message", "Goal Pos is null (HELP)");
         }
-        SmartDashboard.putString("Goal Pos", goalPosition.multC(1/Units.Length.feet).display());
+//        SmartDashboard.putString("Goal Pos", goalPosition.multC(1/Units.Length.feet).display());
         double distToGoalPos = Coordinate.DistanceBetween(robotPos.getPos(), goalPosition);
-        SmartDashboard.putNumber("Dist To Goal Pos", Units.convertUnits(distToGoalPos, Units.Length.feet));
+//        SmartDashboard.putNumber("Dist To Goal Pos", Units.convertUnits(distToGoalPos, Units.Length.feet));
         Coordinate vecRobotToGoal = Heading.headingBetweenPoints(robotPos.getPos(), goalPosition);
 
         double eta = Heading.getAngleBetween(robotPos.getHeading(), vecRobotToGoal);

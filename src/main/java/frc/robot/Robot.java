@@ -1,25 +1,40 @@
 package frc.robot;
 
-import com.revrobotics.*;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.autos.modes.AutoMode;
-import frc.autos.modes.PathTest;
+import frc.autos.modes.SmallAuto;
+import frc.autos.modes.ThreeThenFive;
 import frc.controlBoard.ControlBoard;
 import frc.controlBoard.IControlBoard;
-import frc.drive.*;
-import frc.subsystems.*;
+import frc.display.DriverDisplay;
+import frc.drive.Drive;
+import frc.drive.DriveController;
+import frc.drive.DriveOutput;
+import frc.drive.PositionTracker;
+import frc.subsystems.Climber;
+import frc.subsystems.Control;
+import frc.subsystems.Flywheel;
+import frc.subsystems.Turret;
 import frc.utilPackage.ScaledDrive;
 
 public class Robot extends TimedRobot {
   private static IControlBoard cb = new ControlBoard();
+
   public static IControlBoard getControlBoard(){
     return cb;
   }
 
-  int _smoothing = 0;
+  public static ScaledDrive scaledDrive = new ScaledDrive();
+
+  public static DriverDisplay driverDisplay = new DriverDisplay();
+
+  TeleopControls teleopControls;
 
   AutoMode auto;
+
 
   Compressor compressor;
 
@@ -28,19 +43,22 @@ public class Robot extends TimedRobot {
   DriveOutput driveOutput;
   PositionTracker positionTracker;
 
-  ScaledDrive scaledDrive;
+  Control controller;
+  Climber climber;
 
-  IntakeController intake;
+  Turret turret = Turret.getInstance(); // todo
 
-  Transport transport;
-  Flywheel flywheel;
+//  FunctionTest functionTest;
 
   @Override
   public void robotInit() {
+
+    teleopControls = new TeleopControls();
+
     Constants.Drive.pigeon.setYaw(0);
 
-    auto = new PathTest();
-    scaledDrive = new ScaledDrive();
+    climber = Climber.getInstance();
+
     driveAuto = Drive.getInstance();
     driveController = DriveController.getInstance();
     driveOutput = DriveOutput.getInstance();
@@ -48,73 +66,72 @@ public class Robot extends TimedRobot {
 
     positionTracker = PositionTracker.getInstance();
 
-    scaledDrive = new ScaledDrive();
     scaledDrive.enabled(true);
 
-    intake = IntakeController.getInstance();
+    compressor = new Compressor(0);
+    compressor.setClosedLoopControl(true);
 
+//    functionTest = new FunctionTest();
 
-    transport = new Transport();
-    flywheel = new Flywheel();
+    controller = Control.getInstance();
 
-//    compressor = new Compressor(0);
-//    compressor.setClosedLoopControl(true);
-
+    // Set drivebase motor idle modes to brake
     Constants.Drive.left1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.left2.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right1.setIdleMode(CANSparkMax.IdleMode.kBrake);
     Constants.Drive.right2.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
+    Constants.Drive.left1.setSmartCurrentLimit(45);
+    Constants.Drive.left2.setSmartCurrentLimit(45);
+    Constants.Drive.right1.setSmartCurrentLimit(45);
+    Constants.Drive.right2.setSmartCurrentLimit(45);
+
   }
 
   @Override
   public void robotPeriodic() {
-//    turret.updateEncoder(false);
+    driverDisplay.setMatchTime(DriverStation.getInstance().getMatchTime());
     display();
   }
 
   @Override
   public void autonomousInit() {
+    auto = new SmallAuto();
     auto.start();
   }
 
   @Override
   public void autonomousPeriodic() {
+    controller.run();
   }
 
   @Override
   public void teleopInit() {
-    flywheel.setVelocity(2400);
   }
 
   @Override
   public void teleopPeriodic() {
-      flywheel.run();
-//    if(cb.feederActuate()) {
-//      intake.feederActuate();
-//    }
-//
-//    if(cb.rollers()) {
-//      intake.rollers();
-//    }
+    controller.run();
+    teleopControls.run();
+    scaledDrive.run();
+    climber.run();
   }
 
   @Override
   public void testPeriodic() {
-
+//    functionTest.reset();
+//    functionTest.run();
   }
 
   @Override
   public void disabledInit() {
   }
 
-  public void panic() {
-
-  }
-
-  public void display() {
+    public void display() {
+//    flywheel.display();
     Drive.getInstance().display();
     positionTracker.display();
-    flywheel.display();
+    teleopControls.display();
+    controller.display();
   }
 }

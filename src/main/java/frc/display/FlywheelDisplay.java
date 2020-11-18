@@ -9,6 +9,7 @@ public class FlywheelDisplay {
     ShuffleboardTab tab;
     NetworkTableEntry velocity;
     NetworkTableEntry setpoint;
+    NetworkTableEntry current;
 
     public FlywheelDisplay() {
         tab = Shuffleboard.getTab("Shooter");
@@ -19,17 +20,27 @@ public class FlywheelDisplay {
                 .getEntry();
 
         setpoint =
-                tab.add("Velecity Setpoint", 0)
+                tab.add("Velocity Setpoint", 0)
                 .withPosition(1, 2)
+                .getEntry();
+
+        current =
+                tab.add("Flywheel Current", 0)
+                .withPosition(7,0)
+                .withSize(2,2)
                 .getEntry();
     }
 
-    public void setVelocity(double velocity) {
+    public void velocity(double velocity) {
         this.velocity.setDouble(velocity);
     }
 
     public void setpoint(double setpoint) {
         this.setpoint.setDouble(setpoint);
+    }
+
+    public void current(double current) {
+        this.current.setDouble(current);
     }
 
 }

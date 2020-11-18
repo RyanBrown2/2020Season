@@ -7,32 +7,42 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import frc.display.TurretDisplay;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.utilPackage.Units;
 
-import static frc.robot.Constants.Turret.fieldOriented;
-
 public class Turret {
+    private static Turret instance = null;
+    public static Turret getInstance() {
+        if (instance == null) {
+            instance = new Turret();
+        }
+        return instance;
+    }
     TurretDisplay turretDisplay;
     CANSparkMax turretMotor;
     CANPIDController turretPID;
     CANEncoder turretEncoder;
     // smart motion slot allows us to change the PID/Motion Profile running onboard the spark max controllers
     public int smartMotionSlot;
-    // setpoint is wherever you want the turret to go, as an angle in radians, relative to the field, which is set with the toSetpoint function
-    double setPoint, processVariable;
-    // ypr = yaw/pitch/roll, stored as an array with all 3 values since this is how the gyro outputs it
+    // default setpoint
+    double setPoint = Constants.pi/6;
+    double tempSetpoint;
+    double tempSetpointFieldOriented;
+    // Yaw-Pitch-Roll (ypr) is used to store the gyro data
     double[] ypr = new double[3];
 
-    public Turret() {
+    private Turret() {
         turretMotor = Constants.Turret.turret;
         turretDisplay = new TurretDisplay();
         turretPID = turretMotor.getPIDController();
         turretEncoder = turretMotor.getAlternateEncoder();
 
+        // make a fake encoder for the onboard PID on the spark max to use
         turretPID.setFeedbackDevice(turretEncoder);
 
-        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-        Constants.Turret.turretEnc.setSelectedSensorPosition(0);
+        // add the real encoder from the talonSRX
+        Constants.Turret.turretEnc.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        Constants.Turret.turretEnc.setSelectedSensorPosition(6936);
 
         turretEncoder.setPositionConversionFactor(1);
 
@@ -54,54 +64,47 @@ public class Turret {
         turretPID.setSmartMotionAllowedClosedLoopError(Constants.Turret.allowedErr, smartMotionSlot);
     }
 
-    // this function is run constantly, and is the main function for this class
-    public void run() {
-        updateEncoder(true);
-        // % sign means modulus, take the modulus of the setpoint and 2pi to limit the setpoint to 1 full rotation, as 2pi radians is one full rotation, or 360 degrees
-        setPoint %= (2*3.14159);
-        Constants.Drive.pigeon.getYawPitchRoll(ypr);
-        // convert yaw to radians as the gyro outputs degrees
-        ypr[0] *= Constants.degreesToRadians;
-        // again, modulus is used to limit to 2 full rotations as th
-        ypr[0] = (ypr[0]/2) % (3.14159/2);
-        turretPID.setReference(setPoint - ypr[0], ControlType.kPosition);
+    // main function for the turret, runs constantly and handles all movement
+    public void run(boolean fieldOriented) {
+        // call update encoder constantly so that our fake encoder has the real encoder values stored within it
+        updateEncoder();
+        // use a modulus function on the provided setpoint that keeps it under one full rotation (2pi radians)
+        tempSetpoint = (setPoint) % (Constants.pi*2);
+        // make the setpoint relative to the field by subtracting yaw-pi since the yaw is flipped 180 degrees for some reason
+        tempSetpointFieldOriented = tempSetpoint - (getYaw() - Constants.pi);
+        // use modulus again to ensure the setpoint is not above a full rotation
+        tempSetpointFieldOriented %= (2*Constants.pi);
+
+        // if the setpoint is below the deadzone, set it to the lower limit of the deadzone
+        if(tempSetpointFieldOriented < 0) {
+            tempSetpointFieldOriented = (2*Constants.pi + tempSetpointFieldOriented);
+        }
+        // if the setpoint is above the deadzone, stop all motion until setpoint returns to somewhere good
+        if(tempSetpointFieldOriented > (3*Constants.pi/2)){
+            turretPID.setOutputRange(0, 0);
+            // displays whether the turret's setpoint is in the deadzone or not
+            Robot.driverDisplay.setInDeadZone(true);
+        } else {
+            turretPID.setOutputRange(-1, 1);
+            Robot.driverDisplay.setInDeadZone(false);
+        }
+
+        // final movement statement, the motion profile reference is set and the onboard PID handles the movement to the point
+         if(fieldOriented) {
+             turretPID.setReference(tempSetpointFieldOriented, ControlType.kPosition);
+         } else {
+             turretPID.setReference(setPoint, ControlType.kPosition);
+         }
     }
 
-    // im pretty sure this isn't used but im leaving it here for some reason
-    public void keepInRange() {
-        if(fieldOriented) {
-            if(getRawTicks() > Constants.Turret.ticksPerRev) {
-                double val = setPoint/Constants.Turret.ticksPerRev;
-                val -= (val % 1);
-                setPoint -= val*Constants.Turret.ticksPerRev;
-            }
-            if(getRawTicks() < 0) {
-                double val = setPoint/Constants.Turret.ticksPerRev;
-                val -= (val % 1);
-                setPoint += val*Constants.Turret.ticksPerRev;
-            }
-        }
-        if(!fieldOriented) {
-            setPoint = Math.abs(setPoint % Constants.Turret.ticksPerRev);
-        }
-    }
-
-    // the spark max controllers' onboard PID and motion profiles only work with an encoder attached to that spark max,
-    // but our encoders aren't compatible in brushless mode and so we make a fake encoder that the spark max will be able
-    // to read and use by constantly updating the value of the fake encoder with the one from the real encoder, plugged into our talonsrx
-    public void updateEncoder(boolean fieldOriented) {
-        if(fieldOriented) {
-            Constants.Drive.pigeon.getYawPitchRoll(ypr);
-            turretEncoder.setPosition(getAngle() + ypr[0]*Constants.degreesToRadians);
-        }
-        else {
-            turretEncoder.setPosition(getAngle());
-        }
+    // Encoder not plugged directly into Spark Max, so update a 'fake' encoder with the actual value for the PID loops
+    public void updateEncoder() {
+        turretEncoder.setPosition(getAngle(false));
     }
 
     // used to adjust which direction the turret should be pointing relative to the field, in radians
     public void toSetpoint(double set) {
-        setPoint = set % Constants.Turret.ticksPerRev;
+        setPoint = set;
     }
 
     // reads raw encoder ticks for use in other functions and for debugging purposes
@@ -109,18 +112,59 @@ public class Turret {
         return -Constants.Turret.turretEnc.getSelectedSensorPosition();
     }
 
-    public double getAngle() {
-        return (getRawTicks() - Constants.Turret.encoderOffset)/Constants.Turret.ticksPerRev;
+    // Angle is returned in radians, and can be relative to the robot's starting position
+    public double getAngle(boolean fieldOriented) {
+        if(fieldOriented) {
+            return (getRawTicks() / Constants.Turret.ticksPerRev) + getYaw();
+        } else {
+            return (getRawTicks() / Constants.Turret.ticksPerRev) + Constants.pi;
+        }
     }
 
-    public void panic() {
-        //TODO
+    // its the same as getting everything but all we need is yaw, which is stored as value 0 in the array output by the gyro
+    public double getYaw() {
+        Constants.Drive.pigeon.getYawPitchRoll(ypr);
+        // convert to radians cause they're better
+        ypr[0] *= Constants.degreesToRadians;
+        // offset it by pi cause it makes more sense
+        ypr[0] += Constants.pi;
+        // modulus it for obvious reasons
+        ypr[0] %= (Constants.pi*2);
+        // if it is negative make it not negative
+        if(ypr[0] < 0) {
+            ypr[0] = (Constants.pi*2) + ypr[0];
+        }
+        // modulus it again because i have an obsession
+        ypr[0] %= (Constants.pi*2);
+        return ypr[0];
+    }
+
+    // Returns true if turret is at setpoint
+    public boolean atSetpoint(boolean fieldOriented) {
+        double setpoint = this.setPoint;
+        if (Math.abs(setpoint - getAngle(fieldOriented)) < Constants.Turret.acceptedError) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public double getVelocity() {
+        return turretEncoder.getVelocity() / Constants.Turret.ticksPerRev;
     }
 
     // displays important information about the turret to the dashboard
     public void display() {
-        // display angle in degrees because im lacking
-        turretDisplay.angle(getAngle()/ Units.Angle.degrees);
-        turretDisplay.setpoint(setPoint);
+        updateEncoder();
+        turretDisplay.angle(getAngle(false)/Units.Angle.degrees);
+        turretDisplay.fieldOrientedAngle(getAngle(true)/Units.Angle.degrees);
+        turretDisplay.setpoint(tempSetpoint/Units.Angle.degrees);
+        turretDisplay.atSetpoint(atSetpoint(true));
+
+        if(turretDisplay.turretReset()) {
+            Constants.Turret.turretEnc.setSelectedSensorPosition(6936);
+            Constants.Drive.pigeon.setYaw(0);
+        }
+        turretDisplay.untoggleButtons();
     }
 }

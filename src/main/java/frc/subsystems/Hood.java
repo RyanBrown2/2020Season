@@ -6,13 +6,20 @@ import frc.robot.Constants;
 import frc.utilPackage.Units;
 
 public class Hood {
+    private static Hood instance = null;
+    public static Hood getInstance() {
+        if (instance == null) {
+            instance = new Hood();
+        }
+        return instance;
+    }
 
     Servo hood;
     HoodDisplay hoodDisplay;
 
     public double setpoint = 180;
 
-    public Hood() {
+    private Hood() {
         hood = new Servo(Constants.Hood.hoodServo);
         hoodDisplay = new HoodDisplay();
     }
@@ -24,10 +31,10 @@ public class Hood {
 
     // 0 degree min, 150 degree max
     public void setAngle(double angle) {
-        double setpoint = angle / Units.Angle.degrees;
-        setpoint = setpoint + Constants.Hood.angleOffset;
-        this.setpoint = setpoint;
-    }
+//        double setpoint = angle;
+//        setpoint = setpoint + Constants.Hood.angleOffset;
+        this.setpoint = angle;
+        }
 
     public void panic() {
 
@@ -35,6 +42,7 @@ public class Hood {
 
     public void display() {
         hoodDisplay.setpoint(setpoint);
+        hoodDisplay.angle(hood.getAngle());
     }
 
 }
